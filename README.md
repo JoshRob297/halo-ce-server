@@ -25,9 +25,23 @@ El server no trae datos del juego. Copia `maps/` desde tu propio disco
 (la carpeta que extrae el instalador del puerto, o la de tu instalacion de
 Halo PC/Custom Edition para mapas CE en `custom_maps/`).
 
+**Si, se necesitan los datos del juego**, pero no la ISO entera en el server:
+basta la carpeta `maps/` extraida. Para un server solo multijugador alcanza
+con `ui.map` y los mapas de la rotacion (p. ej. `bloodgulch.map`,
+`chillout.map`); el cooperativo ademas necesita los de campana (`a10.map`,
+`b30.map`, `c10.map`...). La ISO solo hace falta una vez, en tu PC, para
+extraerlos (el instalador del puerto lo hace solo, o con `extract-xiso`/7z).
+El server nunca la pide ni la distribuye.
+
 The server ships no game data. Bring your own `maps/` folder from your disc
 (the folder the port's installer extracts; Halo PC/Custom Edition maps go in
 `custom_maps/`).
+
+Yes, game data is needed, but not the whole ISO on the server: the extracted
+`maps/` folder is enough. A multiplayer-only server needs `ui.map` plus the
+maps in its rotation; co-op also needs the campaign maps. The ISO is used
+once, on your PC, to extract them (the port's installer does it, or
+`extract-xiso`/7z). The server never asks for it nor distributes it.
 
 ## Docker (lo mas rapido)
 
@@ -99,6 +113,29 @@ proyecto). El server imprime el enlace de invitacion al arrancar.
 
 All settings are documented in `docs/dedicated_server.md` (the project's
 own). The server prints its invite link at start-up.
+
+## Mapas y modos de juego
+
+El server no tiene menu: **el admin elige los mapas y los modos en
+`config.toml`** (`debug.network_test`) y la lista rota sola.
+
+- Mapas: los que el juego conoce (`bloodgulch`, `chillout`, `sidewinder`,
+  `wizard`...), con los archivos en `maps/`.
+- Modos: variantes del motor (`slayer`, `ctf`, `oddball`, `king`, `race`),
+  gametypes de OpenCE (`swat`, `infection`, `gun_game`, `hardcore_slayer`,
+  `hardcore_ctf`, `hardcore_oddball`) y cooperativo (`coop`).
+- Los jugadores **no votan ni eligen** el siguiente mapa: eso no existe en
+  este enfoque (es el host automatico del puerto, no un panel de admin).
+  Cambiar la lista es editar `config.toml` y reiniciar.
+
+Detalle completo en `docs/dedicated_server.es.md` y
+`docs/dedicated_server.md`.
+
+The server has no menu: **the admin picks the maps and modes in
+`config.toml`** (`debug.network_test`) and the list rotates by itself.
+Players do not vote for the next map (this is the port's automated host, not
+an admin panel); changing the list is editing `config.toml` and restarting.
+Full detail in `docs/dedicated_server.md` (and `docs/dedicated_server.es.md`).
 
 ## Compatibilidad
 
