@@ -1,17 +1,20 @@
 services:
   halo-server:
+    # the prebuilt image (pulled, ~139 MB); remove it to build from source
+    # (an Arch toolchain, about 15 minutes the first time)
+    image: ghcr.io/joshrob297/halo-ce-server:latest
     build: .
     container_name: halo-server
     restart: unless-stopped
     ports:
-      # el puerto del juego (network.tunnel_port); cambialo en los dos lados
+      # the game's UDP port (network.tunnel_port); change it on both sides
       - "2302:2302/udp"
     volumes:
-      # tus mapas (de tu propio disco); no vienen en la imagen
+      # your maps (from your own disc); not in the image
       - ./maps:/halo/maps:ro
-      # mapas de Halo PC / Custom Edition (opcional)
+      # Halo PC / Custom Edition maps (optional)
       - ./custom_maps:/halo/custom_maps:ro
-      # partidas guardadas y cache (persistente entre reinicios)
+      # saved games and the cache (kept across restarts)
       - ./saved:/root/.local/share/halo-linux
-      # sobreescribe la config de ejemplo con la tuya (opcional)
+      # override the sample config with your own (optional)
       # - ./config.toml:/halo/config.toml:ro
