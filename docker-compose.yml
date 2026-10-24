@@ -1,0 +1,17 @@
+services:
+  halo-server:
+    build: .
+    container_name: halo-server
+    restart: unless-stopped
+    ports:
+      # el puerto del juego (network.tunnel_port); cambialo en los dos lados
+      - "2302:2302/udp"
+    volumes:
+      # tus mapas (de tu propio disco); no vienen en la imagen
+      - ./maps:/halo/maps:ro
+      # mapas de Halo PC / Custom Edition (opcional)
+      - ./custom_maps:/halo/custom_maps:ro
+      # partidas guardadas y cache (persistente entre reinicios)
+      - ./saved:/root/.local/share/halo-linux
+      # sobreescribe la config de ejemplo con la tuya (opcional)
+      # - ./config.toml:/halo/config.toml:ro

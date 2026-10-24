@@ -1,0 +1,25 @@
+[Unit]
+Description=Halo: Combat Evolved dedicated server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=halo
+Group=halo
+WorkingDirectory=/srv/halo
+Environment=HALO_DATA_ROOT=/srv/halo
+Environment=HOME=/srv/halo/home
+# sin pantalla ni tarjeta de sonido: los drivers dummy de SDL
+Environment=SDL_VIDEODRIVER=dummy
+Environment=SDL_AUDIODRIVER=dummy
+ExecStart=/srv/halo/halo
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

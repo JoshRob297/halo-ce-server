@@ -1,0 +1,56 @@
+# Halo CE dedicated server: the host's own settings.
+# Cada clave tiene su explicacion en docs/dedicated_server.md del proyecto;
+# una clave mal escrita se escribe en el log y se queda en su valor por
+# defecto. El archivo se reescribe con los defaults en el primer arranque.
+
+[debug]
+# un server no tiene pantalla: nada se dibuja, no se hace ventana
+null_renderer = true
+
+# la lista de mapas que hostea, en el orden en que la rota: entradas de
+# "mapa" o "mapa:variante,variante", ";" entre ellas, y vuelta a la primera
+# despues de la ultima. Los nombres son los de las listas del juego
+# ("levels\test\wizard", y un mapa de Custom Edition como
+# "custom_maps\<nombre>")
+network_test = "host:bloodgulch:slayer,ctf;chillout:slayer,oddball;sidewinder:ctf,slayer"
+
+# los minutos que dura cada partida de la lista, para que una partida que
+# nadie gana termine igual y la lista avance
+network_test_time = 15
+
+# los segundos que el lobby cuenta hacia el arranque de la partida.
+# 0: el del juego, 31 segundos
+network_test_countdown = 15
+
+# cuanto espera el host a un countdown antes de arrancar la partida a la
+# fuerza, cuando nada mas la arranca
+network_test_start = 1.0
+
+# false: el host no toma jugador propio. Sus partidas son solo de los
+# jugadores y espera en el lobby al primero. true (el default) es el host
+# del test automatico, que juega con jugador propio
+network_test_player = false
+
+[audio]
+# no se abre dispositivo de audio
+enabled = false
+
+[paths]
+# la raiz de datos, cuando los mapas no estan al lado del ejecutable
+# (en Docker es /halo, con /halo/maps)
+# data = "/srv/halo"
+
+[network]
+# el nombre que su listado muestra en el Server Browser de todos (32 bytes
+# como mucho en el browser; el lobby del juego muestra 15 caracteres)
+server_name = "My 24/7 Halo"
+
+# el puerto UDP del juego por internet: uno fijo, para que la regla del
+# firewall y el forward del router lo nombren (0 deja que el juego elija uno
+# en cada arranque)
+tunnel_port = 2302
+
+[display]
+# avisa a los jugadores, en la zona de chat, cuanto queda de partida y el
+# countdown del lobby
+time_notices = true
