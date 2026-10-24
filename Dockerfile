@@ -10,6 +10,9 @@ ARG OPENCE_REF=dhost-v38
 
 FROM archlinux:base AS build
 
+ARG OPENCE_REPO
+ARG OPENCE_REF
+
 RUN printf '[multilib]\nInclude = /etc/pacman.d/mirrorlist\n' >> /etc/pacman.conf \
  && pacman -Syu --noconfirm --needed \
     git zstd python python-pytest ninja ccache \
