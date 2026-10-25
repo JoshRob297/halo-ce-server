@@ -289,3 +289,30 @@ Or via environment variable:
 export HALO_NET_AFK_TIMEOUT=180
 ```
 
+---
+
+## 8. Escalating Progressive Bans (`escalating_bans`)
+
+When `network.escalating_bans = true` (default), host bans issued via `operator.sh ban <name>` scale automatically based on prior infractions found in `bans.txt` for that IP and hardware ID:
+
+- **Strike 1:** 1 hour ban (`expires=TIMESTAMP`)
+- **Strike 2:** 24 hour ban
+- **Strike 3:** 7 day ban
+- **Strike 4+:** Permanent ban
+
+Expired temporary bans are ignored automatically by the host upon connection and do not block players. Confirmed speed hack auto-bans (`cheaters.txt`) are always permanent regardless of strike count.
+
+### Configuration
+
+In `config.toml`:
+```toml
+[network]
+escalating_bans = true   # Set to false for permanent bans on first infraction
+```
+
+Or via environment variable:
+```bash
+export HALO_NET_ESCALATING_BANS=true
+```
+
+

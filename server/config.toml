@@ -79,6 +79,12 @@ map_rotation = "sequence"
 # 0 disables the AFK kick. Default: 180 (3 minutes).
 afk_timeout = 180
 
+# Escalating progressive bans for operator bans:
+# Strike 1: 1 hour | Strike 2: 24 hours | Strike 3: 7 days | Strike 4+: permanent
+# Expirations are recorded in bans.txt and cleaned automatically.
+# Set to false to issue permanent bans immediately on every strike. Default: true.
+escalating_bans = true
+
 
 [display]
 # avisa a los jugadores, en la zona de chat, cuanto queda de partida y el
