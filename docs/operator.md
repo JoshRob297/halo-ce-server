@@ -263,3 +263,29 @@ The endpoint binds `0.0.0.0` (so a container can publish it), serves no
 path but `/health`, and does no authentication: publish it only where you
 want it reachable, or keep the Docker port mapping off and probe from
 inside the container.
+
+---
+
+## 7. AFK Inactivity Timeout (`afk_timeout`)
+
+The server tracks input activity per client machine (analog sticks, button presses, weapon triggers, and aim angle adjustments).
+
+If a player remains completely inactive during an active match:
+- At `afk_timeout - 30` seconds: A private warning notice is sent directly to the player:
+  `AFK Warning: You will be kicked in 30 seconds for inactivity`
+- At `afk_timeout` seconds: The player is automatically disconnected and a public notice is broadcast:
+  `PlayerName was kicked for inactivity (AFK)`
+
+### Configuration
+
+In `config.toml`:
+```toml
+[network]
+afk_timeout = 180   # Inactivity limit in seconds (0 = disabled, default = 180)
+```
+
+Or via environment variable:
+```bash
+export HALO_NET_AFK_TIMEOUT=180
+```
+
