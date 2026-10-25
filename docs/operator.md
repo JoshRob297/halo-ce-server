@@ -75,6 +75,25 @@ export HALO_NET_SERVER_PASSWORD="your_secret_password"
 - **Non-empty string**: The server listing is marked as locked (`_listing_password` flag). Its lobby token is sealed with the password key using Argon2id salted with the host signing key (`p2p_seal_token`).
 - **Joining**: Clients selecting the locked server in the server browser are prompted for the password (`p2p_listing_unlock`). Only clients entering the correct password can derive the key, unlock the token, and join. Direct invite links continue to work if shared.
 
+## Map Rotation (`map_rotation`)
+
+The dedicated server supports both sequential and pseudo-random rotation across the playlist specified in `debug.network_test`:
+
+In `config.toml`:
+```toml
+[network]
+map_rotation = "sequence"  # "sequence" (default) or "shuffle"
+```
+
+Or via environment variable:
+```bash
+export HALO_NET_MAP_ROTATION="shuffle"
+```
+
+### Rotation Modes
+- **`sequence`** (default): Rotates through the configured playlist entries and gametype variants sequentially, returning to the first map after reaching the end.
+- **`shuffle`**: Randomly selects a map and gametype variant from the entire configured playlist after each game concludes, avoiding picking the exact same entry twice consecutively whenever the playlist contains more than one combination.
+
 ### Environment Overrides
 
 - `HALO_CONSOLE_HOST`: Console IP (default: `127.0.0.1`)

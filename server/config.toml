@@ -68,6 +68,13 @@ server_password = ""
 # 0 turns it off (default). Bind to 0.0.0.0 so containers can publish it.
 health_port = 0
 
+# Map rotation mode: "sequence" (default) or "shuffle".
+# "sequence" advances through the playlist entries in order, looping back.
+# "shuffle" chooses a pseudo-random map and variant across the playlist,
+# avoiding selecting the exact same map/variant twice in a row (if length > 1).
+map_rotation = "sequence"
+
+
 [display]
 # avisa a los jugadores, en la zona de chat, cuanto queda de partida y el
 # countdown del lobby
