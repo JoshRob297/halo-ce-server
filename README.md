@@ -55,6 +55,7 @@ Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native por
 - [What You Need](#what-you-need)
 - [Quick Start (Docker)](#quick-start-docker)
 - [The Complete Guide, Step by Step](#the-complete-guide-step-by-step)
+- [Operator CLI (operator.sh)](#operator-cli-operatorsh)
 - [Windows Headless](#windows-headless)
 - [The Settings](#the-settings)
 - [Maps and Game Modes](#maps-and-game-modes)
@@ -219,6 +220,51 @@ sudo nano /srv/halo/config.toml
 sudo systemctl enable --now halo-server
 sudo journalctl -u halo-server -f
 ```
+
+---
+
+## Operator CLI (operator.sh)
+
+The server includes a lightweight management CLI (`scripts/operator.sh`) communicating directly with the internal administration console over loopback telnet (`127.0.0.1:2323`).
+
+### Enabling the Console
+In `config.toml`:
+```toml
+[debug]
+telnet_console = true
+telnet_console_port = 2323
+```
+Or via environment variable:
+```bash
+export HALO_TELNET_CONSOLE=true
+```
+
+### Usage with Docker
+Run commands from the host machine using `docker exec`:
+```bash
+# Check live match status (map, mode, players, state)
+docker exec halo-server /halo/operator.sh status
+
+# Disconnect a disruptive player
+docker exec halo-server /halo/operator.sh kick "PlayerName"
+
+# Ban a player (writes IP + HWID with progressive tier)
+docker exec halo-server /halo/operator.sh ban "Griefer"
+
+# Trigger a host vote-kick
+docker exec halo-server /halo/operator.sh votekick "AfkPlayer"
+
+# Execute arbitrary Halo Script or debug commands
+docker exec halo-server /halo/operator.sh raw "help kick"
+```
+
+### Usage on Bare Metal / Systemd
+```bash
+/opt/halo-server/operator.sh status
+/opt/halo-server/operator.sh kick "PlayerName"
+```
+
+See [docs/operator.md](docs/operator.md) for the full guide, including chat settings, progressive ban tiers, lobby map voting, and the HTTP health endpoint.
 
 ---
 
