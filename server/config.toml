@@ -59,6 +59,11 @@ tunnel_port = 2302
 # Requires network.text_chat = "on" or "links". Default: false.
 public_chat = false
 
+# Join password. Empty = open server (default).
+# When set, the game listing shows as locked in the browser and players must
+# provide the password to join.
+server_password = ""
+
 [display]
 # avisa a los jugadores, en la zona de chat, cuanto queda de partida y el
 # countdown del lobby

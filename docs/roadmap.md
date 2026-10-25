@@ -126,16 +126,14 @@ Implemented:
 
 ## Milestone 3: Server password (join gate)
 
-**Priority: medium.** Lets operators run a private server discoverable in
-the browser (listed, but gated).
+**Status: Done (v1.3.0).** Completed in engine commit `e7172ac7edbb69dcae984f4757c2514930bebf9a`.
 
-The join path in `network_server_manager.c` already has a `password` field
-in the lobby data structure. The gap is that the dedicated host mode never
-sets it. Add `network.server_password` (string, empty = open) that is
-written to the lobby's password field before the game starts.
-
-Done when: a client that does not know the password is refused with a
-"wrong password" notice.
+Implemented:
+1. `network.server_password` setting added in `port_config.c` (default: `""`, environment: `HALO_NET_SERVER_PASSWORD`).
+2. `network_test.c` updated during host setup to call `p2p_set_hosting_password(server_password && server_password[0] ? server_password : NULL)`.
+3. When set, `p2p_lobby.c` seals the lobby invite token with Argon2id salted with the host's key, advertising `_listing_password` (`locked = 1`) in the public browser. Clients must unlock with the matching password to join.
+4. Documented in `server/config.toml` and `docs/operator.md`.
+5. Verified compilation with `ci_build.py linux debug` on cachy.
 
 ---
 

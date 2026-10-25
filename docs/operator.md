@@ -55,6 +55,26 @@ With `/mute <name>` (operator chat command) and `operator.sh ban <name>`,
 the operator can manage disruptive players. Links are blocked unless
 `text_chat = "links"`.
 
+## Server Password (Join Gating)
+
+The dedicated server supports password protection while remaining listed in the public server browser:
+
+In `config.toml`:
+```toml
+[network]
+server_password = "your_secret_password"
+```
+
+Or via environment variable:
+```bash
+export HALO_NET_SERVER_PASSWORD="your_secret_password"
+```
+
+### Behavior & Details
+- **Empty string (`""`)**: Default. The server is public and open to anyone joining from the browser.
+- **Non-empty string**: The server listing is marked as locked (`_listing_password` flag). Its lobby token is sealed with the password key using Argon2id salted with the host signing key (`p2p_seal_token`).
+- **Joining**: Clients selecting the locked server in the server browser are prompted for the password (`p2p_listing_unlock`). Only clients entering the correct password can derive the key, unlock the token, and join. Direct invite links continue to work if shared.
+
 ### Environment Overrides
 
 - `HALO_CONSOLE_HOST`: Console IP (default: `127.0.0.1`)
