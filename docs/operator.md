@@ -315,4 +315,39 @@ Or via environment variable:
 export HALO_NET_ESCALATING_BANS=true
 ```
 
+---
+
+## 9. Lobby Map Voting (`map_voting`)
+
+When `network.map_voting = true`, the server presents a vote to all players in the pregame lobby during the start countdown:
+
+1. The server broadcasts available candidates from the playlist:
+   ```text
+   Vote Next Map: [1] Blood Gulch (Slayer) [2] Chill Out (CTF) [3] Sidewinder (Infection) (Type 1-3 in chat)
+   ```
+2. Players vote simply by typing `1`, `2`, `3`, etc. in chat.
+   - Voted numbers are intercepted by the server and acknowledged privately.
+   - Each player machine holds only one vote (typing a new number switches their vote).
+3. Right before the game begins, the server announces the winner:
+   ```text
+   Winning Map: [1] Blood Gulch (Slayer) with 4 votes!
+   ```
+   and immediately loads that selection.
+
+### Configuration
+
+In `config.toml`:
+```toml
+[network]
+map_voting = true       # Enable lobby chat map voting (default: false)
+map_vote_options = 3    # Number of candidates to present (2 to 5, default: 3)
+```
+
+Or via environment variables:
+```bash
+export HALO_NET_MAP_VOTING=true
+export HALO_NET_MAP_VOTE_OPTIONS=3
+```
+
+
 
