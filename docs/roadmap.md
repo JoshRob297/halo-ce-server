@@ -139,7 +139,7 @@ Implemented:
 
 ## Milestone 4: Anti-cheat audit and hardening
 
-**Status: Done (v1.4.0).** Comprehensive code audit completed and documented in [`docs/anticheat.md`](anticheat.md).
+**Status: Done.** Comprehensive code audit completed and documented in [`docs/anticheat.md`](anticheat.md).
 
 Audit findings across all evaluated vectors:
 1. **Weapon reach & production damage**: Verified. The checks in `network_test.c` are test-harness only (`debug.network_test_shoot`), but production damage handling in `network_damage.c:2061-2295` performs strict server-side validation on every hit report (verifying recent weapon ownership `distributed_player_deals`, firing burst rate `distributed_report_paid`, reach distance `distributed_player_could_fire`, melee distance `distributed_player_was_near`, historical target window `distributed_target_seen`, and line-of-sight raycasts `distributed_report_line_of_sight`).
