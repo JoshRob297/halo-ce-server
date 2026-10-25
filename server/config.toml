@@ -50,7 +50,7 @@ enabled = false
 [network]
 # el nombre que su listado muestra en el Server Browser de todos (32 bytes
 # como mucho en el browser; el lobby del juego muestra 15 caracteres)
-server_name = "My 24/7 Halo"
+server_name = "JOCES 24/7 CUSTOM"
 
 # el puerto UDP del juego por internet: uno fijo, para que la regla del
 # firewall y el forward del router lo nombren (0 deja que el juego elija uno
