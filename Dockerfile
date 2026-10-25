@@ -28,7 +28,7 @@ FROM debian:bookworm-slim
 # newer than the portable build's 2.31 floor)
 RUN dpkg --add-architecture i386 \
  && apt-get update \
- && apt-get install -y --no-install-recommends libc6:i386 libgcc-s1:i386 ca-certificates \
+ && apt-get install -y --no-install-recommends libc6:i386 libgcc-s1:i386 ca-certificates netcat-openbsd \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /halo
@@ -36,6 +36,7 @@ COPY --from=build /src/dist/halo-linux-release/halo /halo/halo
 COPY --from=build /src/dist/halo-linux-release/libSDL3.so.0 /halo/libSDL3.so.0
 COPY --from=build /src/dist/halo-linux-release/SDL3-LICENSE.txt /halo/SDL3-LICENSE.txt
 COPY server/config.toml /halo/config.toml
+COPY scripts /halo/scripts
 
 # the data root: maps/ beside the executable; saved games under the home
 VOLUME ["/halo/maps", "/halo/custom_maps", "/root/.local/share/halo-linux"]

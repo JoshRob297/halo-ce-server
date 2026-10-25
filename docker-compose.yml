@@ -6,6 +6,10 @@ services:
     build: .
     container_name: halo-server
     restart: unless-stopped
+    # Operator: docker exec halo-server /halo/scripts/operator.sh status
+    # Enable console: set HALO_TELNET_CONSOLE=true in environment:
+    # environment:
+    #   - HALO_TELNET_CONSOLE=true
     ports:
       # the game's UDP port (network.tunnel_port); change it on both sides
       - "2302:2302/udp"
