@@ -114,22 +114,13 @@ Verified: `printf "kick test\n" | socat -t 2 - TCP:127.0.0.1:2323` and `scripts/
 
 ## Milestone 2: Text chat in public servers
 
-**Priority: high (usability).** The one-line fix in `network_chat.c`:
+**Status: Done (v1.2.0).** Completed in engine commit `4697c3fd14417af7bc9ebd44a67d63b2652425da`.
 
-```c
-/* current (chat off for server-browser-listed games): */
-if (setting && !chat_names_equal(setting, "off") && !p2p_hosting_listed()) {
-
-/* proposed (dedicated public server may allow chat): */
-if (setting && !chat_names_equal(setting, "off") &&
-    (!p2p_hosting_listed() || config_boolean("network.public_chat"))) {
-```
-
-`network.public_chat = false` (default, preserving current behavior).
-A dedicated server sets it `true`. Upstream PR when the change is clean.
-
-Done when: players on a server listed in the public browser can type and
-read chat.
+Implemented:
+1. `chat_host_config_flags()` updated in `network_chat.c` to allow chat when `network.public_chat` is enabled (`(!p2p_hosting_listed() || config_boolean("network.public_chat"))`).
+2. `network.public_chat` setting added in `port_config.c` (default: `false`, environment: `HALO_NET_PUBLIC_CHAT`).
+3. Documented in `port/linux/README.md`, `server/config.toml`, and `docs/operator.md`.
+4. Verified compilation with `ci_build.py linux debug` on cachy.
 
 ---
 
