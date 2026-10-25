@@ -186,3 +186,52 @@ YYYY-MM-DD HH:MM:SS	ip=192.168.1.75	hwid=f0e1d2c3b4a59687	discord_username=none	
 1. **Speed Hacks:** The server compares client tick timing against its host clock every 2 seconds. If a client runs >10% faster and >0.5 seconds ahead continuously for 10 seconds, the host automatically drops the connection, bans the IP/HWID in `bans.txt`, and logs the infraction to `cheaters.txt`.
 2. **Unverified Timing Discrepancies:** If incoming datagrams are ahead of real time but cannot be confirmed via the client's TCP stream, an `unverified` entry is written to `cheaters.txt` without issuing an immediate ban to protect against packet spoofing.
 3. **Manual Host Bans:** When `ban <name>` is executed by the operator, an entry is written to both `bans.txt` and `cheaters.txt`.
+
+---
+
+## 6. Health Check Endpoint
+
+The server includes an HTTP health check endpoint on a dedicated TCP port (`network.health_port` in `config.toml` or `HALO_NET_HEALTH_PORT` environment variable).
+
+### Configuration
+
+In `config.toml`:
+```toml
+[network]
+health_port = 8080
+```
+
+Or via environment variable:
+```bash
+export HALO_NET_HEALTH_PORT=8080
+```
+
+When using Docker Compose, publish the TCP port in `docker-compose.yml`:
+```yaml
+services:
+  halo-server:
+    ports:
+      - "2302:2302/udp"
+      - "8080:8080/tcp"
+    environment:
+      - HALO_NET_HEALTH_PORT=8080
+```
+
+### Endpoints
+
+- `GET /health`: Returns HTTP 200 with JSON status payload:
+  ```json
+  {"status":"ok","state":"in_game","map":"bloodgulch","variant":"slayer","players":3,"max_players":16,"minutes_left":8,"listed":true,"uptime_seconds":1234}
+  ```
+  State values: `pregame`, `in_game`, `postgame`, `no_server`.
+
+- Any other path: Returns HTTP 404 with JSON:
+  ```json
+  {"error":"not found"}
+  ```
+
+### Example Usage
+
+```bash
+curl -s http://127.0.0.1:8080/health
+```

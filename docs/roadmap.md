@@ -167,18 +167,20 @@ The following engine-level limitations and threat vectors are unmitigated or req
 
 ## Milestone 5: Health check endpoint
 
-**Priority: medium (ops).** A `GET /health` HTTP endpoint that returns:
+**Status: Done (v1.4.0).** Completed in engine commit `2280e45b001aea94c98cda95b4e24badd2600e0d`.
 
-```json
-{"state": "in_game", "map": "bloodgulch", "variant": "slayer", "players": 4, "listed": true}
-```
-
-Implementation: a 30-line thread in `sdl_platform.c` or a sidecar script
-that parses the 5-second state log line piped to a file, served by a
-one-liner Python HTTP server in the Docker image.
-
-Done when: `curl http://localhost:8080/health` returns JSON from a running
-container.
+Implemented:
+1. Native `server_health.{c,h}` module built into the engine running an independent `SDL_Thread` listening on 0.0.0.0 on TCP port `network.health_port` (`HALO_NET_HEALTH_PORT`).
+2. Publishes snapshot every frame without locking the game loop, protected by `SDL_Mutex`.
+3. Handles `GET /health` with HTTP 200 JSON payload:
+   ```json
+   {"status":"ok","state":"pregame","map":"bloodgulch","variant":"slayer","players":1,"max_players":128,"minutes_left":0,"listed":true,"uptime_seconds":17}
+   ```
+4. Returns HTTP 404 for any other request path.
+5. Config setting added in `port_config.c` (default `0`: disabled) and documented in `port/linux/README.md`, `server/config.toml`, `docs/operator.md`, and `docker-compose.yml`.
+6. Smoke tested on headless host cachy:
+   - `curl -s http://127.0.0.1:8099/health` -> `{"status":"ok","state":"pregame","map":"bloodgulch","variant":"slayer","players":1,"max_players":128,"minutes_left":0,"listed":true,"uptime_seconds":17}`
+   - `curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8099/nope` -> `404`
 
 ---
 

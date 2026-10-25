@@ -10,9 +10,12 @@ services:
     # Enable console: set HALO_TELNET_CONSOLE=true in environment:
     # environment:
     #   - HALO_TELNET_CONSOLE=true
+    #   - HALO_NET_HEALTH_PORT=8080
     ports:
       # the game's UDP port (network.tunnel_port); change it on both sides
       - "2302:2302/udp"
+      # the HTTP health check endpoint (network.health_port); uncomment if enabled
+      # - "8080:8080/tcp"
     volumes:
       # your maps (from your own disc); not in the image
       - ./maps:/halo/maps:ro

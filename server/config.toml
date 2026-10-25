@@ -64,6 +64,10 @@ public_chat = false
 # provide the password to join.
 server_password = ""
 
+# TCP port for the HTTP health check endpoint (GET /health).
+# 0 turns it off (default). Bind to 0.0.0.0 so containers can publish it.
+health_port = 0
+
 [display]
 # avisa a los jugadores, en la zona de chat, cuanto queda de partida y el
 # countdown del lobby
