@@ -26,10 +26,12 @@ network_test_countdown = 15
 # fuerza, cuando nada mas la arranca
 network_test_start = 1.0
 
-# false: el host no toma jugador propio. Sus partidas son solo de los
-# jugadores y espera en el lobby al primero. true (el default) es el host
-# del test automatico, que juega con jugador propio
-network_test_player = false
+# true (recomendado para 24/7): el host toma un jugador propio inactivo,
+# lo que permite que el countdown arranque solo a los 15 segundos y el juego
+# pase a 'in_game' para que cualquier jugador se una en caliente.
+# false: espera en el lobby; en modos por equipos requiere jugadores en ambos
+# bandos antes de iniciar el countdown.
+network_test_player = true
 
 # Operator console: listen on 127.0.0.1 for kick/ban/say commands.
 # Access with: scripts/operator.sh kick "PlayerName"

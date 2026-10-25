@@ -164,7 +164,7 @@ null_renderer = true
 network_test = "host:bloodgulch:slayer,ctf;chillout:slayer,oddball;sidewinder:ctf"
 network_test_time = 15                # Match time limit in minutes
 network_test_countdown = 15           # Pre-game lobby countdown in seconds
-network_test_player = false           # Server does not spawn an idle player
+network_test_player = true            # Spawns idle host player so match starts and allows hot-joining
 ```
 
 Update `docker-compose.yml` to mount your custom `config.toml`:
@@ -242,7 +242,7 @@ All configuration is handled inside `config.toml` (or via corresponding environm
 | `debug.network_test_time` | Integer | `0` | Hard match limit in minutes (overrides game variant). |
 | `debug.network_test_countdown`| Integer | `0` | Seconds to hold the pre-game countdown (0 = 31s). |
 | `debug.network_test_start` | Float | `1.0` | Fallback timeout to enforce start if conditions hang. |
-| `debug.network_test_player` | Boolean | `false`| Disables the host client player slot. |
+| `debug.network_test_player` | Boolean | `true` | `true`: spawns idle host player to advance countdown; allows hot-joining. |
 | `audio.enabled` | Boolean | `false`| Prevents opening any audio device. |
 | `network.server_name` | String | `""` | Display name for the public server browser (Max 32 chars). |
 | `network.tunnel_port` | Integer | `2302` | Inbound network port. |
