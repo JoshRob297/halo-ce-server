@@ -208,11 +208,18 @@ YYYY-MM-DD HH:MM:SS	ip=192.168.1.75	hwid=f0e1d2c3b4a59687	discord_username=none	
 
 ---
 
-## 6. Health Check Endpoint
+## 6. Web Dashboard & Health Endpoint
 
-The server includes an HTTP health check endpoint on a dedicated TCP port (`network.health_port` in `config.toml` or `HALO_NET_HEALTH_PORT` environment variable).
+The server includes a zero-dependency, fully embedded HTTP Web Dashboard and REST API on a dedicated TCP port (`network.health_port` in `config.toml` or `HALO_NET_HEALTH_PORT` environment variable, default `:8080`).
 
-The endpoint is built for Linux and Windows only. The Android and web builds
+Accessing `http://<server-ip>:8080/` in any desktop or mobile browser opens the interactive administration dashboard:
+- **Status:** Live match telemetry, game time, live scores, next map, active player count, and 10-minute player history sparkline.
+- **Players:** Real-time player listing with ping, team affiliation, IP/HWID, and quick moderation actions (Kick, Ban, Mute).
+- **Rotation:** Interactive playlist manager (Up, Down, Remove, Play Now, Add Map).
+- **Console (RCON):** Interactive web terminal executing operator commands directly in browser.
+- **REST & Health:** Probes requesting `/health` receive instant JSON status responses for uptime monitoring.
+
+The dashboard is built for Linux and Windows only. The Android and web builds
 compile it out (their environments have no sockets and threads to spare), so
 `network.health_port` is ignored there.
 
@@ -221,7 +228,7 @@ compile it out (their environments have no sockets and threads to spare), so
 In `config.toml`:
 ```toml
 [network]
-health_port = 8080
+health_port = 8080   # Port for the web dashboard and health probe
 ```
 
 Or via environment variable:
