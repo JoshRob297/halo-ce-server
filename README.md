@@ -262,11 +262,23 @@ For Custom Edition maps located in `custom_maps/`, specify them with the subfold
 `custom_maps\cbeaver`
 
 ### Supported Gametypes
-Chain multiple modes per map entry using commas:
+Chain multiple modes per map entry in `config.toml` using commas:
 
-- **Engine Standard:** `slayer`, `ctf`, `oddball`, `king`, `race`
-- **OpenCE Additions:** `swat`, `infection`, `gun_game`, `hardcore_slayer`, `hardcore_ctf`, `hardcore_oddball`
-- **Cooperative Campaign:** `coop`
+| Gametype Identifier | Category | Rules & Mechanics |
+| :--- | :--- | :--- |
+| **`slayer`** / **`team_slayer`** | Classic Halo | Free for all or team deathmatch. |
+| **`ctf`** / **`ironctf`** | Classic Halo | Capture The Flag. `ironctf` disables touch-return. |
+| **`oddball`** / **`team_oddball`** | Classic Halo | Hold the skull for points. Ball carrier uses skull melee. |
+| **`king`** / **`team_king`** | Classic Halo | King of the Hill. Accumulate time inside moving hill. |
+| **`race`** / **`team_race`** / **`rally`** | Classic Halo | Drive vehicles through checkpoint sequence. |
+| **`swat`** | **OpenCE Custom** | No shields, instant headshot kills with any weapon, pistol + assault rifle spawn, no radar, no grenades on map. |
+| **`infection`** | **OpenCE Custom** | Humans (Red) vs Zombies (Blue/Green). Zombies have increased speed, skull melee only. Humans killed become zombies. |
+| **`gun_game`** | **OpenCE Custom** | Free for all. Each kill awards the next weapon in sequence. Kill with final weapon wins the match. |
+| **`hardcore`** / **`hardcore_slayer`**| **OpenCE Custom** | No motion sensor, no aim assist. Each kill instantly restores full health and shields to the killer. |
+| **`hardcore_ctf`** | **OpenCE Custom** | Capture The Flag with hardcore rules (no radar, no aim assist, kill regen). |
+| **`hardcore_oddball`** | **OpenCE Custom** | Oddball with hardcore rules (no radar, no aim assist, kill regen). |
+| **`hardcore_king`** | **OpenCE Custom** | King of the Hill with hardcore rules (no radar, no aim assist, kill regen). |
+| **`coop`** | Campaign | Campaign cooperative missions (`a10`, `b30`, etc.). |
 
 > **Automatic Fallback:** If a gametype requires teams (e.g. CTF) and fewer than two players join, the engine automatically selects the first non-team variant to ensure the game cycle continues smoothly.
 
