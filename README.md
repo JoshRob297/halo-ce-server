@@ -298,15 +298,28 @@ sudo systemctl kill -s KILL halo-server
 
 ---
 
+## Security & Anti-Cheat
+
+The server enforces strict host authority:
+- Server-authoritative inventory, weapon ammunition, grenade counts, and scoring.
+- Comprehensive damage hit report validation including weapon ownership, rate-of-fire burst limits, historical target bounding spheres, and line-of-sight raycasts.
+- Automatic clock skew detection against speed hacks with immediate prediction rejection and stream-verified auto-bans.
+
+See [docs/anticheat.md](docs/anticheat.md) for the complete audit report, host protection matrix, and operator ban management guide.
+
+---
+
 ## Roadmap & Limitations
 
 - [x] Full headless Docker deployment.
 - [x] Automated map and mode playlist rotation.
 - [x] Public browser listing and invite token generation.
-- [ ] Interactive operator console (`sv_map`, `sv_kick`, `sv_ban`, `sv_status`).
-- [ ] Admin chat broadcasts (`sv_say`).
-- [ ] Server-enforced anti-cheat checks.
+- [x] Interactive operator console (`operator.sh` / telnet).
+- [x] Public text chat toggle (`network.public_chat`).
+- [x] Join gate / server password authentication (`network.server_password`).
+- [x] Server-enforced anti-cheat audit and documentation ([docs/anticheat.md](docs/anticheat.md)).
 - [ ] Lightweight JSON HTTP health status endpoint.
+- [ ] Windows headless smoke verification.
 
 See [docs/roadmap.md](docs/roadmap.md) for planned milestones.
 

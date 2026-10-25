@@ -139,27 +139,29 @@ Implemented:
 
 ## Milestone 4: Anti-cheat audit and hardening
 
-**Priority: high (security).** The engine already catches speed hacks,
-position cheats and corrupt datagrams. The audit closes remaining gaps:
+**Status: Done (v1.4.0).** Comprehensive code audit completed and documented in [`docs/anticheat.md`](anticheat.md).
 
-1. **Weapon reach**: the damage range check in `network_test.c` is a test
-   harness function. Confirm that the same check runs in production host
-   mode, or port it to `network_distributed.c`.
-2. **Aimbot / no-recoil**: the host controls recoil and spread server-side
-   by design (the Xbox build's authority model). Verify that a client
-   cannot submit a shot that bypasses the host's spread application.
-3. **Grenade count manipulation**: clients report grenade counts; the host
-   should cap them at the map's spawn values.
-4. **Scoreboard manipulation**: verify the host rejects score deltas it did
-   not cause.
-5. **HWID spoofing limit**: documented in `NETCODE.md` — a copied HWID can
-   only reduce votes, never add them. Confirm no other path where a spoofed
-   HWID gives an advantage.
-6. Write `docs/anticheat.md` with what is enforced, what is not, and how to
-   read `cheaters.txt`.
+Audit findings across all evaluated vectors:
+1. **Weapon reach & production damage**: Verified. The checks in `network_test.c` are test-harness only (`debug.network_test_shoot`), but production damage handling in `network_damage.c:2061-2295` performs strict server-side validation on every hit report (verifying recent weapon ownership `distributed_player_deals`, firing burst rate `distributed_report_paid`, reach distance `distributed_player_could_fire`, melee distance `distributed_player_was_near`, historical target window `distributed_target_seen`, and line-of-sight raycasts `distributed_report_line_of_sight`).
+2. **Aimbot / no-recoil**: Recoil and spread are simulated server-side via weapon action inputs (`update_server_handle_distributed_input`). External aim assistance or memory modification in client process memory remains undetectable server-side.
+3. **Grenade count & ammunition**: Verified. Inventories, carried weapons, total ammo, and grenades are 100% authoritative on the host (`network_objects.c:1602-1634`). Clients never send inventory or ammo counts to the host; they only receive host states (`network_objects.c:3008-3058`).
+4. **Scoreboard manipulation**: Verified. Kills, deaths, and team scores are calculated strictly from host simulation (`network_damage.c`, `network_distributed.c:3340-3423`). Clients cannot alter scores.
+5. **HWID spoofing limit**: Verified. HWID and IP are matched against `bans.txt` on connection. Spoofed HWIDs cannot grant elevated privileges or duplicate votes (`network_votekick.c`).
+6. Comprehensive operator guide and protection matrix written to `docs/anticheat.md`.
 
-Done when: `docs/anticheat.md` exists and items 1-5 each have a finding
-(confirmed OK, or a fix committed).
+No engine vulnerabilities warranting micro-patches were identified; server authority is already strictly enforced by the netcode architecture.
+
+---
+
+## Known Gaps
+
+The following engine-level limitations and threat vectors are unmitigated or require external controls:
+
+| Vector | Severity | Status / Description |
+| :--- | :--- | :--- |
+| **Client Memory ESP / Aimbot** | **High** | Client execution space is unverified. Players modifying client memory to snap aim or draw player bounding boxes through walls cannot be prevented server-side. Mitigated by player vote-kicks and operator bans. |
+| **HWID Spoofing** | **Medium** | Client hardware IDs (`p2p_hardware_id`) derive from local OS identifiers (`/etc/machine-id`, SMBIOS). Root/admin users can spoof them. Mitigated by IP banning and server join passwords (`network.server_password`). |
+| **Unverified Speed Hack on UDP** | **Low** | If clock skew is detected solely on UDP datagrams without stream confirmation, the host logs to `cheaters.txt` as unverified but does not kick to protect against source IP spoofing. |
 
 ---
 
