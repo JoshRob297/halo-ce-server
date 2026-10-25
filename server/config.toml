@@ -55,6 +55,10 @@ server_name = "My 24/7 Halo"
 # en cada arranque)
 tunnel_port = 2302
 
+# Allow text chat in publicly listed games (dedicated server with moderation only).
+# Requires network.text_chat = "on" or "links". Default: false.
+public_chat = false
+
 [display]
 # avisa a los jugadores, en la zona de chat, cuanto queda de partida y el
 # countdown del lobby

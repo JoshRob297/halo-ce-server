@@ -39,6 +39,22 @@ HALO_TELNET_CONSOLE=1 ./halo
 | `operator.sh status` | Reads the latest 5-second server state line from `debug.txt` and formats game status. |
 | `operator.sh raw <command>` | Sends an arbitrary command or Halo Script expression directly to the console. |
 
+## Text Chat in Public Servers
+
+By default, text chat is disabled in games listed in the public server browser.
+A dedicated server with operator moderation can enable it:
+
+In `config.toml`:
+```toml
+[network]
+text_chat = "on"      # on | links | off
+public_chat = true    # lift the public-listing restriction
+```
+
+With `/mute <name>` (operator chat command) and `operator.sh ban <name>`,
+the operator can manage disruptive players. Links are blocked unless
+`text_chat = "links"`.
+
 ### Environment Overrides
 
 - `HALO_CONSOLE_HOST`: Console IP (default: `127.0.0.1`)
