@@ -167,7 +167,8 @@ The following engine-level limitations and threat vectors are unmitigated or req
 
 ## Milestone 5: Health check endpoint
 
-**Status: Done (v1.4.0).** Completed in engine commit `2280e45b001aea94c98cda95b4e24badd2600e0d`.
+**Status: Done.** Completed in engine commits `2280e45b` (the endpoint) and
+`e6d69b01` (the stop race and HEAD).
 
 Implemented:
 1. Native `server_health.{c,h}` module built into the engine running an independent `SDL_Thread` listening on 0.0.0.0 on TCP port `network.health_port` (`HALO_NET_HEALTH_PORT`).

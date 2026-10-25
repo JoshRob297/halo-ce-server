@@ -223,15 +223,20 @@ services:
   ```json
   {"status":"ok","state":"in_game","map":"bloodgulch","variant":"slayer","players":3,"max_players":16,"minutes_left":8,"listed":true,"uptime_seconds":1234}
   ```
-  State values: `pregame`, `in_game`, `postgame`, `no_server`.
+State values: `pregame`, `in_game`, `postgame`, `no_server`.
 
-- Any other path: Returns HTTP 404 with JSON:
-  ```json
-  {"error":"not found"}
-  ```
+- `HEAD /health`: the same headers with no body, for monitors that probe
+  with HEAD.
+
+- Any other path or method: HTTP 404 with `{"error":"not found"}`.
 
 ### Example Usage
 
 ```bash
 curl -s http://127.0.0.1:8080/health
 ```
+
+The endpoint binds `0.0.0.0` (so a container can publish it), serves no
+path but `/health`, and does no authentication: publish it only where you
+want it reachable, or keep the Docker port mapping off and probe from
+inside the container.
