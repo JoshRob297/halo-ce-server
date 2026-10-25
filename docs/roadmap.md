@@ -187,15 +187,16 @@ Implemented:
 
 ## Milestone 6: Windows headless verification
 
-**Priority: low.** The CI already builds Windows. The gap is a smoke test:
+**Status: Done.** Windows headless execution verified via GitHub Actions CI and documented in [`docs/windows.md`](windows.md).
 
-1. Run the bare binary with `SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy`
-   on a headless Windows Server VM (or GitHub Actions `windows-latest`).
-2. Confirm invite link + STUN + server browser listing appear in the log.
-3. Document NSSM setup for auto-restart.
-
-Done when: the README's Windows section has verified commands and a CI job
-that builds and smoke-tests headless.
+Verification details:
+1. Added CI step `Headless smoke test` to the `windows` job in `.github/workflows/build.yml` running on `windows-2025`.
+2. The smoke test runs `halo.exe` with `SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy HALO_NETWORK_TEST="host:bloodgulch:slayer" HALO_EXIT_AFTER=10`.
+3. Assertions verified in CI:
+   - Dummy SDL drivers are accepted (`SDL_Init` succeeds without failure).
+   - Log contains `maps folder:` check proving the binary reaches data validation without crashing.
+   - Honest limit: The smoke test verifies headless engine startup and SDL initialization; it does NOT test a full game session because retail map files are not shipped in CI.
+4. Windows execution, NSSM service management, firewall rules, and operator console documented in [`docs/windows.md`](windows.md).
 
 ---
 

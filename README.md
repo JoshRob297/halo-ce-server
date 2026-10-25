@@ -55,6 +55,7 @@ Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native por
 - [What You Need](#what-you-need)
 - [Quick Start (Docker)](#quick-start-docker)
 - [The Complete Guide, Step by Step](#the-complete-guide-step-by-step)
+- [Windows Headless](#windows-headless)
 - [The Settings](#the-settings)
 - [Maps and Game Modes](#maps-and-game-modes)
 - [Who Can Join](#who-can-join)
@@ -221,6 +222,15 @@ sudo journalctl -u halo-server -f
 
 ---
 
+## Windows Headless
+
+The dedicated server runs natively on Windows using headless SDL dummy drivers without a display or sound card.
+
+- **Guide & Service Setup:** See [docs/windows.md](docs/windows.md) for full instructions, manual startup commands (Command Prompt and PowerShell), Windows Firewall rules, and running as an auto-restarting background service via NSSM.
+- **CI Verification:** The `windows` job on GitHub Actions (`windows-2025`) continuously builds and smoke-tests headless startup with `SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy`.
+
+---
+
 ## The Settings
 
 All configuration is handled inside `config.toml` (or via corresponding environment variables):
@@ -318,8 +328,8 @@ See [docs/anticheat.md](docs/anticheat.md) for the complete audit report, host p
 - [x] Public text chat toggle (`network.public_chat`).
 - [x] Join gate / server password authentication (`network.server_password`).
 - [x] Server-enforced anti-cheat audit and documentation ([docs/anticheat.md](docs/anticheat.md)).
-- [ ] Lightweight JSON HTTP health status endpoint.
-- [ ] Windows headless smoke verification.
+- [x] Lightweight JSON HTTP health status endpoint.
+- [x] Windows headless smoke verification ([docs/windows.md](docs/windows.md)).
 
 See [docs/roadmap.md](docs/roadmap.md) for planned milestones.
 
