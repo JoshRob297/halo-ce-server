@@ -193,6 +193,10 @@ YYYY-MM-DD HH:MM:SS	ip=192.168.1.75	hwid=f0e1d2c3b4a59687	discord_username=none	
 
 The server includes an HTTP health check endpoint on a dedicated TCP port (`network.health_port` in `config.toml` or `HALO_NET_HEALTH_PORT` environment variable).
 
+The endpoint is built for Linux and Windows only. The Android and web builds
+compile it out (their environments have no sockets and threads to spare), so
+`network.health_port` is ignored there.
+
 ### Configuration
 
 In `config.toml`:
