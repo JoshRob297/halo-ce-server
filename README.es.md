@@ -493,6 +493,7 @@ Consulta [docs/anticheat.md](docs/anticheat.md) para el informe completo de audi
 - [x] Soporte nativo para Windows headless ([docs/windows.md](docs/windows.md)).
 - [x] Soporte multiplataforma ARM64 para Raspberry Pi 3B/4/5 y Oracle Cloud ([docs/raspberry-pi.md](docs/raspberry-pi.md)).
 - [ ] Redirección de directorio de logs (`HALO_LOG_DIR` / `paths.logs`) para volúmenes de Unraid y Docker.
+- [ ] Control de acceso basado en roles (RBAC), autenticación y portal de inicio de sesión web (Hito 8).
 
 Consulta [docs/roadmap.md](docs/roadmap.md) para los hitos y próximas características planeadas.
 

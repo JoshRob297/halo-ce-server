@@ -211,10 +211,25 @@ Goals:
 
 ---
 
-## Not planned
+## Milestone 8: Role-based access control (RBAC), user authentication & Web Login
 
-- An in-game admin GUI or web panel.
+**Status: Planned.** Native authentication system and tiered role permissions for server operations, in-game moderation, and Web Dashboard access.
+
+Goals:
+1. **Multi-Tiered Roles:**
+   - **Owner:** Full system authority, configuration updates, role delegation, server shutdown/restart.
+   - **Admin:** Playlist and map management (`Play Now`, rotation reordering), permanent bans, unbans, RCON access.
+   - **Moderator:** Player kicks, temporary strikes/bans (up to 7 days), text chat muting, in-game warning broadcasts.
+   - **Viewer:** Read-only access to live telemetry, player graphs, and scoreboard facts without administrative capabilities.
+2. **Web Portal Authentication & Login:**
+   - Session-based authentication via Argon2id hashed passwords (`server.web_password` and `server.web_moderator_password`).
+   - Secure HttpOnly session cookies with automatic 12-hour expiration (or 30 minutes idle timeout) and CSRF protection.
+   - Login interface displayed directly in the embedded Web Dashboard before granting access to sensitive controls (`/api/command`, `/api/rotation/next`, moderation actions).
+3. **Audit Trail:**
+   - Append-only logging of moderation actions to `control_audit.log` (timestamp, actor, target player, action taken, and reason).
+
+---
+
+## Not planned
 - Changing the wire protocol (clients must keep joining as-is).
-- Shipping game data.
-- Map voting by players (the rotation is the operator's; players
-  vote-kick, not vote-map).
+- Shipping retail game data.

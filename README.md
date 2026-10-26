@@ -506,6 +506,7 @@ See [docs/anticheat.md](docs/anticheat.md) for the complete audit report, host p
 - [x] Lightweight JSON HTTP health status endpoint.
 - [x] Windows headless smoke verification ([docs/windows.md](docs/windows.md)).
 - [ ] Log directory redirection (`HALO_LOG_DIR` / `paths.logs`) for Unraid/Docker storage shares.
+- [ ] Role-based access control (RBAC), user authentication, and Web Dashboard login gate (Milestone 8).
 
 See [docs/roadmap.md](docs/roadmap.md) for planned milestones.
 
