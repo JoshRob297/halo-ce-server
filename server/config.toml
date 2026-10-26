@@ -120,9 +120,9 @@ count = 0
 time_notices = true
 
 # -----------------------------------------------------------------------------
-# Server Identity, Browser Presentation & Moderation Filters (v1.3.0)
+# Server Identity, Browser Presentation & Moderation Filters (v1.4.0)
 # -----------------------------------------------------------------------------
-
+[server]
 # Region label displayed in the game server browser (e.g. "eu", "na-east", "sa").
 # Max 16 characters. Shows up directly in the Ping column.
 region = "eu"
