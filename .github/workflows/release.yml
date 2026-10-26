@@ -25,9 +25,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             clang lld qemu-user-static \
-            gcc-multilib \
-            gcc-aarch64-linux-gnu libc6-dev-arm64-cross \
-            tar gzip coreutils
+            zip unzip tar gzip coreutils
 
       - name: Clone OpenCE Dedicated Server Engine
         run: |
