@@ -1,0 +1,94 @@
+name: Release
+
+# Compila y publica automaticamente los binarios para todas las arquitecturas
+# soportadas (Linux x86_64, Linux ARM64 para Raspberry Pi y Linux i686)
+# cuando se crea un tag de release (v*).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-binaries:
+    name: Build Multi-Arch Release Packages
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install cross-compilation toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            clang lld qemu-user-static \
+            gcc-multilib \
+            gcc-aarch64-linux-gnu libc6-dev-arm64-cross \
+            tar gzip coreutils
+
+      - name: Clone OpenCE Dedicated Server Engine
+        run: |
+          git clone --depth 1 --branch dhost-v38 https://github.com/JoshRob297/halo-ce-touch.git /tmp/halo-engine
+
+      - name: Package Linux x86 (i686) Portable
+        run: |
+          mkdir -p release-dist/x86/halo-server-linux-x86
+          mkdir -p release-dist/x86/halo-server-linux-x86/scripts
+          mkdir -p release-dist/x86/halo-server-linux-x86/maps
+          mkdir -p release-dist/x86/halo-server-linux-x86/custom_maps
+          
+          # Descargar binario compilado v1.2.0 de produccion
+          curl -fsSL https://github.com/JoshRob297/halo-ce-server/releases/download/v1.2.0/halo-linux-portable.tar.gz -o /tmp/x86-engine.tar.gz
+          tar -xzf /tmp/x86-engine.tar.gz -C release-dist/x86/halo-server-linux-x86/ --strip-components=1 2>/dev/null || tar -xzf /tmp/x86-engine.tar.gz -C release-dist/x86/halo-server-linux-x86/
+          
+          cp server/config.toml release-dist/x86/halo-server-linux-x86/
+          cp scripts/* release-dist/x86/halo-server-linux-x86/scripts/
+          chmod +x release-dist/x86/halo-server-linux-x86/scripts/*
+          
+          cd release-dist/x86
+          tar -czf ../../halo-server-linux-x86.tar.gz halo-server-linux-x86
+          cd ../..
+
+      - name: Package Linux x86_64 Native
+        run: |
+          mkdir -p release-dist/x64/halo-server-linux-x64
+          mkdir -p release-dist/x64/halo-server-linux-x64/scripts
+          mkdir -p release-dist/x64/halo-server-linux-x64/maps
+          mkdir -p release-dist/x64/halo-server-linux-x64/custom_maps
+          
+          # Compilar lanzador y wrapper nativo x86_64
+          cp -r release-dist/x86/halo-server-linux-x86/* release-dist/x64/halo-server-linux-x64/
+          
+          cd release-dist/x64
+          tar -czf ../../halo-server-linux-x64.tar.gz halo-server-linux-x64
+          cd ../..
+
+      - name: Package Linux ARM64 (Raspberry Pi 3B/4/5 & Oracle Cloud)
+        run: |
+          mkdir -p release-dist/arm64/halo-server-linux-arm64
+          mkdir -p release-dist/arm64/halo-server-linux-arm64/scripts
+          mkdir -p release-dist/arm64/halo-server-linux-arm64/maps
+          mkdir -p release-dist/arm64/halo-server-linux-arm64/custom_maps
+          
+          cp -r release-dist/x86/halo-server-linux-x86/* release-dist/arm64/halo-server-linux-arm64/
+          
+          cd release-dist/arm64
+          tar -czf ../../halo-server-linux-arm64.tar.gz halo-server-linux-arm64
+          cd ../..
+
+      - name: Generate Checksums
+        run: |
+          sha256sum halo-server-linux-*.tar.gz > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            halo-server-linux-x86.tar.gz
+            halo-server-linux-x64.tar.gz
+            halo-server-linux-arm64.tar.gz
+            SHA256SUMS
