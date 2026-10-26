@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JOCESLAB MX - Minimal Glassmorphism Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --card-bg: rgba(17, 24, 39, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #10b981;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 32px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: var(--success);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .kpi-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+    .panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .btn {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    .map-chip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .map-chip.active {
+      background: rgba(59, 130, 246, 0.08);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .field-group {
+      margin-bottom: 16px;
+    }
+    .field-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .field-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <div class="logo-area">
+        <div class="logo-circle">JL</div>
+        <div>
+          <div class="title">JOCESLAB MX</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Servidor Dedicado Oficial · Build 289</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="status-pill"><span class="live-dot"></span> NA-East · Activo</div>
+        <button class="btn btn-primary">Saltar Partida (1s)</button>
+        <button class="btn">Reiniciar Rotación</button>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Partida en Curso</div>
+        <div class="kpi-value" style="color: #60a5fa;">Battle Creek</div>
+        <div class="kpi-sub">Modo Gun Game · 14:05 restantes</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Jugadores Activos</div>
+        <div class="kpi-value" style="color: #34d399;">0 / 128</div>
+        <div class="kpi-sub">Capacidad masiva habilitada</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Tiempo de Lobby</div>
+        <div class="kpi-value">1 seg</div>
+        <div class="kpi-sub">Transición ultra-rápida</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Estado de Red</div>
+        <div class="kpi-value">30.0 Hz</div>
+        <div class="kpi-sub">Master Server Probe: OK</div>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Rotación de Mapas</div>
+            <button class="btn">+ Añadir Mapa</button>
+          </div>
+          <div class="map-chip active">
+            <div>
+              <strong style="color: #60a5fa;">Battle Creek</strong>
+              <span style="color: var(--text-muted); margin-left: 8px;">Gun Game</span>
+            </div>
+            <span class="status-pill" style="font-size: 11px;">Jugando</span>
+          </div>
+          <div class="map-chip">
+            <div>
+              <strong>Wizard</strong>
+              <span style="color: var(--text-muted); margin-left: 8px;">Infection</span>
+            </div>
+            <span style="color: var(--text-muted); font-size: 12px;">Siguiente</span>
+          </div>
+          <div class="map-chip">
+            <div>
+              <strong>Prisoner</strong>
+              <span style="color: var(--text-muted); margin-left: 8px;">SWAT</span>
+            </div>
+            <span style="color: var(--text-muted); font-size: 12px;">En Cola</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Jugadores Conectados</div>
+            <span style="font-size: 12px; color: var(--text-muted);">0 en línea</span>
+          </div>
+          <div style="text-align: center; color: var(--text-muted); padding: 32px 0;">
+            No hay jugadores en la partida. El servidor espera la primera conexión.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Configuración en Vivo</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Nombre en el Buscador</label>
+            <input class="field-input" value="JOCESLAB MX">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Cuenta Regresiva de Lobby (s)</label>
+            <input class="field-input" type="number" value="1">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Región Geográfica</label>
+            <input class="field-input" value="na-east">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Filtro de Palabras Ofensivas</label>
+            <select class="field-input">
+              <option>Desactivado (off)</option>
+              <option>Censurar con asteriscos (censor)</option>
+              <option>Bloquear y expulsar (block)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Discord Webhook</label>
+            <input class="field-input" placeholder="https://discord.com/api/webhooks/...">
+          </div>
+          <button class="btn btn-primary" style="width: 100%; padding: 10px;">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

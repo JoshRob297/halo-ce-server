@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JOCESLAB MX - Cyber Ops Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --panel: #111827;
+      --panel-border: #1f293d;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-red: #f43f5e;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-display: 'Chakra Petch', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-green);
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-main);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-cyan);
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .stat-box {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--panel-border);
+      padding: 12px;
+      border-radius: 4px;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .stat-val {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .table th {
+      padding: 8px 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--panel-border);
+    }
+    .table td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .btn {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--panel-border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+    .btn-action {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.15);
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+    .control-group {
+      margin-bottom: 12px;
+    }
+    .control-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .input-field {
+      width: 100%;
+      background: #080c14;
+      border: 1px solid var(--panel-border);
+      padding: 8px 10px;
+      color: var(--text-main);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div class="brand-title">JOCESLAB MX</div>
+      <div class="badge-status"><span class="dot"></span> En Vivo · NA-East</div>
+      <span style="color: var(--text-muted);">Netcode v39 (Build 289)</span>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn btn-action">Saltar Partida (1s)</button>
+      <button class="btn">Reiniciar Rotación</button>
+      <button class="btn btn-danger">Pausar Sala</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Telemetría de Servidor</span>
+          <span style="color: var(--text-muted); font-size: 11px;">Tickrate: 30.0 Hz Constante</span>
+        </div>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-label">Partida Actual</div>
+            <div class="stat-val" style="color: var(--accent-cyan);">Battle Creek</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Gun Game · Slayer</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Jugadores</div>
+            <div class="stat-val" style="color: var(--accent-green);">0 / 128</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Capacidad Masiva</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Tiempo Restante</div>
+            <div class="stat-val">14:12</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Límite 15 min</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Uptime Servidor</div>
+            <div class="stat-val">02h 45m</div>
+            <div style="font-size: 11px; color: var(--text-muted);">LXC 106 · CachyOS</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Jugadores en Línea</span>
+          <span style="color: var(--text-muted); font-size: 11px;">0 conectados</span>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Slot</th>
+              <th>Jugador</th>
+              <th>Equipo</th>
+              <th>Puntaje</th>
+              <th>Ping</th>
+              <th style="text-align: right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                No hay jugadores conectados en este momento. La partida iniciará cuando entre el primer jugador.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Lista de Rotación Activa</span>
+          <button class="btn btn-action">+ Agregar Mapa</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(6,182,212,0.05); border: 1px solid rgba(6,182,212,0.2); border-radius: 4px;">
+            <div>
+              <strong style="color: var(--accent-cyan);">1. Battle Creek</strong>
+              <span style="color: var(--text-muted); margin-left: 8px;">Gun Game (Jugando Ahora)</span>
+            </div>
+            <span class="badge-status" style="font-size: 10px;">Activa</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--panel-border); border-radius: 4px;">
+            <div>
+              <strong>2. Wizard</strong>
+              <span style="color: var(--text-muted); margin-left: 8px;">Infection</span>
+            </div>
+            <span style="color: var(--text-muted); font-size: 11px;">Siguiente</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--panel-border); border-radius: 4px;">
+            <div>
+              <strong>3. Prisoner</strong>
+              <span style="color: var(--text-muted); margin-left: 8px;">SWAT</span>
+            </div>
+            <span style="color: var(--text-muted); font-size: 11px;">En Cola</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Control de Ajustes Rápidos</span>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Nombre del Servidor</label>
+          <input class="input-field" value="JOCESLAB MX">
+        </div>
+        <div class="control-group">
+          <label class="control-label">Tiempo de Lobby (Segundos)</label>
+          <input class="input-field" type="number" value="1">
+        </div>
+        <div class="control-group">
+          <label class="control-label">Región Oficial</label>
+          <input class="input-field" value="na-east">
+        </div>
+        <div class="control-group">
+          <label class="control-label">Filtro de Moderación</label>
+          <select class="input-field">
+            <option>off (Desactivado)</option>
+            <option>censor (Asteriscos ***)</option>
+            <option>block (Bloquear y expulsar)</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Webhook Discord</label>
+          <input class="input-field" placeholder="https://discord.com/api/webhooks/...">
+        </div>
+        <button class="btn btn-action" style="width: 100%; margin-top: 10px; padding: 10px;">Guardar Ajustes en Caliente</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Master Server Status</span>
+          <span class="badge-status" style="font-size: 10px;">Aprobado</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+          <div><strong>Publisher ID:</strong> p_f2tojtcngph4pvq6</div>
+          <div><strong>Key ID:</strong> 5945e7b1398c0cbd</div>
+          <div><strong>Sonda Master:</strong> 200 OK (Probe OK)</div>
+          <div><strong>Listado:</strong> Pestaña DEDICATED activa</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
