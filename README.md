@@ -84,6 +84,8 @@ The dedicated server includes a native, zero-dependency embedded Web Dashboard l
 - [Who Can Join](#who-can-join)
 - [Troubleshooting](#troubleshooting)
 - [Roadmap & Limitations](#roadmap--limitations)
+- [Feature Comparison: Our Edition vs Upstream](#feature-comparison-our-edition-vs-upstream-branch)
+- [Credits & Attribution](#credits--attribution)
 - [En Espanol](#en-espanol)
 
 ---
@@ -431,6 +433,28 @@ mkdir -p halo-server/maps && cp /ruta/a/tus/mapas/* halo-server/maps/
 cd halo-server && curl -fsSL -O https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/docker-compose.yml
 docker compose up -d
 ```
+
+---
+
+## Feature Comparison: Our Edition vs Upstream Branch
+
+| Feature | Our Dedicated Server (`halo-ce-server`) | Upstream Experimental Branch (`dedicated-server`) |
+| :--- | :--- | :--- |
+| **Client Compatibility** | **100% Compatible (Netcode v38)**<br>All current official Android APK, PC, and Linux players join immediately. | **Incompatible today (Netcode v39)**<br>Requires unreleased client updates not yet published to public users. |
+| **Web Dashboard** | **Native Zero-Dependency Embebido (`:8080`)**<br>Interactive web admin, status facts, live player graph, and rotation editor. | Embedded in experimental branch, targeting v39. |
+| **Lobby Map Voting** | **Interactive Chat Voting (`map_voting = true`)**<br>Lobby players vote for the next match by typing `1` to `N` in chat. | Fixed rotation or manual command only. |
+| **Inactivity / AFK Kick** | **Automated AFK Protection (`afk_timeout = 180`)**<br>Monitors analog sticks, buttons, and aim vectors; sends private warning at $T-30$s. | Not implemented. |
+| **Progressive Ban Tiers** | **Automatic Strikes (`escalating_bans = true`)**<br>Tiered bans: 1h -> 24h -> 7d -> permanent with auto-expirations. | Manual duration flag per command (`sv_ban <player> 2h`). |
+| **Playlist Rotation** | **Sequential & Pseudo-Random Shuffle**<br>Avoids repeating the previous map consecutively. | Sequential playlist parser. |
+| **Operator CLI** | **`operator.sh` CLI + Web Terminal + Telnet** | Console stdin, RCON WebSocket, Web Terminal. |
+| **Public Deployment** | **Production-ready GHCR Docker Image (`139 MB`) + Releases** | Unmerged source code branch. |
+
+---
+
+## Credits & Attribution
+
+- **[OpenCE Project](https://github.com/OpenCommunityEdition/OpenCE):** The underlying decompilation, engine architecture, and multiplayer netcode are created and maintained by the OpenCE community contributors.
+- **Web Interface Architecture:** The visual dashboard layout, styles (`app.css`), and frontend client logic (`app.js`) were designed by **MrBruh / cybersecurity** in the OpenCE project. We ported and adapted the dashboard to interface directly with the Netcode v38 engine core, providing immediate availability to the community without waiting for the v39 transition.
 
 ---
 
