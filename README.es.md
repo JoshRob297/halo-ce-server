@@ -18,7 +18,7 @@
 Ejecuta un servidor multijugador o cooperativo continuo **sin monitor, sin GPU y sin tarjeta de sonido**.<br/>
 Construido sobre el puerto nativo de [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) (`dhost-v38`).
 
-[Inicio Rápido](#inicio-rápido-docker) • [Guía Completa](#guía-completa-paso-a-paso) • [Dashboard Web](#dashboard-web) • [CLI de Operador](#cli-de-operador-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Ajustes](#tabla-de-configuración) • [English Version](README.md)
+[Inicio Rápido](#inicio-rápido-docker) • [Guía Completa](#guía-completa-paso-a-paso) • [Dashboard Web](#dashboard-web) • [Registro Master Server](docs/master-registration.es.md) • [CLI de Operador](#cli-de-operador-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Ajustes](#tabla-de-configuración) • [English Version](README.md)
 
 </div>
 
@@ -517,7 +517,7 @@ Consulta [docs/roadmap.md](docs/roadmap.md) para los hitos y próximas caracter�
 | **Baneos Progresivos Escalables** | **Sistema de Strikes (`escalating_bans = true`)**<br>1h -> 24h -> 7d -> permanente con expiraciones automáticas. | **Solo Flags Manuales**<br>Requiere que el operador especifique duraciones a mano por comando. |
 | **Dashboard Web y Selectores** | **Portal Web Embebido sin Dependencias (`:8080`)**<br>Selector inteligente que agrupa Campaña Co-op vs Multijugador y bloquea modos incompatibles. | **Panel Web Embebido**<br>Selector plano sin validación de reglas por tipo de mapa. |
 | **Actualizaciones Seguras** | **Actualizador Automático (`scripts/halo-update.sh`)**<br>Verificación criptográfica SHA-256, backup previo y rollback automático ante fallos de boot. | **Sustitución manual de binarios en disco.** |
-| **Protocolo de Master y Listado** | **Publicación Instantánea sin Burocracia**<br>Descubrimiento automático en el buscador público oficial y brokers STUN sin trámites. | **Requiere Claves Ed25519 (`--keygen`, `--sign`)**<br>Requiere aprobación de un bot de Discord para aparecer en la pestaña DEDICATED. |
+| **Protocolo de Master y Listado** | **Publicación Instantánea sin Burocracia**<br>Descubrimiento automático en el buscador público oficial y brokers STUN sin trámites. | **Requiere Claves Ed25519 (`--keygen`, `--sign`)**<br>Requiere aprobación de un bot de Discord para aparecer en la pestaña DEDICATED. Ver [docs/master-registration.es.md](docs/master-registration.es.md). |
 
 ---
 

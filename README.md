@@ -18,7 +18,7 @@
 Run a continuous multiplayer or co-op host with **no screen, no GPU, and no sound card**.<br/>
 Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native port (`dhost-v38`).
 
-[Quick Start](#quick-start-docker) • [Full Guide](#the-complete-guide-step-by-step) • [Web Dashboard](#web-dashboard) • [Operator CLI](#operator-cli-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Settings](#the-settings) • [Guía en Español](README.es.md)
+[Quick Start](#quick-start-docker) • [Full Guide](#the-complete-guide-step-by-step) • [Web Dashboard](#web-dashboard) • [Master Server Registration](docs/master-registration.md) • [Operator CLI](#operator-cli-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Settings](#the-settings) • [Guía en Español](README.es.md)
 
 </div>
 
@@ -538,7 +538,7 @@ See [docs/roadmap.md](docs/roadmap.md) for planned milestones.
 | **Progressive Ban Tiers** | **Automatic Strikes (`escalating_bans = true`)**<br>Tiered bans: 1h -> 24h -> 7d -> permanent with auto-expirations. | **Manual Flags Only**<br>Requires operator to specify durations manually per command. |
 | **Web Dashboard & Selectors** | **Embedded Zero-Dependency Web Portal (`:8080`)**<br>Smart category filtering (Campaign Co-op vs Multiplayer) preventing invalid match mixes. | **Embedded Web Panel**<br>Plain selector without gametype safety grouping. |
 | **Automated Updates** | **Safe Auto-Updater (`scripts/halo-update.sh`)**<br>SHA-256 cryptographic verification, pre-update backup, and automatic boot rollback. | **Manual file replacement.** |
-| **Master Protocol & Fleets** | **Instant Zero-Friction Public Listings**<br>Automatic discovery via public STUN/signaling brokers without third-party approvals. | **Requires Ed25519 Keys (`--keygen`, `--sign`)**<br>Requires approval from a Discord bot to list under the DEDICATED tab. |
+| **Master Protocol & Fleets** | **Instant Zero-Friction Public Listings**<br>Automatic discovery via public STUN/signaling brokers without third-party approvals. | **Requires Ed25519 Keys (`--keygen`, `--sign`)**<br>Requires approval from a Discord bot to list under the DEDICATED tab. See [docs/master-registration.md](docs/master-registration.md). |
 
 ---
 
