@@ -12,7 +12,7 @@ null_renderer = true
 # despues de la ultima. Los nombres son los de las listas del juego
 # ("levels\test\wizard", y un mapa de Custom Edition como
 # "custom_maps\<nombre>")
-network_test = "host:bloodgulch:slayer,ctf;chillout:slayer,oddball;sidewinder:ctf,slayer"
+network_test = "host:beavercreek:gun_game,swat,infection,hardcore_slayer,hardcore_oddball;wizard:gun_game,swat,hardcore_king,infection;chillout:infection,swat,gun_game,hardcore_slayer,hardcore_oddball;damnation:swat,gun_game,hardcore_slayer,hardcore_king;prisoner:gun_game,swat,infection,hardcore_slayer;longest:swat,gun_game,hardcore_slayer;putput:infection,gun_game,swat;hangemhigh:swat,infection,gun_game,hardcore_slayer"
 
 # los minutos que dura cada partida de la lista, para que una partida que
 # nadie gana termine igual y la lista avance
