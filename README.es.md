@@ -96,7 +96,7 @@ Para consultar la especificación completa de la API REST, payloads JSON y confi
 - [Servidor en Windows](#servidor-en-windows)
 - [Tabla de Configuración](#tabla-de-configuración)
 - [Mapas y Modos de Juego](#mapas-y-modos-de-juego)
-- [Campañas Cooperativas (16 Jugadores)](#campañas-cooperativas-hasta-16-jugadores)
+- [Campañas Cooperativas (Hasta 128 Jugadores)](#campañas-cooperativas-hasta-128-jugadores)
 - [Bots, Mapas Custom y Mods](#bots-mapas-custom-y-mods)
 - [Quién Puede Unirse](#quién-puede-unirse)
 - [Solución de Problemas](#solución-de-problemas)
@@ -379,9 +379,9 @@ Puedes encadenar múltiples modos por mapa separados por comas:
 
 ---
 
-## Campañas Cooperativas (Hasta 16 Jugadores)
+## Campañas Cooperativas (Hasta 128 Jugadores)
 
-El servidor soporta de forma nativa la campaña completa en cooperativo online para **hasta 16 jugadores simultáneos** (el juego original de Xbox solo permitía 2 en pantalla dividida).
+El servidor soporta de forma nativa la campaña completa en cooperativo online para **hasta 128 jugadores simultáneos** (el valor por defecto del lobby es 16, ampliable por configuración hasta 128 mediante los límites del motor `HALO_PORT_MAXIMUM_NETWORK_PLAYERS`, mientras que el juego original de Xbox solo permitía 2 en pantalla dividida).
 
 ### Cómo Hostear Campaña Co-op
 En `config.toml`, define el nivel y la variante `coop` en `network_test`:
@@ -408,7 +408,7 @@ network_test = "host:a10:coop"
 | **`d40`** | `d40.map` | The Maw |
 
 ### Ajustes Especiales de Co-op en `config.toml`
-- `network.coop_enemies_mode = "per_player"`: Escala el tamaño de los escuadrones enemigos automáticamente con cada jugador adicional (hasta 8x enemigos para balancear 16 jugadores).
+- `network.coop_enemies_mode = "per_player"`: Escala el tamaño de los escuadrones enemigos automáticamente con cada jugador adicional (hasta 8x enemigos para balancear escuadras masivas).
 - `network.coop_pickups = "per_player"`: Multiplica la munición y botiquines en el mapa según el conteo de jugadores.
 - `network.coop_friendly_fire = "on"`: Fuego amigo (`"off"`, `"on"`, `"shields_only"`, `"explosives_only"`).
 - `coop_vehicles`: Los Pelicans en cinemáticas descargan automáticamente Warthogs adicionales si hay más jugadores en la escuadra.

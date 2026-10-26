@@ -90,7 +90,7 @@ For the complete REST API specification, JSON payloads, and HTTPS reverse proxy 
 - [Windows Headless](#windows-headless)
 - [The Settings](#the-settings)
 - [Maps and Game Modes](#maps-and-game-modes)
-- [Campaign Co-op (16 Players)](#campaign-co-op-up-to-16-players)
+- [Campaign Co-op (Up to 128 Players)](#campaign-co-op-up-to-128-players)
 - [Bots, Custom Maps, and Mods](#bots-custom-maps-and-mods)
 - [Who Can Join](#who-can-join)
 - [Troubleshooting](#troubleshooting)
@@ -385,9 +385,9 @@ Chain multiple modes per map entry in `config.toml` using commas:
 
 ---
 
-## Campaign Co-op (Up to 16 Players)
+## Campaign Co-op (Up to 128 Players)
 
-The server natively hosts the complete original Halo campaign online for **up to 16 players simultaneously** (original Xbox was limited to 2 split-screen).
+The server natively hosts the complete original Halo campaign online for **up to 128 players simultaneously** (default lobby limit is 16, configurable up to 128 via `HALO_PORT_MAXIMUM_NETWORK_PLAYERS`, whereas original Xbox was limited to 2 split-screen).
 
 ### How to Host Co-op Campaign
 In `config.toml`, set the campaign mission and `coop` gametype in `network_test`:
@@ -414,7 +414,7 @@ network_test = "host:a10:coop"
 | **`d40`** | `d40.map` | The Maw |
 
 ### Special Co-op Settings in `config.toml`
-- `network.coop_enemies_mode = "per_player"`: Automatically scales Covenant squad sizes based on player count (up to 8x enemies to balance 16 players).
+- `network.coop_enemies_mode = "per_player"`: Automatically scales Covenant squad sizes based on player count (up to 8x enemies to balance large lobbies).
 - `network.coop_pickups = "per_player"`: Scales weapons, health packs, and ammunition across the level.
 - `network.coop_friendly_fire = "on"`: Friendly fire rules (`"off"`, `"on"`, `"shields_only"`, `"explosives_only"`).
 - `coop_vehicles`: Cutscene Pelicans automatically drop additional Warthogs when more players are in the squad.
