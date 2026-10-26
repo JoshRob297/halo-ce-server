@@ -74,11 +74,11 @@ health_port = 0
 # "sequence" advances through the playlist entries in order, looping back.
 # "shuffle" chooses a pseudo-random map and variant across the playlist,
 # avoiding selecting the exact same map/variant twice in a row (if length > 1).
-map_rotation = "sequence"
+map_rotation = "shuffle"
 
 # Allow players to vote for the next map and gametype in the lobby by typing
 # the option number in chat. Default: false.
-map_voting = false
+map_voting = true
 
 # Number of map and gametype choices presented in lobby vote (2 to 5). Default: 3.
 map_vote_options = 3
@@ -93,6 +93,29 @@ afk_timeout = 180
 # Expirations are recorded in bans.txt and cleaned automatically.
 # Set to false to issue permanent bans immediately on every strike. Default: true.
 escalating_bans = true
+
+# Port for the embedded Web Dashboard and REST API (0 to disable). Default: 8080.
+health_port = 8080
+
+# Enable BitTorrent-style P2P map sharing to players joining without custom maps. Default: true.
+map_share = true
+
+# Maximum KB/s dedicated to map upload transfers (to protect game tick rate). Default: 1024.
+map_share_upload = 1024
+
+# Scale campaign co-op enemies based on active player count: "none", "per_player", "multiplier".
+coop_enemies_mode = "per_player"
+
+# Scale campaign co-op ammo and health pickups: "none", "per_player", "multiplier".
+coop_pickups = "per_player"
+
+# Campaign co-op friendly fire rule: "off", "on", "shields_only", "explosives_only". Default: "on".
+coop_friendly_fire = "on"
+
+
+[bots]
+# Number of AI multiplayer bots to spawn in Slayer/CTF/King matches (0 to 16). Default: 0.
+count = 0
 
 
 [display]

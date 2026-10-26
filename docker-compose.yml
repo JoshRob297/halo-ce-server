@@ -14,8 +14,8 @@ services:
     ports:
       # the game's UDP port (network.tunnel_port); change it on both sides
       - "2302:2302/udp"
-      # the HTTP health check endpoint (network.health_port); uncomment if enabled
-      # - "8080:8080/tcp"
+      # the Web Dashboard & REST API (network.health_port)
+      - "8080:8080/tcp"
     volumes:
       # your maps (from your own disc); not in the image
       - ./maps:/halo/maps:ro
