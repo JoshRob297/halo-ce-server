@@ -349,6 +349,66 @@ Puedes encadenar múltiples modos por mapa separados por comas:
 
 ---
 
+## Campañas Cooperativas (Hasta 16 Jugadores)
+
+El servidor soporta de forma nativa la campaña completa en cooperativo online para **hasta 16 jugadores simultáneos** (el juego original de Xbox solo permitía 2 en pantalla dividida).
+
+### Cómo Hostear Campaña Co-op
+En `config.toml`, define el nivel y la variante `coop` en `network_test`:
+```toml
+[debug]
+# Hostear una misión específica o rotación de campaña:
+network_test = "host:a10:coop"
+# O una rotación completa de misiones:
+# network_test = "host:a10:coop;a30:coop;b30:coop;c10:coop"
+```
+
+### Identificadores de Misiones de Campaña
+| ID Nivel | Nombre del Mapa | Nombre de la Misión |
+| :--- | :--- | :--- |
+| **`a10`** | `a10.map` | The Pillar of Autumn |
+| **`a30`** | `a30.map` | Halo |
+| **`a50`** | `a50.map` | The Truth and Reconciliation |
+| **`b30`** | `b30.map` | The Silent Cartographer |
+| **`b40`** | `b40.map` | Assault on the Control Room |
+| **`c10`** | `c10.map` | 343 Guilty Spark |
+| **`c20`** | `c20.map` | The Library |
+| **`c40`** | `c40.map` | Two Betrayals |
+| **`d20`** | `d20.map` | Keyes |
+| **`d40`** | `d40.map` | The Maw |
+
+### Ajustes Especiales de Co-op en `config.toml`
+- `network.coop_enemies_mode = "per_player"`: Escala el tamaño de los escuadrones enemigos automáticamente con cada jugador adicional (hasta 8x enemigos para balancear 16 jugadores).
+- `network.coop_pickups = "per_player"`: Multiplica la munición y botiquines en el mapa según el conteo de jugadores.
+- `network.coop_friendly_fire = "on"`: Fuego amigo (`"off"`, `"on"`, `"shields_only"`, `"explosives_only"`).
+- `coop_vehicles`: Los Pelicans en cinemáticas descargan automáticamente Warthogs adicionales si hay más jugadores en la escuadra.
+- `coop_spectate`: Si un jugador muere mientras sus compañeros continúan vivos, entra en modo espectador en tercera persona sobre sus aliados hasta que reaparece.
+
+---
+
+## Bots, Mapas Custom y Mods
+
+### Bots Multijugador Inteligentes
+El servidor incluye IA de bots multijugador nativa (`bots.c`) capaz de navegar, combatir con armas y disputar objetivos (Slayer, CTF, King of the Hill):
+- En `config.toml`: `bots.count = 4` (añade de 1 a 16 bots para rellenar partidas vacías).
+- Vía Consola RCON / Web Console: `bots.count = 8` o `bots.skill = "expert"`.
+
+### Descarga Automática P2P de Mapas Custom (`map_share`)
+OpenCE incorpora un protocolo P2P tipo BitTorrent (`map_share.c`):
+- Los mapas de Custom Edition se colocan en la carpeta `custom_maps/` (por ejemplo `custom_maps/hugeass.map`).
+- Cuando un jugador entra sin el mapa, el servidor calcula el hash SHA-256 y envía piezas (`chunks`).
+- Los demás jugadores en la partida que ya tienen el mapa actúan como semillas (`seeders`), transmitiendo piezas en paralelo.
+- El juego descarga el mapa en segundo plano mientras el servidor continúa la partida; el jugador se une en caliente al completarse la descarga.
+- Control de ancho de banda: `network.map_share_upload = 1024` (KB/s máximos dedicados a compartir mapas para proteger el tráfico de juego).
+
+### Mods de Tags (HEK e Invader)
+El motor soporta mods basados en tags en la carpeta `mods/`:
+- Estructura: `mods/<nombre_mod>/mod.toml` y subcarpeta `tags/`.
+- Permite sustituir texturas, sonidos, textos y geometrías de armas/vehículos con tags de Halo PC sin romper la compatibilidad de red con clientes vainilla.
+- Gestión de orden de carga automática con `load_order.toml`.
+
+---
+
 ## Quién Puede Unirse
 
 | Tipo de Cliente | Versión de Red | Estado |

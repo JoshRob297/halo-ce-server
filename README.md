@@ -356,6 +356,66 @@ Chain multiple modes per map entry in `config.toml` using commas:
 | **`hardcore_king`** | **OpenCE Custom** | King of the Hill with hardcore rules (no radar, no aim assist, kill regen). |
 | **`coop`** | Campaign | Campaign cooperative missions (`a10`, `b30`, etc.). |
 
+---
+
+## Campaign Co-op (Up to 16 Players)
+
+The server natively hosts the complete original Halo campaign online for **up to 16 players simultaneously** (original Xbox was limited to 2 split-screen).
+
+### How to Host Co-op Campaign
+In `config.toml`, set the campaign mission and `coop` gametype in `network_test`:
+```toml
+[debug]
+# Host a specific mission:
+network_test = "host:a10:coop"
+# Or a mission playlist sequence:
+# network_test = "host:a10:coop;a30:coop;b30:coop;c10:coop"
+```
+
+### Campaign Mission IDs
+| Level ID | Map File | Mission Name |
+| :--- | :--- | :--- |
+| **`a10`** | `a10.map` | The Pillar of Autumn |
+| **`a30`** | `a30.map` | Halo |
+| **`a50`** | `a50.map` | The Truth and Reconciliation |
+| **`b30`** | `b30.map` | The Silent Cartographer |
+| **`b40`** | `b40.map` | Assault on the Control Room |
+| **`c10`** | `c10.map` | 343 Guilty Spark |
+| **`c20`** | `c20.map` | The Library |
+| **`c40`** | `c40.map` | Two Betrayals |
+| **`d20`** | `d20.map` | Keyes |
+| **`d40`** | `d40.map` | The Maw |
+
+### Special Co-op Settings in `config.toml`
+- `network.coop_enemies_mode = "per_player"`: Automatically scales Covenant squad sizes based on player count (up to 8x enemies to balance 16 players).
+- `network.coop_pickups = "per_player"`: Scales weapons, health packs, and ammunition across the level.
+- `network.coop_friendly_fire = "on"`: Friendly fire rules (`"off"`, `"on"`, `"shields_only"`, `"explosives_only"`).
+- `coop_vehicles`: Cutscene Pelicans automatically drop additional Warthogs when more players are in the squad.
+- `coop_spectate`: Dead players enter third-person spectate camera following living teammates until respawn.
+
+---
+
+## Bots, Custom Maps, and Mods
+
+### Intelligent Multiplayer Bots
+The server includes native multiplayer bot AI (`bots.c`) that navigates maps, engages with weapons, and contests objectives (Slayer, CTF, King of the Hill):
+- In `config.toml`: `bots.count = 4` (spawns 1 to 16 AI bots to fill empty slots).
+- Via RCON / Web Console: `bots.count = 8` or `bots.skill = "expert"`.
+
+### P2P Torrent Map Sharing (`map_share`)
+OpenCE includes a native BitTorrent-style P2P protocol (`map_share.c`):
+- Place Custom Edition maps into the `custom_maps/` directory (e.g. `custom_maps/hugeass.map`).
+- When a player connects without the map, the server hashes the file (SHA-256) and distributes pieces.
+- Existing players who already have the map act as seeders, uploading pieces in parallel.
+- Map downloads happen in the background without blocking ongoing gameplay; players join hot upon completion.
+- Bandwidth throttling: `network.map_share_upload = 1024` (max KB/s dedicated to map downloads to protect tick rate).
+
+### Tag Mods (HEK and Invader)
+The engine supports tag-based mods placed in the `mods/` directory:
+- Structure: `mods/<mod_name>/mod.toml` with a `tags/` subfolder.
+- Replaces textures, audio, text strings, and weapon/vehicle geometry from Halo PC tag files without breaking network synchronization with vanilla clients.
+- Automated load order resolution with `load_order.toml`.
+
 > **Automatic Fallback:** If a gametype requires teams (e.g. CTF) and fewer than two players join, the engine automatically selects the first non-team variant to ensure the game cycle continues smoothly.
 
 ---
