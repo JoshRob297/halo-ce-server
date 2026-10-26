@@ -200,6 +200,17 @@ Verification details:
 
 ---
 
+## Milestone 7: Log directory redirection (QoL for Unraid / Docker)
+
+**Status: Planned.** Allow custom redirection of `debug.txt` and `debug.old.txt` via environment variable or config setting (e.g. `HALO_LOG_DIR` or `paths.logs`), as requested by users in Issue #1.
+
+Goals:
+1. Provide a dedicated setting in `port_config.c` (`paths.logs` / `HALO_LOG_DIR`) to point the engine's log file output to a custom directory instead of strictly `d:\` (the game data root).
+2. Allow Unraid and Docker users to map a dedicated `/logs` volume share without having to mount the entire `/halo` binary root directory.
+3. Automatically roll `debug.txt` to `debug.old.txt` in the specified folder when reaching 64 MB.
+
+---
+
 ## Not planned
 
 - An in-game admin GUI or web panel.
