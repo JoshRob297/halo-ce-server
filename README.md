@@ -84,15 +84,17 @@ The dedicated server includes a native, zero-dependency embedded Web Dashboard l
 - [The Complete Guide, Step by Step](#the-complete-guide-step-by-step)
 - [Web Dashboard](#web-dashboard)
 - [Operator CLI (operator.sh)](#operator-cli-operatorsh)
+- [Multi-Platform & Hardware](#multi-platform--supported-hardware)
 - [Windows Headless](#windows-headless)
 - [The Settings](#the-settings)
 - [Maps and Game Modes](#maps-and-game-modes)
+- [Campaign Co-op (16 Players)](#campaign-co-op-up-to-16-players)
+- [Bots, Custom Maps, and Mods](#bots-custom-maps-and-mods)
 - [Who Can Join](#who-can-join)
 - [Troubleshooting](#troubleshooting)
 - [Roadmap & Limitations](#roadmap--limitations)
 - [Feature Comparison: Our Edition vs Upstream](#feature-comparison-our-edition-vs-upstream-branch)
 - [Credits & Attribution](#credits--attribution)
-- [En Espanol](#en-espanol)
 
 ---
 
@@ -298,6 +300,19 @@ See [docs/operator.md](docs/operator.md) for the full guide, including chat sett
 
 ---
 
+## Multi-Platform & Supported Hardware
+
+The server is engineered for maximum portability across architectures, operating systems, and form factors:
+
+| Platform / Architecture | Supported Hardware | Deployment Method | Notes |
+| :--- | :--- | :--- | :--- |
+| **Linux ARM64 (`aarch64`)** | **Raspberry Pi 3B / 3B+ / 4 / 5**, Orange Pi 5, **Oracle Cloud Ampere A1**, AWS Graviton | **Docker (`linux/arm64`)** or Bare-Metal systemd | Ultra-low power (2.5W to 4W). Uses ~85 MB RAM. Full guide: [docs/raspberry-pi.md](docs/raspberry-pi.md). |
+| **Linux x86_64 (`amd64`)** | VPS (Hetzner, Linode, DigitalOcean, OVH), Proxmox VE / LXC, Bare Metal PC | **Docker (`linux/amd64`)** or Bare-Metal systemd | Default deployment for homelabs and cloud servers. |
+| **Linux x86 (`i686`)** | Legacy 32-bit hardware, older VPS | Bare-Metal ELF binary | Maximum legacy compatibility. |
+| **Windows x86_64 / x86** | Windows 10/11, Windows Server 2016-2025 | Native `.exe` or NSSM background service | Runs with dummy SDL drivers (no GPU/audio needed). Full guide: [docs/windows.md](docs/windows.md). |
+
+---
+
 ## Windows Headless
 
 The dedicated server runs natively on Windows using headless SDL dummy drivers without a display or sound card.
@@ -483,31 +498,12 @@ See [docs/roadmap.md](docs/roadmap.md) for planned milestones.
 
 ---
 
-## En Espanol
-
-Servidor dedicado para **Halo: Combat Evolved (OpenCE)** diseñado para correr de forma continua 24/7 en contenedores Docker o Linux sin entorno gráfico ni tarjeta de sonido.
-
-- **Netcode v38:** Compatible con todos los clientes oficiales de OpenCE (Windows, Linux, Android y Web).
-- **Rotación Automática:** Los mapas y modos se configuran en `config.toml` (`debug.network_test`). El servidor administra el ciclo de partidas de forma desatendida.
-- **Descubrimiento:** Aparece en el Server Browser público oficial o mediante enlaces directos `halo://join/...`.
-
-> **Importante:** Debes proveer tus propios archivos de mapas extraídos de tu copia original del juego. El proyecto no incluye ni distribuye contenido propietario.
-
-Para desplegarlo en dos pasos con Docker:
-```sh
-mkdir -p halo-server/maps && cp /ruta/a/tus/mapas/* halo-server/maps/
-cd halo-server && curl -fsSL -O https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/docker-compose.yml
-docker compose up -d
-```
-
----
-
 ## Feature Comparison: Our Edition vs Upstream Branch
 
 | Feature | Our Dedicated Server (`halo-ce-server`) | Upstream Experimental Branch (`dedicated-server`) |
 | :--- | :--- | :--- |
 | **Client Compatibility** | **100% Compatible (Netcode v38)**<br>All current official Android APK, PC, and Linux players join immediately. | **Incompatible today (Netcode v39)**<br>Requires unreleased client updates not yet published to public users. |
-| **Web Dashboard** | **Native Zero-Dependency Embebido (`:8080`)**<br>Interactive web admin, status facts, live player graph, and rotation editor. | Embedded in experimental branch, targeting v39. |
+| **Web Dashboard** | **Native Zero-Dependency Embedded (`:8080`)**<br>Interactive web admin, status facts, live player graph, and rotation editor. | Embedded in experimental branch, targeting v39. |
 | **Lobby Map Voting** | **Interactive Chat Voting (`map_voting = true`)**<br>Lobby players vote for the next match by typing `1` to `N` in chat. | Fixed rotation or manual command only. |
 | **Inactivity / AFK Kick** | **Automated AFK Protection (`afk_timeout = 180`)**<br>Monitors analog sticks, buttons, and aim vectors; sends private warning at $T-30$s. | Not implemented. |
 | **Progressive Ban Tiers** | **Automatic Strikes (`escalating_bans = true`)**<br>Tiered bans: 1h -> 24h -> 7d -> permanent with auto-expirations. | Manual duration flag per command (`sv_ban <player> 2h`). |

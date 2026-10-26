@@ -285,6 +285,19 @@ Consulta [docs/operator.md](docs/operator.md) para más detalles sobre comandos 
 
 ---
 
+## Multiplataforma y Hardware Compatible
+
+El servidor está optimizado para ejecutarse en diversas arquitecturas y factores de forma:
+
+| Plataforma / Arquitectura | Dispositivos y Hardware | Método de Despliegue | Notas |
+| :--- | :--- | :--- | :--- |
+| **Linux ARM64 (`aarch64`)** | **Raspberry Pi 3B / 3B+ / 4 / 5**, Orange Pi 5, **Oracle Cloud Ampere A1**, AWS Graviton | **Docker (`linux/arm64`)** o Bare-Metal systemd | Consumo ultra-bajo (2.5W a 4W). Usa ~85 MB de RAM. Guía completa: [docs/raspberry-pi.md](docs/raspberry-pi.md). |
+| **Linux x86_64 (`amd64`)** | Servidores VPS (Hetzner, Linode, DigitalOcean, OVH), Proxmox VE / LXC, PC Bare Metal | **Docker (`linux/amd64`)** o Bare-Metal systemd | Despliegue estándar recomendado para homelabs y la nube. |
+| **Linux x86 (`i686`)** | Hardware antiguo de 32 bits, VPS legacy | Binario ELF nativo | Máxima compatibilidad retrospectiva. |
+| **Windows x86_64 / x86** | Windows 10/11, Windows Server 2016-2025 | Ejecutable `.exe` nativo o servicio NSSM | Sin interfaz gráfica ni sonido (drivers dummy SDL). Guía completa: [docs/windows.md](docs/windows.md). |
+
+---
+
 ## Servidor en Windows
 
 El servidor corre de forma nativa en Windows usando los drivers dummy de SDL sin entorno gráfico ni sonido.
