@@ -50,11 +50,33 @@ Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native por
 
 ---
 
+## Web Dashboard
+
+The dedicated server includes a native, zero-dependency embedded Web Dashboard listening on port `:8080`, faithfully matching the official OpenCE administration interface while preserving 100% compatibility with current official client builds (Netcode v38).
+
+<p align="center">
+  <img src="docs/screenshots/dashboard_status.png" alt="Halo CE Dedicated Server Web Dashboard - Status" width="850">
+</p>
+
+### Key Dashboard Modules
+- **Status & Telemetry:** Live map, active gametype, match time, score, uptime, and real-time 10-minute player history sparkline.
+- **Rotation Manager:** Interactive playlist reordering (`Up`, `Down`, `Remove`, `Play Now`) and adding new map/rule combinations on the fly.
+- **Player Administration:** Connected player monitoring with ping, IP, team affiliation, and instant moderation actions (`Kick`, `Ban`, `Mute`).
+- **Settings & Console:** Visual configuration editor and embedded browser RCON terminal.
+
+<p align="center">
+  <img src="docs/screenshots/dashboard_rotation.png" alt="Rotation Manager" width="420">&nbsp;
+  <img src="docs/screenshots/dashboard_settings.png" alt="Settings Editor" width="420">
+</p>
+
+---
+
 ## Contents
 
 - [What You Need](#what-you-need)
 - [Quick Start (Docker)](#quick-start-docker)
 - [The Complete Guide, Step by Step](#the-complete-guide-step-by-step)
+- [Web Dashboard](#web-dashboard)
 - [Operator CLI (operator.sh)](#operator-cli-operatorsh)
 - [Windows Headless](#windows-headless)
 - [The Settings](#the-settings)
