@@ -1,4 +1,46 @@
+# Git Ignore Rules for Halo CE Server
+
+# Game map data (retail & custom files - must be user-provided)
 maps/
 custom_maps/
+maps_ce/
+maps_pc/
+
+# User data & saves
 saved/
+logs/
+debug.txt
+debug.old.txt
+lastprof.txt
+
+# Binary archives & artifacts
 *.tar.gz
+*.zip
+*.iso
+*.xiso
+
+# Compiled binaries
+halo
+halo.exe
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+
+# OS & Editor generated files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Build caches & temporary files
+build/
+dist/
+__pycache__/
+*.pyc
+/tmp/

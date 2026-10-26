@@ -70,6 +70,8 @@ The dedicated server includes a native, zero-dependency embedded Web Dashboard l
 - **Player Administration:** Connected player monitoring with ping, IP, team affiliation, and instant moderation actions (`Kick`, `Ban`, `Mute`).
 - **Settings & Console:** Visual configuration editor and embedded browser RCON terminal.
 
+For the complete REST API specification, JSON payloads, and HTTPS reverse proxy setup, see [docs/web-dashboard.md](docs/web-dashboard.md).
+
 <p align="center">
   <img src="docs/screenshots/dashboard_rotation.png" alt="Rotation Manager" width="420">&nbsp;
   <img src="docs/screenshots/dashboard_settings.png" alt="Settings Editor" width="420">

@@ -1,0 +1,52 @@
+name: Bug Report
+description: File a bug report to help improve the dedicated server
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: version
+    attributes:
+      label: Server Version / Commit SHA
+      description: What version of the dedicated server are you running? (e.g. v1.2.0, commit 4b3e01b)
+      placeholder: v1.2.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Deployment Platform
+      options:
+        - Docker (linux/amd64)
+        - Docker (linux/arm64 - Raspberry Pi)
+        - Linux Bare-Metal (systemd)
+        - Windows (Native / NSSM)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Step-by-step instructions on how to reproduce the issue.
+      placeholder: |
+        1. Set config.toml with ...
+        2. Start server
+        3. Connect with client ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Server Logs
+      description: Please paste any relevant lines from the server stdout or debug.txt.
+      render: text

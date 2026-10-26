@@ -77,6 +77,8 @@ El panel web es **completamente opcional**: si se configura `health_port = 0`, e
 - **Administración de Jugadores:** Monitoreo con ping, IP, equipo y botones de moderación instantánea (`Kick`, `Ban`, `Mute`).
 - **Ajustes y Consola Web:** Editor visual de parámetros de `config.toml` y terminal interactiva RCON en el navegador.
 
+Para consultar la especificación completa de la API REST, payloads JSON y configuración de proxy inverso HTTPS, consulta [docs/web-dashboard.es.md](docs/web-dashboard.es.md).
+
 <p align="center">
   <img src="docs/screenshots/dashboard_rotation.png" alt="Gestor de Rotación de Mapas" width="420">&nbsp;
   <img src="docs/screenshots/dashboard_settings.png" alt="Editor de Ajustes" width="420">
