@@ -4,15 +4,21 @@
 
 **Headless 24/7 dedicated server for Halo: Combat Evolved (OpenCE)**
 
+<p align="center">
+  <b>English</b> • <a href="README.es.md">Español</a>
+</p>
+
 [![Release](https://img.shields.io/github/v/release/JoshRob297/halo-ce-server?style=for-the-badge&color=blue)](https://github.com/JoshRob297/halo-ce-server/releases/latest)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#quick-start-docker)
 [![Netcode](https://img.shields.io/badge/netcode-v38-green?style=for-the-badge)](#who-can-join)
+[![Web Dashboard](https://img.shields.io/badge/web-dashboard-002244?style=for-the-badge&logo=html5&logoColor=2299ff)](#web-dashboard)
+[![Anti-Cheat](https://img.shields.io/badge/anticheat-enforced-success?style=for-the-badge)](docs/anticheat.md)
 [![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)](LICENSE)
 
 Run a continuous multiplayer or co-op host with **no screen, no GPU, and no sound card**.<br/>
 Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native port (`dhost-v38`).
 
-[Quick Start](#quick-start-docker) • [Full Guide](#the-complete-guide-step-by-step) • [Settings](#the-settings) • [Maps & Modes](#maps-and-game-modes) • [Roadmap](docs/roadmap.md) • [En Espanol](#en-espanol)
+[Quick Start](#quick-start-docker) • [Full Guide](#the-complete-guide-step-by-step) • [Web Dashboard](#web-dashboard) • [Operator CLI](#operator-cli-operatorsh) • [Settings](#the-settings) • [Guía en Español](README.es.md)
 
 </div>
 
