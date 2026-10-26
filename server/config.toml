@@ -118,3 +118,22 @@ count = 0
 # avisa a los jugadores, en la zona de chat, cuanto queda de partida y el
 # countdown del lobby
 time_notices = true
+
+# -----------------------------------------------------------------------------
+# Server Identity, Browser Presentation & Moderation Filters (v1.3.0)
+# -----------------------------------------------------------------------------
+
+# Region label displayed in the game server browser (e.g. "eu", "na-east", "sa").
+# Max 16 characters. Shows up directly in the Ping column.
+region = "eu"
+
+# Server chat & name moderation filter ("off", "censor", "block").
+# "off": no automated word moderation.
+# "censor": replaces forbidden words with asterisks (***).
+# "block": blocks transmission of forbidden lines and rejects offensive player names at connection.
+chat_filter = "off"
+
+# Severity levels for word categories ("off", "severe", "strong", "mild").
+chat_filter_slurs = "mild"
+chat_filter_swearing = "off"
+chat_filter_insults = "off"

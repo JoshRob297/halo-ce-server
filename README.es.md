@@ -342,6 +342,11 @@ Todos los parámetros se gestionan en `config.toml` o mediante variables de ento
 | `network.afk_timeout` | Integer | `180` | `HALO_NET_AFK_TIMEOUT` | Segundos de inactividad antes de auto-kick (aviso a $T-30$s, 0 = desactiva). |
 | `network.escalating_bans`| Boolean | `true` | `HALO_NET_ESCALATING_BANS` | Baneos progresivos por strikes: 1h -> 24h -> 7d -> permanente. |
 | `network.health_port` | Integer | `0` | `HALO_NET_HEALTH_PORT` | Puerto TCP para Dashboard Web y API REST (0 = desactiva). |
+| `server.region` | String | `"eu"` | `HALO_SERVER_REGION` | Etiqueta de región en el Server Browser (columna Ping: EU, NA-E, SA). |
+| `server.chat_filter` | String | `"off"` | `HALO_SERVER_CHAT_FILTER` | Modo de filtro de moderación para chat y nombres (`"off"`, `"censor"`, `"block"`). |
+| `server.chat_filter_slurs` | String | `"mild"` | `HALO_SERVER_CHAT_FILTER_SLURS` | Nivel de severidad para palabras discriminatorias (`"off"`, `"severe"`, `"strong"`, `"mild"`). |
+| `server.chat_filter_swearing` | String | `"off"` | `HALO_SERVER_CHAT_FILTER_SWEARING` | Nivel de severidad para lenguaje explícito (`"off"`, `"severe"`, `"strong"`, `"mild"`). |
+| `server.chat_filter_insults` | String | `"off"` | `HALO_SERVER_CHAT_FILTER_INSULTS` | Nivel de severidad para insultos generales (`"off"`, `"severe"`, `"strong"`, `"mild"`). |
 | `debug.null_renderer` | Boolean | `true` | `HALO_NULL_RENDERER` | Suprime renderizado de ventanas y gráficos (modo headless). |
 | `debug.network_test` | String | `""` | `HALO_NETWORK_TEST` | Lista de mapas y modos: `"host:mapa:modo;mapa:modo"`. |
 | `debug.network_test_time` | Integer | `0` | `HALO_NETWORK_TEST_TIME` | Límite máximo de partida en minutos. |

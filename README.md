@@ -351,6 +351,19 @@ All configuration is handled inside `config.toml` (or via corresponding environm
 | `network.tunnel_port` | Integer | `2302` | Inbound network port. |
 | `network.online` | Boolean | `true` | Enables WAN/Internet functionality (`false` = LAN only). |
 | `network.host_public` | Boolean | `true` | Broadcasts listing to the public server browser. |
+| `network.public_chat` | Boolean | `true` | Enables text chat on moderated public dedicated games. |
+| `network.server_password`| String | `""` | Join password with Argon2id hash (empty = open server). |
+| `network.map_rotation` | String | `"sequence"`| Playlist mode: `"sequence"` (in order) or `"shuffle"` (random without immediate repeats). |
+| `network.map_voting` | Boolean | `false` | Enables lobby map voting so players pick next map in chat. |
+| `network.map_vote_options`| Integer | `3` | Number of map/gametype candidates presented in vote (2 to 5). |
+| `network.afk_timeout` | Integer | `180` | Inactivity timeout in seconds before auto-kick (warning at T-30s, 0 = off). |
+| `network.escalating_bans`| Boolean | `true` | Progressive strike-based bans: 1h -> 24h -> 7d -> permanent. |
+| `network.health_port` | Integer | `0` | TCP port for Web Dashboard and REST API (0 = disabled). |
+| `server.region` | String | `"eu"` | Region label displayed in Server Browser (Ping column: EU, NA-E, SA). |
+| `server.chat_filter` | String | `"off"` | Chat and player name moderation filter mode (`"off"`, `"censor"`, `"block"`). |
+| `server.chat_filter_slurs` | String | `"mild"` | Severity filter level for slurs (`"off"`, `"severe"`, `"strong"`, `"mild"`). |
+| `server.chat_filter_swearing` | String | `"off"` | Severity filter level for swearing and explicit language (`"off"`, `"severe"`, `"strong"`, `"mild"`). |
+| `server.chat_filter_insults` | String | `"off"` | Severity filter level for general insults (`"off"`, `"severe"`, `"strong"`, `"mild"`). |
 | `display.time_notices` | Boolean | `true` | Broadcasts match time milestones via chat. |
 
 ---
