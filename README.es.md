@@ -288,6 +288,16 @@ docker exec halo-server /halo/operator.sh raw "help kick"
 /opt/halo-server/operator.sh kick "NombreJugador"
 ```
 
+### Actualizaciones Seguras y Automáticas (`halo-update.sh`)
+Actualiza el servidor y el Netcode con verificación SHA-256 oficial y rollback automático:
+```bash
+# Comprobar si hay una nueva versión disponible
+sudo /opt/halo-server/scripts/halo-update.sh /opt/halo-server --check
+
+# Aplicar actualización con verificación criptográfica, backup y smoke-test
+sudo /opt/halo-server/scripts/halo-update.sh /opt/halo-server
+```
+
 Consulta [docs/operator.md](docs/operator.md) para más detalles sobre comandos de moderación y formatos de archivo.
 
 ---

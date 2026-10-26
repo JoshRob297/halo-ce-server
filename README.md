@@ -298,6 +298,16 @@ docker exec halo-server /halo/operator.sh raw "help kick"
 /opt/halo-server/operator.sh kick "PlayerName"
 ```
 
+### Safe Automated Updates (`halo-update.sh`)
+Update to the latest release and Netcode version safely with SHA-256 verification and automatic rollback:
+```bash
+# Check if a new release is available
+sudo /opt/halo-server/scripts/halo-update.sh /opt/halo-server --check
+
+# Apply update with SHA-256 integrity check, backup, and smoke test
+sudo /opt/halo-server/scripts/halo-update.sh /opt/halo-server
+```
+
 See [docs/operator.md](docs/operator.md) for the full guide, including chat settings, progressive ban tiers, lobby map voting, and the HTTP health endpoint.
 
 ---
