@@ -50,7 +50,7 @@ COPY scripts /halo/scripts
 
 # the data root: maps/ beside the executable; saved games under the home
 VOLUME ["/halo/maps", "/halo/custom_maps", "/root/.local/share/halo-linux"]
-EXPOSE 2302/udp
+EXPOSE 2302/udp 8080/tcp
 
 # no display and no sound card: SDL's dummy drivers (the game still opens
 # SDL's video and audio, as any host would)

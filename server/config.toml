@@ -66,10 +66,6 @@ public_chat = false
 # provide the password to join.
 server_password = ""
 
-# TCP port for the HTTP health check endpoint (GET /health).
-# 0 turns it off (default). Bind to 0.0.0.0 so containers can publish it.
-health_port = 0
-
 # Map rotation mode: "sequence" (default) or "shuffle".
 # "sequence" advances through the playlist entries in order, looping back.
 # "shuffle" chooses a pseudo-random map and variant across the playlist,
