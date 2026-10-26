@@ -10,7 +10,7 @@
 
 [![Release](https://img.shields.io/github/v/release/JoshRob297/halo-ce-server?style=for-the-badge&color=blue)](https://github.com/JoshRob297/halo-ce-server/releases/latest)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#inicio-rápido-docker)
-[![Netcode](https://img.shields.io/badge/netcode-v38-green?style=for-the-badge)](#quién-puede-unirse)
+[![Netcode](https://img.shields.io/badge/netcode-v39-green?style=for-the-badge)](#quién-puede-unirse)
 [![Web Dashboard](https://img.shields.io/badge/web-dashboard-002244?style=for-the-badge&logo=html5&logoColor=2299ff)](#dashboard-web)
 [![Anti-Cheat](https://img.shields.io/badge/anticheat-enforced-success?style=for-the-badge)](docs/anticheat.md)
 [![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)](LICENSE)
@@ -63,7 +63,7 @@ Construido sobre el puerto nativo de [OpenCE](https://github.com/OpenCommunityEd
 
 ## Dashboard Web
 
-El servidor incluye un Dashboard Web nativo embebido en C que escucha en el puerto `:8080`, replicando fielmente la interfaz de administración oficial de OpenCE y manteniendo 100% de compatibilidad con los clientes oficiales actuales (Netcode v38).
+El servidor incluye un Dashboard Web nativo embebido en C que escucha en el puerto `:8080`, replicando fielmente la interfaz de administración oficial de OpenCE y manteniendo 100% de compatibilidad con los clientes oficiales actuales (Netcode v39).
 
 El panel web es **completamente opcional**: si se configura `health_port = 0`, el servidor no abre ningún socket HTTP y corre en modo headless puro.
 
@@ -519,7 +519,7 @@ Consulta [docs/roadmap.md](docs/roadmap.md) para los hitos y próximas caracter�
 ## Créditos y Atribución
 
 - **[Proyecto OpenCE](https://github.com/OpenCommunityEdition/OpenCE):** La descompilación base, la arquitectura del motor y el netcode multijugador son obra y mantenimiento de los contribuidores de la comunidad OpenCE.
-- **Arquitectura de Interfaz Web:** El diseño visual del dashboard, los estilos (`app.css`) y la lógica cliente del frontend (`app.js`) fueron creados por **MrBruh / cybersecurity** en el proyecto OpenCE. Nosotros adaptamos el dashboard para interactuar directamente con el núcleo del motor en Netcode v38, brindando disponibilidad inmediata a la comunidad sin forzar la transición a v39.
+- **Arquitectura de Interfaz Web:** El diseño visual del dashboard, los estilos (`app.css`) y la lógica cliente del frontend (`app.js`) fueron creados por **MrBruh / cybersecurity** en el proyecto OpenCE. Nosotros adaptamos el dashboard para interactuar directamente con el núcleo del motor en Netcode v39, brindando disponibilidad inmediata a la comunidad sin forzar la transición a v39.
 
 ---
 

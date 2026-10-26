@@ -10,7 +10,7 @@
 
 [![Release](https://img.shields.io/github/v/release/JoshRob297/halo-ce-server?style=for-the-badge&color=blue)](https://github.com/JoshRob297/halo-ce-server/releases/latest)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#quick-start-docker)
-[![Netcode](https://img.shields.io/badge/netcode-v38-green?style=for-the-badge)](#who-can-join)
+[![Netcode](https://img.shields.io/badge/netcode-v39-green?style=for-the-badge)](#who-can-join)
 [![Web Dashboard](https://img.shields.io/badge/web-dashboard-002244?style=for-the-badge&logo=html5&logoColor=2299ff)](#web-dashboard)
 [![Anti-Cheat](https://img.shields.io/badge/anticheat-enforced-success?style=for-the-badge)](docs/anticheat.md)
 [![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)](LICENSE)
@@ -26,7 +26,7 @@ Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native por
 
 ### Highlights
 
-- **Native OpenCE Netcode (v38):** Official OpenCE clients (Windows, Linux, Android, Web) connect directly without modifications.
+- **Native OpenCE Netcode (v39):** Official OpenCE clients (Windows, Linux, Android, Web) connect directly without modifications.
 - **Automated Map Rotation:** Define map and gametype sequences directly in `config.toml`; the server rotates and resets the lobby automatically.
 - **Server Browser Discovery:** Fully discoverable in the in-game public browser or shareable via direct invite links (`halo://join/...`).
 - **Low Footprint:** Runs with a null renderer and SDL dummy drivers. Lightweight enough for a basic VPS, NUC, or mini-PC.
@@ -58,7 +58,7 @@ Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native por
 
 ## Web Dashboard
 
-The dedicated server includes a native, zero-dependency embedded Web Dashboard listening on port `:8080`, faithfully matching the official OpenCE administration interface while preserving 100% compatibility with current official client builds (Netcode v38).
+The dedicated server includes a native, zero-dependency embedded Web Dashboard listening on port `:8080`, faithfully matching the official OpenCE administration interface while preserving 100% compatibility with current official client builds (Netcode v39).
 
 <p align="center">
   <img src="docs/screenshots/dashboard_status.png" alt="Halo CE Dedicated Server Web Dashboard - Status" width="850">
@@ -456,7 +456,7 @@ The engine supports tag-based mods placed in the `mods/` directory:
 | **OpenCE WebAssembly Browser** | v38 | Supported directly |
 | **Legacy OpenCE Clients** | ≤ v37 | Upgrade client required |
 
-The netcode strictly requires version alignment on the client side. Current official master releases operate on network version 38.
+The netcode strictly requires version alignment on the client side. Current official master releases operate on network version 39.
 
 ---
 
@@ -532,7 +532,7 @@ See [docs/roadmap.md](docs/roadmap.md) for planned milestones.
 ## Credits & Attribution
 
 - **[OpenCE Project](https://github.com/OpenCommunityEdition/OpenCE):** The underlying decompilation, engine architecture, and multiplayer netcode are created and maintained by the OpenCE community contributors.
-- **Web Interface Architecture:** The visual dashboard layout, styles (`app.css`), and frontend client logic (`app.js`) were designed by **MrBruh / cybersecurity** in the OpenCE project. We ported and adapted the dashboard to interface directly with the Netcode v38 engine core, providing immediate availability to the community without waiting for the v39 transition.
+- **Web Interface Architecture:** The visual dashboard layout, styles (`app.css`), and frontend client logic (`app.js`) were designed by **MrBruh / cybersecurity** in the OpenCE project. We ported and adapted the dashboard to interface directly with the Netcode v39 engine core, providing immediate availability to the community without waiting for the v39 transition.
 
 ---
 

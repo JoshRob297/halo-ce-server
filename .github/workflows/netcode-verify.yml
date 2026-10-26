@@ -1,7 +1,7 @@
 name: Netcode Version & Smoke Test
 
 # Verifica diariamente y en cada commit que el servidor mantenga estricta
-# paridad con la versión oficial del Netcode de OpenCE upstream (v38)
+# paridad con la versión oficial del Netcode de OpenCE upstream (v39)
 # y que el smoke test de red y emulación ARM64 funcione sin regresiones.
 
 on:
@@ -31,7 +31,7 @@ on:
 
 jobs:
   verify-netcode:
-    name: Verify Netcode Parity (v38)
+    name: Verify Netcode Parity (v39)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -42,7 +42,7 @@ jobs:
           UPSTREAM_VERSION=$(curl -fsSL https://raw.githubusercontent.com/OpenCommunityEdition/OpenCE/main/port/linux/include/halo_port_limits.h | grep -E '^#define[[:space:]]+HALO_PORT_NETWORK_VERSION[[:space:]]+' | awk '{print $3}')
           echo "Upstream OpenCE HALO_PORT_NETWORK_VERSION: $UPSTREAM_VERSION"
           
-          EXPECTED_VERSION="38"
+          EXPECTED_VERSION="39"
           if [ "$UPSTREAM_VERSION" != "$EXPECTED_VERSION" ]; then
             echo "ALERTA: Upstream OpenCE ha cambiado la version de red a $UPSTREAM_VERSION (esperada: $EXPECTED_VERSION)."
             echo "Se requiere evaluar migracion o compatibilidad."
@@ -73,7 +73,7 @@ jobs:
               sin.sin_addr.s_addr = INADDR_ANY;
               if (bind(udp_fd, (struct sockaddr *)&sin, sizeof(sin)) != 0) return 2;
               close(udp_fd);
-              printf("AArch64 Netcode v38 smoke test passed.\n");
+              printf("AArch64 Netcode v39 smoke test passed.\n");
               return 0;
           }
           EOF
