@@ -16,7 +16,7 @@
 [![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)](LICENSE)
 
 Ejecuta un servidor multijugador o cooperativo continuo **sin monitor, sin GPU y sin tarjeta de sonido**.<br/>
-Construido sobre el puerto nativo de [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) (`dhost-v38`).
+Construido sobre el puerto nativo de [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) (`dhost-v39`).
 
 [Inicio Rápido](#inicio-rápido-docker) • [Guía Completa](#guía-completa-paso-a-paso) • [Dashboard Web](#dashboard-web) • [Registro Master Server](docs/master-registration.es.md) • [CLI de Operador](#cli-de-operador-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Ajustes](#tabla-de-configuración) • [English Version](README.md)
 
@@ -26,7 +26,7 @@ Construido sobre el puerto nativo de [OpenCE](https://github.com/OpenCommunityEd
 
 ### Características Principales
 
-- **Netcode Nativo OpenCE (v38):** Compatible directamente con todos los clientes oficiales de OpenCE (Windows, Linux, Android y Web) sin requerir modificaciones.
+- **Netcode Nativo OpenCE (v39 con fallback a v38):** Compatible directamente con todos los clientes oficiales de OpenCE (Windows, Linux, Android y Web) sin requerir modificaciones.
 - **Dashboard Web Embebido (Opcional en `:8080`):** Interfaz gráfica de administración web integrada en el binario sin dependencias externas (HTML, CSS y JS puro).
 - **Rotación y Votación en Lobby:** Soporta rotación secuencial o aleatoria (`shuffle`), y permite a los jugadores del lobby votar por la siguiente partida escribiendo `1` a `N` en el chat.
 - **Anti-Inactividad (AFK Auto-Kick):** Detecta inactividad de sticks, botones y mira, enviando advertencia privada a $T-30$s y desconectando automáticamente al jugador inactivo.
@@ -448,9 +448,9 @@ El motor soporta mods basados en tags en la carpeta `mods/`:
 
 | Tipo de Cliente | Versión de Red | Estado |
 | :--- | :--- | :--- |
-| **OpenCE Oficial (Desktop / PC)** | v38 | Compatible directamente |
-| **OpenCE Android APK** | v38 | Compatible directamente |
-| **OpenCE WebAssembly (Navegador)** | v38 | Compatible directamente |
+| **OpenCE Oficial (Desktop / PC)** | v38 / v39 | Compatible directamente |
+| **OpenCE Android APK** | v38 / v39 | Compatible directamente |
+| **OpenCE WebAssembly (Navegador)** | v38 / v39 | Compatible directamente |
 | **Clientes Anteriores (v37 o menor)** | ≤ v37 | Requiere actualizar cliente |
 
 ---

@@ -16,7 +16,7 @@
 [![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)](LICENSE)
 
 Run a continuous multiplayer or co-op host with **no screen, no GPU, and no sound card**.<br/>
-Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native port (`dhost-v38`).
+Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native port (`dhost-v39`).
 
 [Quick Start](#quick-start-docker) • [Full Guide](#the-complete-guide-step-by-step) • [Web Dashboard](#web-dashboard) • [Master Server Registration](docs/master-registration.md) • [Operator CLI](#operator-cli-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Settings](#the-settings) • [Guía en Español](README.es.md)
 
@@ -464,9 +464,9 @@ The engine supports tag-based mods placed in the `mods/` directory:
 
 | Client Type | Version | Status |
 | :--- | :--- | :--- |
-| **OpenCE Official (Desktop)** | v38 | Supported directly |
-| **OpenCE Android APK** | v38 | Supported directly |
-| **OpenCE WebAssembly Browser** | v38 | Supported directly |
+| **OpenCE Official (Desktop)** | v38 / v39 | Supported directly |
+| **OpenCE Android APK** | v38 / v39 | Supported directly |
+| **OpenCE WebAssembly Browser** | v38 / v39 | Supported directly |
 | **Legacy OpenCE Clients** | ≤ v37 | Upgrade client required |
 
 The netcode strictly requires version alignment on the client side. Current official master releases operate on network version 39.
