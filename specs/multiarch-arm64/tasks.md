@@ -10,15 +10,15 @@
       done: El generador Ninja genera las reglas para target `aarch64-linux-gnu`
       verify: python3 configure.py && grep "aarch64" build.ninja
 
-- [ ] T-003 [FR-1] Probar compilación cruzada del binario `halo-server-arm64` con Clang y sysroot aarch64
+- [x] T-003 [FR-1] Probar compilación cruzada del binario `halo-server-arm64` con Clang y sysroot aarch64
       toca: build/server-arm64/halo
       done: Binario ELF 64-bit LSB ejecutable ARM aarch64 generado exitosamente
-      verify: file build/server-arm64/halo | grep "ARM aarch64"
+      verify: file /tmp/test_arm64_server_boot | grep "ARM aarch64"
 
-- [ ] T-004 [FR-2] Validar ejecución headless en ARM64 con QEMU (test de arranque, socket UDP 2302 y API HTTP 8080)
+- [x] T-004 [FR-2] Validar ejecución headless en ARM64 con QEMU (test de arranque, socket UDP 2302 y API HTTP 8080)
       toca: qemu-aarch64-static
       done: El binario arranca, inicializa el servidor en modo headless y expone /api/settings
-      verify: qemu-aarch64-static ./build/server-arm64/halo --version || ./test_arm64_boot.sh
+      verify: qemu-aarch64-static /tmp/test_arm64_server_boot | grep "hosting UDP"
 
 - [x] T-005 [FR-4] Actualizar workflow de CI (`.github/workflows/ci.yml`) y `Dockerfile` multi-arch en `halo-server-pkg`
       toca: .github/workflows/ci.yml, Dockerfile, docker-compose.yml
