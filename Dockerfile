@@ -8,7 +8,7 @@
 ARG OPENCE_REPO=https://github.com/JoshRob297/halo-ce-touch.git
 ARG OPENCE_REF=dhost-v38
 
-FROM archlinux:base AS build
+FROM --platform=$BUILDPLATFORM archlinux:base AS build
 
 ARG OPENCE_REPO
 ARG OPENCE_REF
@@ -24,12 +24,22 @@ RUN git clone --depth 1 --branch "$OPENCE_REF" "$OPENCE_REPO" . \
 
 FROM debian:bookworm-slim
 
-# the 32-bit game needs the i386 loader and libc (bookworm's glibc 2.36 is
-# newer than the portable build's 2.31 floor)
-RUN dpkg --add-architecture i386 \
- && apt-get update \
- && apt-get install -y --no-install-recommends libc6:i386 libgcc-s1:i386 ca-certificates netcat-openbsd \
- && rm -rf /var/lib/apt/lists/*
+ARG TARGETARCH
+
+# Configurar soporte segun arquitectura:
+# En amd64: arquitectura i386 nativa
+# En arm64: compatibilidad armhf / box86
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        dpkg --add-architecture i386 \
+        && apt-get update \
+        && apt-get install -y --no-install-recommends libc6:i386 libgcc-s1:i386 ca-certificates netcat-openbsd \
+        && rm -rf /var/lib/apt/lists/*; \
+    else \
+        dpkg --add-architecture armhf \
+        && apt-get update \
+        && apt-get install -y --no-install-recommends libc6:armhf libgcc-s1:armhf ca-certificates netcat-openbsd \
+        && rm -rf /var/lib/apt/lists/*; \
+    fi
 
 WORKDIR /halo
 COPY --from=build /src/dist/halo-linux-release/halo /halo/halo
