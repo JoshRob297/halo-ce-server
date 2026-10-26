@@ -79,9 +79,21 @@ jobs:
           tar -czf ../../halo-server-linux-arm64.tar.gz halo-server-linux-arm64
           cd ../..
 
+      - name: Package Windows x86/x64 Standalone
+        run: |
+          mkdir -p release-dist/windows/halo-server-windows/scripts
+          curl -fsSL https://github.com/JoshRob297/halo-ce-server/releases/download/v1.2.0/halo-server-windows.zip -o /tmp/win-base.zip
+          unzip -q -o /tmp/win-base.zip -d release-dist/windows/
+          cp server/config.toml release-dist/windows/halo-server-windows/
+          cp scripts/* release-dist/windows/halo-server-windows/scripts/
+          
+          cd release-dist/windows
+          zip -r ../../halo-server-windows.zip halo-server-windows
+          cd ../..
+
       - name: Generate Checksums
         run: |
-          sha256sum halo-server-linux-*.tar.gz > SHA256SUMS
+          sha256sum halo-server-linux-*.tar.gz halo-server-windows.zip > SHA256SUMS
           cat SHA256SUMS
 
       - name: Upload Release Assets
@@ -91,4 +103,5 @@ jobs:
             halo-server-linux-x86.tar.gz
             halo-server-linux-x64.tar.gz
             halo-server-linux-arm64.tar.gz
+            halo-server-windows.zip
             SHA256SUMS
