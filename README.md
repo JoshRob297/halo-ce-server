@@ -18,7 +18,7 @@
 Run a continuous multiplayer or co-op host with **no screen, no GPU, and no sound card**.<br/>
 Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native port (`dhost-v38`).
 
-[Quick Start](#quick-start-docker) • [Full Guide](#the-complete-guide-step-by-step) • [Web Dashboard](#web-dashboard) • [Operator CLI](#operator-cli-operatorsh) • [Settings](#the-settings) • [Guía en Español](README.es.md)
+[Quick Start](#quick-start-docker) • [Full Guide](#the-complete-guide-step-by-step) • [Web Dashboard](#web-dashboard) • [Operator CLI](#operator-cli-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Settings](#the-settings) • [Guía en Español](README.es.md)
 
 </div>
 

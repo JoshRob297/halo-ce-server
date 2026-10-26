@@ -18,7 +18,7 @@
 Ejecuta un servidor multijugador o cooperativo continuo **sin monitor, sin GPU y sin tarjeta de sonido**.<br/>
 Construido sobre el puerto nativo de [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) (`dhost-v38`).
 
-[Inicio Rápido](#inicio-rápido-docker) • [Guía Completa](#guía-completa-paso-a-paso) • [Dashboard Web](#dashboard-web) • [CLI de Operador](#cli-de-operador-operatorsh) • [Ajustes](#tabla-de-configuración) • [English Version](README.md)
+[Inicio Rápido](#inicio-rápido-docker) • [Guía Completa](#guía-completa-paso-a-paso) • [Dashboard Web](#dashboard-web) • [CLI de Operador](#cli-de-operador-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Ajustes](#tabla-de-configuración) • [English Version](README.md)
 
 </div>
 
