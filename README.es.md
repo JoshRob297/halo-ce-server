@@ -90,11 +90,16 @@ El panel web es **completamente opcional**: si se configura `health_port = 0`, e
 - [Inicio Rápido (Docker)](#inicio-rápido-docker)
 - [Guía Completa Paso a Paso](#guía-completa-paso-a-paso)
 - [CLI de Operador (operator.sh)](#cli-de-operador-operatorsh)
+- [Multiplataforma y Hardware Compatible](#multiplataforma-y-hardware-compatible)
 - [Servidor en Windows](#servidor-en-windows)
 - [Tabla de Configuración](#tabla-de-configuración)
 - [Mapas y Modos de Juego](#mapas-y-modos-de-juego)
+- [Campañas Cooperativas (16 Jugadores)](#campañas-cooperativas-hasta-16-jugadores)
+- [Bots, Mapas Custom y Mods](#bots-mapas-custom-y-mods)
 - [Quién Puede Unirse](#quién-puede-unirse)
 - [Solución de Problemas](#solución-de-problemas)
+- [Seguridad y Anti-Cheat](#seguridad-y-anti-cheat)
+- [Hoja de Ruta y Estado](#hoja-de-ruta-y-estado-del-proyecto)
 - [Comparativa: Nuestra Versión vs Upstream](#comparativa-nuestra-versión-vs-upstream)
 - [Créditos y Atribución](#créditos-y-atribución)
 
@@ -449,6 +454,34 @@ export SDL_AUDIODRIVER=dummy
 ### `No es posible unirse a la partida` desde el Teléfono
 1. **En Wi-Fi Local (NAT Loopback):** Si intentas unirte desde el Server Browser estando conectado al Wi-Fi de tu casa, routers residenciales que no soportan NAT Hairpinning descartan los paquetes dirigidos a su propia IP pública. Conéctate vía **System Link (LAN)** o usa datos móviles (4G/5G).
 2. **Partida en Pregame sin Jugadores:** Asegúrate de tener `network_test_player = true` en `config.toml` para que la partida inicie automáticamente y acepte uniones en caliente.
+
+---
+
+## Seguridad y Anti-Cheat
+
+El servidor ejerce autoridad estricta como anfitrión de la partida (Host Authority):
+- Autoridad exclusiva del servidor sobre inventario, munición de armas, granadas y marcadores.
+- Validación exhaustiva de reportes de daño: posesión previa del arma disparada, cadencia máxima por ráfaga, esferas de colisión históricas de la víctima y trazado de rayos para verificar línea de visión directa (Line-of-Sight).
+- Detección automática de aceleración de reloj (Speed Hacks) con rechazo inmediato de predicción y baneo automático verificado.
+
+Consulta [docs/anticheat.md](docs/anticheat.md) para el informe completo de auditoría, la matriz de protecciones del host y la guía de administración de sanciones.
+
+---
+
+## Hoja de Ruta y Estado del Proyecto
+
+- [x] Despliegue completo headless en contenedores Docker y systemd.
+- [x] Rotación automatizada de secuencias de mapas y modos de juego.
+- [x] Publicación automática en el Server Browser público y generación de tokens de invitación.
+- [x] Consola interactiva de operador (`operator.sh` / Telnet loopback).
+- [x] Conmutador de chat público (`network.public_chat`).
+- [x] Filtro de acceso / contraseña de servidor con hash Argon2id (`network.server_password`).
+- [x] Auditoría completa de seguridad y anti-cheat documentada ([docs/anticheat.md](docs/anticheat.md)).
+- [x] Web Dashboard nativo de telemetría y API REST en tiempo real (`:8080`).
+- [x] Soporte nativo para Windows headless ([docs/windows.md](docs/windows.md)).
+- [x] Soporte multiplataforma ARM64 para Raspberry Pi 3B/4/5 y Oracle Cloud ([docs/raspberry-pi.md](docs/raspberry-pi.md)).
+
+Consulta [docs/roadmap.md](docs/roadmap.md) para los hitos y próximas características planeadas.
 
 ---
 
