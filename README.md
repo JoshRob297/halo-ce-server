@@ -512,18 +512,20 @@ See [docs/roadmap.md](docs/roadmap.md) for planned milestones.
 
 ---
 
-## Feature Comparison: Our Edition vs Upstream Branch
+## Feature Comparison: Our Edition vs Upstream Official (`halo --server`)
 
-| Feature | Our Dedicated Server (`halo-ce-server`) | Upstream Experimental Branch (`dedicated-server`) |
+| Feature | Our Dedicated Server (`halo-ce-server`) | Upstream Official OpenCE (`build-289`) |
 | :--- | :--- | :--- |
-| **Client Compatibility** | **100% Compatible (Netcode v38)**<br>All current official Android APK, PC, and Linux players join immediately. | **Incompatible today (Netcode v39)**<br>Requires unreleased client updates not yet published to public users. |
-| **Web Dashboard** | **Native Zero-Dependency Embedded (`:8080`)**<br>Interactive web admin, status facts, live player graph, and rotation editor. | Embedded in experimental branch, targeting v39. |
-| **Lobby Map Voting** | **Interactive Chat Voting (`map_voting = true`)**<br>Lobby players vote for the next match by typing `1` to `N` in chat. | Fixed rotation or manual command only. |
-| **Inactivity / AFK Kick** | **Automated AFK Protection (`afk_timeout = 180`)**<br>Monitors analog sticks, buttons, and aim vectors; sends private warning at $T-30$s. | Not implemented. |
-| **Progressive Ban Tiers** | **Automatic Strikes (`escalating_bans = true`)**<br>Tiered bans: 1h -> 24h -> 7d -> permanent with auto-expirations. | Manual duration flag per command (`sv_ban <player> 2h`). |
-| **Playlist Rotation** | **Sequential & Pseudo-Random Shuffle**<br>Avoids repeating the previous map consecutively. | Sequential playlist parser. |
-| **Operator CLI** | **`operator.sh` CLI + Web Terminal + Telnet** | Console stdin, RCON WebSocket, Web Terminal. |
-| **Public Deployment** | **Production-ready GHCR Docker Image (`139 MB`) + Releases** | Unmerged source code branch. |
+| **Architecture & Hardware** | **Linux ARM64 (Raspberry Pi 3B/4/5 & Oracle Cloud), x86_64, i686 & Windows**<br>Native prebuilt packages and multi-arch Docker image (`linux/arm64`, `linux/amd64`). Runs at ~85 MB RAM / 3W. | **x86_64 / i686 only**<br>No precompiled ARM64 packages for low-power SBCs (Raspberry Pi). |
+| **Observability & Metrics** | **Native Prometheus / Grafana Exporter (`/metrics`)**<br>Real-time player counts, capacity, 30.0 Hz tickrate monitoring, and match timers. | **None**<br>No metrics endpoint available for enterprise homelab monitoring. |
+| **Discord & Telegram Integration** | **Direct Community Webhooks (`server_webhooks.c`)**<br>Async notifications for Match Start, Carnage Reports, and disciplinary bans. No desktop app needed. | **Local Desktop IPC Only (`p2p_discord.c`)**<br>Only works with Discord running on a local desktop display; no-op on headless VPS/Docker. |
+| **Log Storage & Redirection** | **Custom Log Path (`HALO_LOG_DIR` / `paths.logs`)**<br>Isolates `debug.txt` and `debug.old.txt` into custom mounted shares for Unraid and Docker. | **Hardcoded to Data Root (`d:\`)**<br>Must expose the main binary/maps directory to view logs. |
+| **Lobby Map Voting** | **Interactive Chat Voting (`map_voting = true`)**<br>Lobby players vote for the next match by typing `1` to `N` in chat. | **None**<br>Fixed playlist order or manual console intervention only. |
+| **Inactivity / AFK Protection** | **Automated AFK Kick (`afk_timeout = 180`)**<br>Monitors analog sticks, buttons, and aim vectors; sends private warning at $T-30$s. | **Socket Timeout Only**<br>Does not detect idle/afk players holding down connections. |
+| **Progressive Ban Tiers** | **Automatic Strikes (`escalating_bans = true`)**<br>Tiered bans: 1h -> 24h -> 7d -> permanent with auto-expirations. | **Manual Flags Only**<br>Requires operator to specify durations manually per command. |
+| **Web Dashboard & Selectors** | **Embedded Zero-Dependency Web Portal (`:8080`)**<br>Smart category filtering (Campaign Co-op vs Multiplayer) preventing invalid match mixes. | **Embedded Web Panel**<br>Plain selector without gametype safety grouping. |
+| **Automated Updates** | **Safe Auto-Updater (`scripts/halo-update.sh`)**<br>SHA-256 cryptographic verification, pre-update backup, and automatic boot rollback. | **Manual file replacement.** |
+| **Master Protocol & Fleets** | **Instant Zero-Friction Public Listings**<br>Automatic discovery via public STUN/signaling brokers without third-party approvals. | **Requires Ed25519 Keys (`--keygen`, `--sign`)**<br>Requires approval from a Discord bot to list under the DEDICATED tab. |
 
 ---
 

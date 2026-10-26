@@ -499,18 +499,20 @@ Consulta [docs/roadmap.md](docs/roadmap.md) para los hitos y próximas caracter�
 
 ---
 
-## Comparativa: Nuestra Versión vs Upstream
+## Comparativa: Nuestra Versión vs Versión Oficial Upstream (`halo --server`)
 
-| Característica | Nuestra Versión (`halo-ce-server`) | Rama Experimental Upstream (`dedicated-server`) |
+| Característica | Nuestra Versión (`halo-ce-server`) | Versión Oficial Upstream OpenCE (`build-289`) |
 | :--- | :--- | :--- |
-| **Compatibilidad con Clientes** | **100% Compatible (Netcode v38)**<br>Todos los jugadores actuales de Android APK, PC y Linux pueden entrar ya. | **Incompatible hoy (Netcode v39)**<br>Requiere actualizaciones de cliente no lanzadas al público. |
-| **Dashboard Web** | **Embebido Nativo sin Dependencias (`:8080`)**<br>Admin web interactivo, telemetría en vivo, gráfica histórica y editor de rotación. | Embebido en rama experimental apuntando a v39. |
-| **Votación de Mapas en Lobby** | **Votación Interactiva por Chat (`map_voting = true`)**<br>Los jugadores eligen la siguiente partida escribiendo `1` a `N` en el chat. | Solo rotación fija o cambio manual por comando. |
-| **Auto-Kick por Inactividad (AFK)** | **Protección Automatizada (`afk_timeout = 180`)**<br>Monitorea sticks analógicos, botones y mira con aviso privado a $T-30$s. | No implementado. |
-| **Baneos Progresivos Escalables** | **Sistema de Strikes (`escalating_bans = true`)**<br>1h -> 24h -> 7d -> permanente con expiraciones automáticas. | Flag manual de duración por comando (`sv_ban <player> 2h`). |
-| **Rotación de Mapas** | **Secuencial y Aleatoria (`shuffle`)**<br>Evita repetir el mapa anterior de forma consecutiva. | Parser de lista secuencial. |
-| **CLI de Operador** | **Script `operator.sh` + Terminal Web + Telnet Loopback** | Stdin de consola, WebSocket RCON, Terminal Web. |
-| **Distribución Pública** | **Imagen Docker en GHCR (`139 MB`) + Releases Binarios** | Código fuente en rama no mergeada. |
+| **Arquitectura y Hardware** | **Linux ARM64 (Raspberry Pi 3B/4/5 y Oracle Cloud), x86_64, i686 y Windows**<br>Paquetes precompilados e imagen Docker multi-arch (`linux/arm64`, `linux/amd64`). Corre con ~85 MB de RAM / 3W. | **Solo x86_64 / i686**<br>Sin paquetes ARM64 precompilados para mini-PCs o placas de bajo consumo. |
+| **Observabilidad y Métricas** | **Exportador Nativo Prometheus / Grafana (`/metrics`)**<br>Telemetría en tiempo real de jugadores, capacidad, tickrate de 30.0 Hz y tiempos de partida. | **Ninguno**<br>No dispone de endpoint de métricas para monitorización en Grafana. |
+| **Integración con Discord / Telegram** | **Webhooks Nativos de Comunidad (`server_webhooks.c`)**<br>Notificaciones asíncronas de inicio/fin de partida, podios y baneos disciplinarios. | **Solo IPC Local de Escritorio (`p2p_discord.c`)**<br>Solo funciona si Discord corre en un monitor local; no opera en VPS/Docker headless. |
+| **Almacenamiento de Logs** | **Ruta Personalizable (`HALO_LOG_DIR` / `paths.logs`)**<br>Aísla `debug.txt` y `debug.old.txt` en carpetas compartidas para Unraid y Docker. | **Fijado a la Raíz de Mapas (`d:\`)**<br>Requiere exponer todo el directorio del binario para leer logs. |
+| **Votación de Mapas en Lobby** | **Votación Interactiva por Chat (`map_voting = true`)**<br>Los jugadores eligen la siguiente partida escribiendo `1` a `N` en el chat. | **Ninguna**<br>Solo rotación fija secuencial o intervención manual por consola. |
+| **Anti-Inactividad (AFK)** | **Protección Automatizada (`afk_timeout = 180`)**<br>Monitorea sticks analógicos, botones y mira con aviso privado a $T-30$s. | **Solo Timeout de Socket**<br>No detecta jugadores inactivos que retienen conexiones abiertas. |
+| **Baneos Progresivos Escalables** | **Sistema de Strikes (`escalating_bans = true`)**<br>1h -> 24h -> 7d -> permanente con expiraciones automáticas. | **Solo Flags Manuales**<br>Requiere que el operador especifique duraciones a mano por comando. |
+| **Dashboard Web y Selectores** | **Portal Web Embebido sin Dependencias (`:8080`)**<br>Selector inteligente que agrupa Campaña Co-op vs Multijugador y bloquea modos incompatibles. | **Panel Web Embebido**<br>Selector plano sin validación de reglas por tipo de mapa. |
+| **Actualizaciones Seguras** | **Actualizador Automático (`scripts/halo-update.sh`)**<br>Verificación criptográfica SHA-256, backup previo y rollback automático ante fallos de boot. | **Sustitución manual de binarios en disco.** |
+| **Protocolo de Master y Listado** | **Publicación Instantánea sin Burocracia**<br>Descubrimiento automático en el buscador público oficial y brokers STUN sin trámites. | **Requiere Claves Ed25519 (`--keygen`, `--sign`)**<br>Requiere aprobación de un bot de Discord para aparecer en la pestaña DEDICATED. |
 
 ---
 
