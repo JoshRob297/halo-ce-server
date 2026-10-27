@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="104" viewBox="0 0 120 104">
+  <defs>
+    <style>
+      .h { fill: none; stroke: #38bdf8; stroke-width: 1.8; opacity: 0.55; }
+      .g { fill: none; stroke: #38bdf8; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+      .gf { fill: #38bdf8; opacity: 0.85; }
+    </style>
+  </defs>
+
+  <!-- Hex 1 en (30, 26) -->
+  <polygon points="30,2 54,14 54,38 30,50 6,38 6,14" class="h"/>
+  <path d="M 30,12 L 30,34 Q 30,40 24,40" class="g"/>
+  <line x1="20" y1="21" x2="40" y2="21" class="g"/>
+  <line x1="23" y1="28" x2="37" y2="28" class="g"/>
+
+  <!-- Hex 2 en (90, 26) -->
+  <polygon points="90,2 114,14 114,38 90,50 66,38 66,14" class="h"/>
+  <path d="M 90,12 L 90,40" class="g"/>
+  <path d="M 78,18 L 90,26 L 102,18" class="g"/>
+  <line x1="80" y1="40" x2="100" y2="40" class="g"/>
+
+  <!-- Hex 3 en (0, 78) y (120, 78) -->
+  <polygon points="0,54 24,66 24,90 0,102 -24,90 -24,66" class="h"/>
+  <path d="M -8,68 L 8,68 L -2,78 L 8,88 L -8,88" class="g"/>
+  <circle cx="0" cy="78" r="2.2" class="gf"/>
+
+  <polygon points="120,54 144,66 144,90 120,102 96,90 96,66" class="h"/>
+  <path d="M 112,68 L 128,68 L 118,78 L 128,88 L 112,88" class="g"/>
+  <circle cx="120" cy="78" r="2.2" class="gf"/>
+
+  <!-- Hex 4 en (60, 78) -->
+  <polygon points="60,54 84,66 84,90 60,102 36,90 36,66" class="h"/>
+  <path d="M 60,65 C 48,65 48,88 60,88 C 70,88 70,75 60,75 L 72,75" class="g"/>
+  <circle cx="55" cy="76" r="2" class="gf"/>
+</svg>

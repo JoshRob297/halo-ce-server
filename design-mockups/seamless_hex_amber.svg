@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="56" height="48" viewBox="0 0 56 48">
+  <defs>
+    <style>
+      .mesh { stroke: #d97706; stroke-width: 1.0; fill: none; opacity: 0.30; }
+      .g { stroke: #d97706; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0.45; }
+      .gf { fill: #d97706; opacity: 0.45; }
+    </style>
+  </defs>
+
+  <!-- Aristas del panal continuo (sin separaciones entre hexágonos) -->
+  <!-- Columna central superior -->
+  <path d="M 28,0 L 42,8 L 42,24 L 28,32 L 14,24 L 14,8 Z" class="mesh"/>
+  
+  <!-- Extensiones que conectan con los hexágonos adyacentes continuos -->
+  <path d="M 28,0 L 28,-16" class="mesh"/>
+  <path d="M 42,8 L 56,0 L 70,8" class="mesh"/>
+  <path d="M 14,8 L 0,0 L -14,8" class="mesh"/>
+  <path d="M 42,24 L 56,32 L 56,48 L 42,56" class="mesh"/>
+  <path d="M 14,24 L 0,32 L 0,48 L 14,56" class="mesh"/>
+  <path d="M 28,32 L 28,48" class="mesh"/>
+
+  <!-- Glifo 1 en el hexágono superior (28, 16): Cayado Sagrado Sangheili compacto -->
+  <path d="M 28,9 L 28,21 Q 28,24 25,24" class="g"/>
+  <line x1="23" y1="13" x2="33" y2="13" class="g"/>
+  <line x1="24" y1="17" x2="32" y2="17" class="g"/>
+
+  <!-- Glifo 2 en el hexágono inferior (0, 40) y (56, 40): Tridente Sangheili -->
+  <!-- Centro en 0, 40 -->
+  <path d="M 0,33 L 0,45" class="g"/>
+  <path d="M -5,36 L 0,39 L 5,36" class="g"/>
+  <line x1="-5" y1="45" x2="5" y2="45" class="g"/>
+
+  <!-- Centro en 56, 40 -->
+  <path d="M 56,33 L 56,45" class="g"/>
+  <path d="M 51,36 L 56,39 L 61,36" class="g"/>
+  <line x1="51" y1="45" x2="61" y2="45" class="g"/>
+</svg>

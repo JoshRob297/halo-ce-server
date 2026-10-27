@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>UNSC Tactical Operations Console // JOCESLAB MX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000;
+      --panel: rgba(13, 17, 24, 0.90);
+      --primary: #e2e8f0;
+      --primary-bright: #ffffff;
+      --primary-dim: rgba(255, 255, 255, 0.10);
+      --primary-border: rgba(255, 255, 255, 0.28);
+      --green: #10b981;
+      --green-dim: rgba(16, 185, 129, 0.15);
+      --red: #ef4444;
+      --red-dim: rgba(239, 68, 68, 0.15);
+      --text: #f1f5f9;
+      --text-muted: #64748b;
+      --font-display: 'Teko', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      background-color: #050608;
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 75%),
+        radial-gradient(circle at 10% 90%, rgba(244, 63, 94, 0.10) 0%, transparent 45%),
+        linear-gradient(180deg, rgba(8, 10, 14, 0.4) 0%, rgba(2, 3, 5, 0.92) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cdefs%3E%3Cstyle%3E.b%7Bstroke:%23ffffff;stroke-width:3.2;stroke-linecap:round;opacity:0.15;%7D%3C/style%3E%3C/defs%3E%3Cline x1='3.5' y1='14.5' x2='14.5' y2='3.5' class='b'/%3E%3Cline x1='21.5' y1='3.5' x2='32.5' y2='14.5' class='b'/%3E%3Cline x1='3.5' y1='21.5' x2='14.5' y2='32.5' class='b'/%3E%3Cline x1='21.5' y1='32.5' x2='32.5' y2='21.5' class='b'/%3E%3C/svg%3E");
+      background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.4;
+      min-height: 100dvh;
+      width: 100%;
+      position: relative;
+    }
+    /* Insignia oficial de fondo estilo Halo HUD */
+    .bg-watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(70vw, 420px);
+      height: min(70vw, 420px);
+      pointer-events: none;
+      z-index: 0;
+      color: var(--primary-bright);
+      opacity: 0.07;
+      filter: drop-shadow(0 0 16px var(--primary));
+    }
+    .hud-box {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      position: relative;
+      z-index: 1;
+    }
+    .hud-header, .kpi-bar, .nav-tabs, .tab-content {
+      position: relative;
+      z-index: 1;
+    }
+    .header-logo-icon {
+      width: 38px;
+      height: 38px;
+      color: var(--primary-bright);
+      filter: drop-shadow(0 0 6px var(--primary));
+      flex-shrink: 0;
+    }
+    body {
+      padding: clamp(10px, 2.5vw, 24px);
+    }
+    .hud-header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .hud-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .hud-title {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 5vw, 34px);
+      line-height: 1;
+      letter-spacing: 0.04em;
+      color: var(--primary);
+      text-transform: uppercase;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border: 1px solid var(--primary);
+      background: var(--primary-dim);
+      color: var(--primary-bright);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .header-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .hud-btn {
+      font-family: var(--font-display);
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 8px 12px;
+      background: var(--primary-dim);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: all 0.15s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .hud-btn:hover, .hud-btn:active {
+      background: var(--primary);
+      color: #000;
+    }
+    .hud-btn-red {
+      border-color: var(--red);
+      color: var(--red);
+      background: var(--red-dim);
+    }
+    .hud-btn-red:hover, .hud-btn-red:active {
+      background: var(--red);
+      color: #fff;
+    }
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 6px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--primary-border);
+      padding-bottom: 8px;
+    }
+    .nav-tab {
+      font-family: var(--font-display);
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: var(--text-muted);
+      cursor: pointer;
+      touch-action: manipulation;
+      text-align: center;
+      border-radius: 2px;
+    }
+    .nav-tab.active {
+      border-color: var(--primary);
+      background: var(--primary-dim);
+      color: var(--primary-bright);
+      font-weight: bold;
+    }
+    .kpi-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    @media (min-width: 900px) {
+      .kpi-bar {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+    }
+    .hud-box {
+      border: 1px solid var(--primary-border);
+      background: var(--panel);
+      padding: 14px;
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .hud-box::before {
+      content: "";
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 6px; height: 6px;
+      border-top: 2px solid var(--primary);
+      border-left: 2px solid var(--primary);
+    }
+    .hud-box::after {
+      content: "";
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 6px; height: 6px;
+      border-bottom: 2px solid var(--primary);
+      border-right: 2px solid var(--primary);
+    }
+    .box-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px dashed var(--primary-border);
+      padding-bottom: 6px;
+    }
+    .kpi-title {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .kpi-val {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3.8vw, 30px);
+      line-height: 1.1;
+      color: var(--text);
+    }
+    .kpi-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 2fr 1fr;
+        gap: 18px;
+      }
+    }
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table {
+      width: 100%;
+      min-width: 480px;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .table th {
+      padding: 8px 10px;
+      font-size: 11px;
+      color: var(--primary);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--primary-border);
+    }
+    .table td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+    }
+    .rotation-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 12px;
+      border-left: 3px solid var(--primary-border);
+      background: rgba(255, 255, 255, 0.02);
+      margin-bottom: 8px;
+    }
+    @media (min-width: 480px) {
+      .rotation-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+    .rotation-item.active {
+      border-left: 3px solid var(--primary);
+      background: var(--primary-dim);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 600px) {
+      .form-grid.two-cols {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    .form-label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--primary-border);
+      color: var(--text);
+      padding: 9px 10px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      border-radius: 2px;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+    }
+    .cli-terminal {
+      background: #000;
+      border: 1px solid var(--primary-border);
+      padding: 12px;
+      height: 220px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--green);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #000;
+      border: 1px solid var(--primary);
+      padding: 10px 18px;
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: var(--primary-bright);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.8);
+      z-index: 100;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-watermark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="hud-insignia">
+  <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+  <circle cx="50" cy="50" r="40" fill="currentColor" opacity="0.12"/>
+  <!-- Triangulo invertido interior con ojo estilizado -->
+  <polygon points="50,18 78,72 22,72" fill="currentColor" opacity="0.85"/>
+  <circle cx="50" cy="52" r="13" fill="var(--bg)"/>
+  <circle cx="50" cy="52" r="7" fill="currentColor"/>
+</svg></div>
+  <div class="hud-header">
+    <div class="hud-title-row">
+      <div class="hud-title" style="display: flex; align-items: center; gap: 10px;">
+        <div class="header-logo-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="hud-insignia">
+  <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+  <circle cx="50" cy="50" r="40" fill="currentColor" opacity="0.12"/>
+  <!-- Triangulo invertido interior con ojo estilizado -->
+  <polygon points="50,18 78,72 22,72" fill="currentColor" opacity="0.85"/>
+  <circle cx="50" cy="52" r="13" fill="var(--bg)"/>
+  <circle cx="50" cy="52" r="7" fill="currentColor"/>
+</svg></div>
+        <div>
+          <div>UNSC TACTICAL OPERATIONS</div>
+          <div style="font-size: 11px; color: var(--primary); letter-spacing: 0.1em; font-family: var(--font-mono);">OFFICE OF NAVAL INTELLIGENCE // TOP SECRET</div>
+        </div>
+        <span class="hud-badge" id="host-badge">HOST: JOCESLAB MX</span>
+        <span class="hud-badge" style="border-color: var(--green); color: var(--green);" id="region-badge">ONLINE · NA-EAST</span>
+      </div>
+      <div style="font-size: 11px; color: var(--text-muted);" id="node-env-tag">
+        DETECTING ENVIRONMENT...
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="hud-btn" id="btn-skip">SALTAR PARTIDA (1s)</button>
+      <button class="hud-btn" id="btn-shuffle">REINICIAR ROTACION</button>
+      <button class="hud-btn hud-btn-red" id="btn-stop">PAUSAR SALA</button>
+    </div>
+  </div>
+
+  <div class="kpi-bar">
+    <div class="hud-box">
+      <div class="kpi-title">SECTOR ACTIVO (MAPA)</div>
+      <div class="kpi-val" id="kpi-map" style="color: var(--primary-bright);">PRISONER</div>
+      <div class="kpi-sub" id="kpi-mode">MODO: GUN GAME · SLAYER</div>
+    </div>
+    <div class="hud-box">
+      <div class="kpi-title">UNIDADES CONECTADAS</div>
+      <div class="kpi-val" id="kpi-players" style="color: var(--green);">0 / 128</div>
+      <div class="kpi-sub">HUMANOS ACTIVOS</div>
+    </div>
+    <div class="hud-box">
+      <div class="kpi-title">MEMORIA PROCESO / SALUD</div>
+      <div class="kpi-val" id="kpi-ram" style="color: #60a5fa;">-- MB</div>
+      <div class="kpi-sub" id="kpi-uptime">UPTIME: 00h 00m</div>
+    </div>
+    <div class="hud-box">
+      <div class="kpi-title">FRECUENCIA Y MASTER SERVER</div>
+      <div class="kpi-val" id="kpi-tick">30.0 HZ</div>
+      <div class="kpi-sub" id="kpi-master">SONDA MASTER: VERIFICADA</div>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-tab="tab-operations">1. OPERACIONES</button>
+    <button class="nav-tab" data-tab="tab-players">2. JUGADORES</button>
+    <button class="nav-tab" data-tab="tab-settings">3. AJUSTES</button>
+    <button class="nav-tab" data-tab="tab-console">4. CONSOLA CLI</button>
+    <button class="nav-tab" data-tab="tab-logs">5. LOGS EN VIVO</button>
+  </div>
+
+  <!-- TAB 1: OPERACIONES -->
+  <div class="tab-content active" id="tab-operations">
+    <div class="main-grid">
+      <div>
+        <div class="hud-box">
+          <div class="box-title">
+            <span>COLA DE DESPLIEGUE TACTICO (ROTACION)</span>
+            <span style="font-size: 11px; color: var(--text-muted);">AUTO-SHUFFLE</span>
+          </div>
+          <div id="rotation-list">
+            <div class="rotation-item active">
+              <div>
+                <strong style="color: var(--primary-bright);">[ACTIVO] PRISONER</strong>
+                <span style="color: var(--text-muted); margin-left: 8px;">GUN GAME</span>
+              </div>
+              <span class="hud-badge" style="border-color: var(--green); color: var(--green);">EN JUEGO</span>
+            </div>
+            <div class="rotation-item">
+              <div>
+                <strong>[02] WIZARD</strong>
+                <span style="color: var(--text-muted); margin-left: 8px;">INFECTION</span>
+              </div>
+              <span style="color: var(--text-muted); font-size: 11px;">SIGUIENTE</span>
+            </div>
+            <div class="rotation-item">
+              <div>
+                <strong>[03] BEAVER CREEK</strong>
+                <span style="color: var(--text-muted); margin-left: 8px;">SWAT</span>
+              </div>
+              <span style="color: var(--text-muted); font-size: 11px;">EN ESPERA</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-box">
+          <div class="box-title">LANZAMIENTO DIRECTO DE MODOS</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px;">
+            <button class="hud-btn" onclick="execHs('sv_map beavercreek slayer')">SLAYER (BEAVER)</button>
+            <button class="hud-btn" onclick="execHs('sv_map wizard infection')">INFECTION (WIZARD)</button>
+            <button class="hud-btn" onclick="execHs('sv_map prisoner swat')">SWAT (PRISONER)</button>
+            <button class="hud-btn" onclick="execHs('sv_map chillout ctf')">CTF (CHILLOUT)</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="hud-box">
+          <div class="box-title">PARAMETROS RAPIDOS</div>
+          <div class="form-group">
+            <label class="form-label">IDENTIFICADOR DE HOST</label>
+            <input class="form-input" id="cfg-name" value="JOCESLAB MX">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CUENTA REGRESIVA DE LOBBY (SEG)</label>
+            <input class="form-input" id="cfg-countdown" type="number" value="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">LIMITE DE PARTIDA (MIN)</label>
+            <input class="form-input" id="cfg-time" type="number" value="15">
+          </div>
+          <div class="form-group">
+            <label class="form-label">REGION GEOGRAFICA</label>
+            <input class="form-input" id="cfg-region" value="na-east">
+          </div>
+          <button class="hud-btn" id="btn-save-ops" style="width: 100%; padding: 10px;">GUARDAR EN CALIENTE</button>
+        </div>
+
+        <div class="hud-box">
+          <div class="box-title">ESTADO MASTER SERVER</div>
+          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;" id="master-info-box">
+            <div><strong style="color: var(--primary);">PUBLISHER:</strong> JOCESLAB MX</div>
+            <div><strong style="color: var(--primary);">PUBLISHER ID:</strong> p_f2tojtcngph4pvq6</div>
+            <div><strong style="color: var(--primary);">KEY ID:</strong> 5945e7b1398c0cbd</div>
+            <div><strong style="color: var(--green);">ESTADO:</strong> APROBADO DEDICATED</div>
+            <div><strong style="color: var(--primary);">SONDA UDP:</strong> 2302 VERIFICADA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: JUGADORES -->
+  <div class="tab-content" id="tab-players">
+    <div class="hud-box">
+      <div class="box-title">
+        <span>UNIDADES EN COMBATE (JUGADORES)</span>
+        <span style="font-size: 12px; color: var(--text-muted);" id="table-count">0 PRESENTES</span>
+      </div>
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>SLOT</th>
+              <th>IDENTIFICADOR</th>
+              <th>EQUIPO</th>
+              <th>PUNTOS</th>
+              <th>PING</th>
+              <th style="text-align: right;">CONTROL TACTICO</th>
+            </tr>
+          </thead>
+          <tbody id="players-body">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                NO HAY JUGADORES HUMANOS CONECTADOS.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hud-box">
+      <div class="box-title">CONTROL DISCIPLINARIO (SANCIONES)</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <input class="form-input" style="flex: 1; min-width: 180px;" id="mod-target" placeholder="Nombre o Machine ID del jugador...">
+        <button class="hud-btn" onclick="execPlayer('kick')">EXPULSAR (KICK)</button>
+        <button class="hud-btn hud-btn-red" onclick="execPlayer('ban')">BANEAR (IP + HWID)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: AJUSTES -->
+  <div class="tab-content" id="tab-settings">
+    <div class="hud-box">
+      <div class="box-title">ADMINISTRACION Y REGLAS DE PARTIDA</div>
+      <div class="form-grid two-cols">
+        <div class="form-group">
+          <label class="form-label">MODO DE ROTACION</label>
+          <select class="form-input" id="cfg-rot-mode">
+            <option value="shuffle">SHUFFLE (ALEATORIO SIN REPETIR)</option>
+            <option value="sequence">SEQUENCE (SECUENCIA ESTRICTA)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">FILTRO DE COMUNICACIONES Y NOMBRES</label>
+          <select class="form-input" id="cfg-filter">
+            <option value="off">OFF (DESACTIVADO)</option>
+            <option value="censor">CENSOR (ASTERISCOS ***)</option>
+            <option value="block">BLOCK (RECHAZAR MENSAJE Y EXPULSAR)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">TIMEOUT DE INACTIVIDAD AFK (SEG)</label>
+          <input class="form-input" id="cfg-afk" type="number" value="180">
+        </div>
+        <div class="form-group">
+          <label class="form-label">VOTACION EN LOBBY POR CHAT</label>
+          <select class="form-input" id="cfg-voting">
+            <option value="true">ACTIVADA (JUGADORES VOTAN 1-3)</option>
+            <option value="false">DESACTIVADA</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label class="form-label">WEBHOOK DISCORD (ALERTAS DE PARTIDA Y SANCIONES)</label>
+          <input class="form-input" id="cfg-discord" placeholder="https://discord.com/api/webhooks/...">
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label class="form-label">WEBHOOK TELEGRAM (BOT NOTIFICACIONES)</label>
+          <input class="form-input" id="cfg-telegram" placeholder="https://api.telegram.org/bot...">
+        </div>
+      </div>
+      <button class="hud-btn" id="btn-save-full" style="width: 100%; padding: 12px; margin-top: 8px;">GUARDAR CONFIGURACION INTEGRAL</button>
+    </div>
+  </div>
+
+  <!-- TAB 4: CONSOLA CLI -->
+  <div class="tab-content" id="tab-console">
+    <div class="hud-box">
+      <div class="box-title">CONSOLA DIRECTA (HALO ENGINE SCRIPTING)</div>
+      <div class="cli-terminal" id="cli-output">UNSC TACTICAL SHELL INITIALIZED.
+TYPE COMMAND (e.g. 'status', 'kick &lt;name&gt;', 'ban &lt;name&gt;', 'sv_end_game', 'say &lt;text&gt;')
+--------------------------------------------------------------------------------</div>
+      <div style="display: flex; gap: 8px; margin-top: 10px;">
+        <input class="form-input" id="cli-input" placeholder="Comando (ej: say Hola Spartan, sv_end_game)..." onkeydown="if(event.key==='Enter') sendCli()">
+        <button class="hud-btn" onclick="sendCli()">EJECUTAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: LOGS EN VIVO -->
+  <div class="tab-content" id="tab-logs">
+    <div class="hud-box">
+      <div class="box-title">
+        <span>LOGS DEL SISTEMA EN VIVO (DEBUG.TXT)</span>
+        <button class="hud-btn" onclick="refreshLogs()" style="font-size: 13px; padding: 2px 10px;">ACTUALIZAR LOGS</button>
+      </div>
+      <div class="cli-terminal" id="logs-output" style="color: #93c5fd; height: 350px;">CARGANDO LOGS DEL MOTOR...</div>
+    </div>
+  </div>
+
+  <div class="toast" id="hud-toast">PARAMETROS APLICADOS EN CALIENTE</div>
+
+  <script>
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
+        if (btn.getAttribute('data-tab') === 'tab-logs') refreshLogs();
+      });
+    });
+
+    async function refreshStatus() {
+      try {
+        const res = await fetch('/api/status');
+        if (!res.ok) return;
+        const d = await res.json();
+        document.getElementById('kpi-map').textContent = (d.map || 'PRISONER').toUpperCase();
+        document.getElementById('kpi-mode').textContent = `MODO: ${(d.variant || d.gametype || 'SLAYER').toUpperCase()}`;
+        document.getElementById('kpi-players').textContent = `${d.players || 0} / ${d.max_players || 128}`;
+        document.getElementById('kpi-tick').textContent = `${(d.tickrate || 30.0).toFixed(1)} HZ`;
+        document.getElementById('table-count').textContent = `${d.players || 0} PRESENTES`;
+        
+        // Memoria y Uptime reales
+        if (d.rss_kb) {
+          const mb = (d.rss_kb / 1024).toFixed(1);
+          document.getElementById('kpi-ram').textContent = `${mb} MB`;
+        }
+        if (d.uptime) {
+          const hrs = Math.floor(d.uptime / 3600);
+          const mins = Math.floor((d.uptime % 3600) / 60);
+          document.getElementById('kpi-uptime').textContent = `UPTIME: ${hrs}h ${mins}m`;
+        }
+        if (d.node_info) {
+          document.getElementById('node-env-tag').textContent = `NODE: ${d.node_info} · NETCODE: V${d.network_version || 39}`;
+        }
+        if (d.name) {
+          document.getElementById('host-badge').textContent = `HOST: ${d.name}`;
+        }
+      } catch (e) {}
+    }
+
+    async function refreshPlayers() {
+      try {
+        const res = await fetch('/api/players');
+        if (!res.ok) return;
+        const d = await res.json();
+        const tbody = document.getElementById('players-body');
+        if (!d.players || d.players.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px;">NO HAY JUGADORES HUMANOS CONECTADOS.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = d.players.map(p => `
+          <tr>
+            <td>[${p.slot}]</td>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.team === 0 ? 'ROJO' : 'AZUL'}</td>
+            <td>${p.score || 0}</td>
+            <td>${p.ping || 0} ms</td>
+            <td style="text-align:right;">
+              <button class="hud-btn" style="padding:2px 8px;font-size:12px;" onclick="execHs('kick ${p.name}')">KICK</button>
+              <button class="hud-btn hud-btn-red" style="padding:2px 8px;font-size:12px;" onclick="execHs('ban ${p.name}')">BAN</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {}
+    }
+
+    async function refreshLogs() {
+      try {
+        const res = await fetch('/api/log');
+        if (!res.ok) return;
+        const d = await res.json();
+        const out = document.getElementById('logs-output');
+        if (d.lines && d.lines.length > 0) {
+          out.textContent = d.lines.join('\n');
+          out.scrollTop = out.scrollHeight;
+        } else {
+          out.textContent = 'NO HAY ENTRADAS DE LOG DISPONIBLES EN DEBUG.TXT';
+        }
+      } catch (e) {}
+    }
+
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/settings');
+        if (!res.ok) return;
+        const d = await res.json();
+        if (d.settings) {
+          d.settings.forEach(s => {
+            if (s.name === 'network.server_name') document.getElementById('cfg-name').value = s.value;
+            if (s.name === 'debug.network_test_countdown') document.getElementById('cfg-countdown').value = s.value;
+            if (s.name === 'debug.network_test_time') document.getElementById('cfg-time').value = s.value;
+            if (s.name === 'server.region') {
+              document.getElementById('cfg-region').value = s.value;
+              document.getElementById('region-badge').textContent = `ONLINE · ${s.value.toUpperCase()}`;
+            }
+            if (s.name === 'server.chat_filter') document.getElementById('cfg-filter').value = s.value;
+            if (s.name === 'network.map_rotation') document.getElementById('cfg-rot-mode').value = s.value;
+            if (s.name === 'network.afk_timeout') document.getElementById('cfg-afk').value = s.value;
+            if (s.name === 'webhooks.discord') document.getElementById('cfg-discord').value = s.value || '';
+            if (s.name === 'webhooks.telegram') document.getElementById('cfg-telegram').value = s.value || '';
+          });
+        }
+      } catch (e) {}
+    }
+
+    async function saveSettings() {
+      const payload = {
+        "network.server_name": document.getElementById('cfg-name').value,
+        "debug.network_test_countdown": parseInt(document.getElementById('cfg-countdown').value) || 1,
+        "debug.network_test_time": parseInt(document.getElementById('cfg-time').value) || 15,
+        "server.region": document.getElementById('cfg-region').value,
+        "server.chat_filter": document.getElementById('cfg-filter').value,
+        "network.map_rotation": document.getElementById('cfg-rot-mode').value,
+        "network.afk_timeout": parseInt(document.getElementById('cfg-afk').value) || 180,
+        "webhooks.discord": document.getElementById('cfg-discord').value,
+        "webhooks.telegram": document.getElementById('cfg-telegram').value
+      };
+      try {
+        await fetch('/api/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showToast('PARAMETROS APLICADOS EN CALIENTE');
+        refreshStatus();
+      } catch (e) {
+        showToast('ERROR AL APLICAR');
+      }
+    }
+
+    async function execHs(cmd) {
+      try {
+        await fetch('/api/command', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ line: cmd })
+        });
+        showToast('COMANDO EJECUTADO: ' + cmd);
+        logCli('> ' + cmd + ' [OK]');
+      } catch (e) {
+        showToast('ERROR AL EJECUTAR');
+      }
+    }
+
+    function execPlayer(action) {
+      const name = document.getElementById('mod-target').value.trim();
+      if (!name) return;
+      execHs(action + ' ' + name);
+      document.getElementById('mod-target').value = '';
+    }
+
+    function sendCli() {
+      const inp = document.getElementById('cli-input');
+      const val = inp.value.trim();
+      if (!val) return;
+      execHs(val);
+      inp.value = '';
+    }
+
+    function logCli(text) {
+      const out = document.getElementById('cli-output');
+      out.textContent += '\n' + text;
+      out.scrollTop = out.scrollHeight;
+    }
+
+    function showToast(text) {
+      const t = document.getElementById('hud-toast');
+      t.textContent = text;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2500);
+    }
+
+    document.getElementById('btn-save-ops').addEventListener('click', saveSettings);
+    document.getElementById('btn-save-full').addEventListener('click', saveSettings);
+    document.getElementById('btn-skip').addEventListener('click', async () => {
+      await fetch('/api/rotation/play', { method: 'POST' });
+      showToast('SALTANDO A SIGUIENTE PARTIDA...');
+      setTimeout(refreshStatus, 1500);
+    });
+    document.getElementById('btn-shuffle').addEventListener('click', () => execHs('sv_map beavercreek slayer'));
+    document.getElementById('btn-stop').addEventListener('click', () => execHs('sv_end_game'));
+
+    setInterval(refreshStatus, 3000);
+    setInterval(refreshPlayers, 3000);
+    refreshStatus();
+    refreshPlayers();
+    loadSettings();
+  </script>
+</body>
+</html>

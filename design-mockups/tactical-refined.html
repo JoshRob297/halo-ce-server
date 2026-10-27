@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="unsc-titanium">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Halo CE Dedicated // JOCESLAB MX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1e242b;
+      --accent: #e2e8f0;
+      --accent-bright: #ffffff;
+      --accent-dim: rgba(226, 232, 240, 0.08);
+      --panel-bg: rgba(28, 35, 43, 0.94);
+      --panel-border: rgba(226, 232, 240, 0.18);
+      --panel-bevel: rgba(255, 255, 255, 0.18);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --green: #10b981;
+      --green-dim: rgba(16, 185, 129, 0.16);
+      --amber: #f59e0b;
+      --amber-dim: rgba(245, 158, 11, 0.16);
+      --red: #ef4444;
+      --red-dim: rgba(239, 68, 68, 0.16);
+      --font-display: 'Teko', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--bg);
+      background-image: var(--theme-glow, radial-gradient(ellipse 70% 40% at 50% 0%, rgba(226, 232, 240, 0.12) 0%, transparent 70%)), var(--theme-texture);
+      background-size: var(--theme-size, 100% 100%, 36px 36px);
+      background-repeat: no-repeat, repeat;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.45;
+      min-height: 100dvh;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Watermark frontal flotante con opacidad controlada */
+    .bg-watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(72vw, 380px);
+      height: min(72vw, 380px);
+      pointer-events: none;
+      z-index: 1;
+      color: var(--logo-color, #e2e8f0);
+      opacity: var(--logo-opacity, 0.14);
+      filter: drop-shadow(0 0 20px var(--accent));
+      transition: all 0.3s ease;
+    }
+
+    .dashboard-container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* HEADER CONCISO SIN REDUNDANCIA */
+    .hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      box-shadow: inset 0 1px 0 0 var(--panel-bevel), 0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      color: var(--accent);
+      filter: drop-shadow(0 0 8px var(--accent));
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.06em;
+      line-height: 1;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .brand-text .sub {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+
+    /* SELECTOR DE TEMA ERGONÓMICO */
+    .theme-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--panel-border);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 8px 24px 8px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      outline: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 12px;
+      transition: border-color 0.15s;
+    }
+    .theme-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    /* PESTAÑAS DE NAVEGACIÓN SUPERIOR (MÍNIMO 44px TOUCH) */
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .nav-tab {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 6px 8px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      touch-action: manipulation;
+      text-align: center;
+      border-radius: 3px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .nav-tab:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+    }
+    .nav-tab.active {
+      border-color: var(--accent);
+      color: #ffffff;
+      background: var(--accent-dim);
+      font-weight: bold;
+      box-shadow: inset 0 -2px 0 0 var(--accent), 0 0 10px var(--accent-dim);
+    }
+    .nav-tab:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* CAJAS MODULARES */
+    .hud-box {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      padding: 14px;
+      position: relative;
+      margin-bottom: 12px;
+      box-shadow: inset 0 1px 0 0 var(--panel-bevel), 0 6px 20px rgba(0, 0, 0, 0.55);
+      border-radius: 4px;
+    }
+
+    .hud-box::before {
+      content: "";
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 8px; height: 8px;
+      border-top: 2px solid var(--accent);
+      border-left: 2px solid var(--accent);
+    }
+    .hud-box::after {
+      content: "";
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 8px; height: 8px;
+      border-bottom: 2px solid var(--accent);
+      border-right: 2px solid var(--accent);
+    }
+
+    .box-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed var(--panel-border);
+      padding-bottom: 6px;
+    }
+
+    /* HERO CARD: PRIORIDAD EN MAPA, MODO Y JUGADORES */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1.2fr 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hero-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .hero-val-main {
+      font-family: var(--font-display);
+      font-size: 32px;
+      line-height: 1;
+      color: #ffffff;
+      letter-spacing: 0.04em;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px 10px;
+      border-radius: 3px;
+      border: 1px solid var(--panel-border);
+      width: fit-content;
+      margin-top: 4px;
+    }
+
+    /* KPI GROUP: SALUD DEL SERVIDOR */
+    .health-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .health-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--panel-border);
+      padding: 10px 12px;
+      border-radius: 3px;
+    }
+    .health-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .health-val {
+      font-family: var(--font-display);
+      font-size: 22px;
+      line-height: 1;
+      color: #ffffff;
+    }
+    .health-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 3px;
+    }
+
+    /* BOTONES ERGONÓMICOS (TOUCH FRIENDLY >= 44px) */
+    .hud-btn {
+      min-height: 44px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 10px 16px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      color: #ffffff;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 3px;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+    }
+    .hud-btn:hover:not(:disabled) {
+      background: var(--accent);
+      color: #0b0f14;
+      box-shadow: 0 0 14px var(--accent);
+    }
+    .hud-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: var(--panel-border);
+    }
+
+    .hud-btn-red {
+      border-color: var(--red);
+      color: #fca5a5;
+      background: var(--red-dim);
+    }
+    .hud-btn-red:hover:not(:disabled) {
+      background: var(--red);
+      color: #ffffff;
+      box-shadow: 0 0 14px var(--red);
+    }
+
+    /* STATUS PILLS */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .status-green { background: var(--green-dim); color: #34d399; border: 1px solid var(--green); }
+    .status-amber { background: var(--amber-dim); color: #fbbf24; border: 1px solid var(--amber); }
+    .status-red { background: var(--red-dim); color: #f87171; border: 1px solid var(--red); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    /* ROTACIÓN CON ELEMENTO ACTIVO CLARO */
+    .rotation-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--panel-border);
+      border-left: 3px solid var(--panel-border);
+      border-radius: 3px;
+      margin-bottom: 8px;
+      transition: background 0.15s;
+    }
+    .rotation-item.active {
+      border-left: 3px solid var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    /* MODAL DE CONFIRMACIÓN PARA ACCIONES DESTRUCTIVAS */
+    .danger-zone {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* RESPONSIVE MÓVIL */
+    @media (max-width: 680px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 10px; }
+      .health-grid { grid-template-columns: 1fr 1fr; }
+      .hud-header { flex-direction: column; align-items: stretch; gap: 8px; }
+      .brand-group { justify-content: space-between; }
+      .nav-tabs { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Watermark SVG central flotante -->
+  <div class="bg-watermark" id="bg-watermark-icon"></div>
+
+  <div class="dashboard-container">
+
+    <!-- HEADER SUPERIOR -->
+    <header class="hud-header">
+      <div class="brand-group">
+        <div class="brand-logo" id="brand-logo-icon"></div>
+        <div class="brand-text">
+          <h1>HALO CE // DEDICATED</h1>
+          <div class="sub" id="brand-org-tag">UNSC LOGISTICS // NETCODE V39</div>
+        </div>
+      </div>
+      <div class="theme-select-wrap">
+        <label for="theme-selector" style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Tema:</label>
+        <select id="theme-selector" class="theme-select" onchange="switchTheme(this.value)">
+          <option value="unsc-titanium">1. Mjolnir Titanium (UNSC)</option>
+          <option value="oni-blackops">2. ONI Black Ops</option>
+          <option value="unsc-amber">3. UNSC Command Amber</option>
+          <option value="unsc-bluefleet">4. UNSC Fleet Plasma</option>
+          <option value="covenant-sacristan">5. Sacristan Gold Codex</option>
+          <option value="covenant-zealot">6. Covenant Zealot Codex</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- NAVEGACIÓN SUPERIOR (MÍNIMO 44px TOUCH TARGETS) -->
+    <nav class="nav-tabs" role="tablist">
+      <button class="nav-tab active" role="tab" aria-selected="true" onclick="selectTab(0, this)">Partida</button>
+      <button class="nav-tab" role="tab" aria-selected="false" onclick="selectTab(1, this)">Rotación</button>
+      <button class="nav-tab" role="tab" aria-selected="false" onclick="selectTab(2, this)">Jugadores (2)</button>
+      <button class="nav-tab" role="tab" aria-selected="false" onclick="selectTab(3, this)">Terminal</button>
+    </nav>
+
+    <!-- HERO CARD: PRIORIDAD TOTAL EN MAPA, MODO Y JUGADORES -->
+    <section class="hud-box" aria-labelledby="hero-title">
+      <div class="box-title" id="hero-title">
+        <span>ESTADO DE PARTIDA // EN VIVO</span>
+        <span class="status-pill status-green"><span class="status-dot"></span> OPERATIVO</span>
+      </div>
+      <div class="hero-grid">
+        <div class="hero-stat">
+          <span class="hero-label">Mapa en curso</span>
+          <span class="hero-val-main" id="hero-map">BLOOD GULCH</span>
+          <div class="hero-badge">MODO: SLAYER PRO</div>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-label">Jugadores conectados</span>
+          <span class="hero-val-main" style="color: #38bdf8;">2 <span style="font-size: 18px; color: var(--text-muted);">/ 16 SLOTS</span></span>
+          <span style="font-size: 11px; color: var(--text-muted);">Master Server: <b style="color: #34d399;">DEDICATED na-east</b></span>
+        </div>
+        <div class="hero-stat" style="display: flex; gap: 8px;">
+          <button class="hud-btn" style="flex: 1;" onclick="alert('Acción ejecutada: Siguiente Mapa')">SIGUIENTE MAPA</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SALUD DEL SERVIDOR: MÉTRICAS AGRUPADAS SIN DISPERSIÓN -->
+    <section class="hud-box" aria-labelledby="health-title">
+      <div class="box-title" id="health-title">
+        <span>SALUD DEL SERVIDOR // TELEMETRÍA DINÁMICA</span>
+        <span style="font-size: 11px; color: var(--text-muted);">ACTUALIZADO CADA 3S</span>
+      </div>
+      <div class="health-grid">
+        <div class="health-card">
+          <div class="health-label">TICKRATE / MOTOR</div>
+          <div class="health-val" style="color: #34d399;">30.0 <span style="font-size: 13px; color: var(--text-muted);">HZ</span></div>
+          <div class="health-sub">Netcode OpenCE v39</div>
+        </div>
+        <div class="health-card">
+          <div class="health-label">RAM PROCESO (HALO)</div>
+          <div class="health-val">38.2 <span style="font-size: 13px; color: var(--text-muted);">MB</span></div>
+          <div class="health-sub">POSIX statm directo</div>
+        </div>
+        <div class="health-card">
+          <div class="health-label">RAM NODO TOTAL</div>
+          <div class="health-val">2.8 <span style="font-size: 13px; color: var(--text-muted);">/ 16.0 GB</span></div>
+          <div class="health-sub">LXC 106 Dedicated</div>
+        </div>
+        <div class="health-card">
+          <div class="health-label">TIEMPO EN LÍNEA</div>
+          <div class="health-val">18D 04H</div>
+          <div class="health-sub">Cero caídas registradas</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA DE ROTACIÓN CON ESTADOS CLAROS (ACTIVO, DISPONIBLE) -->
+    <section class="hud-box" aria-labelledby="rot-title">
+      <div class="box-title" id="rot-title">
+        <span>ROTACIÓN DE MAPAS // LISTA ACTIVA</span>
+        <span style="font-size: 11px; color: var(--text-muted);">3 MAPAS EN COLA</span>
+      </div>
+      
+      <!-- Mapa 1: ACTIVO -->
+      <div class="rotation-item active">
+        <div>
+          <div style="font-size: 14px; font-weight: bold; color: #ffffff;">1. BLOOD GULCH</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Slayer Pro // Límite: 25 Bajas // Vehículos Activos</div>
+        </div>
+        <span class="status-pill status-green"><span class="status-dot"></span> EN CURSO</span>
+      </div>
+
+      <!-- Mapa 2: DISPONIBLE -->
+      <div class="rotation-item">
+        <div>
+          <div style="font-size: 14px; font-weight: bold; color: #cbd5e1;">2. BEAVER CREEK</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Team Slayer // Límite: 50 Bajas // Sin Vehículos</div>
+        </div>
+        <span style="font-size: 11px; color: var(--text-muted); padding: 3px 6px; border: 1px solid var(--panel-border); border-radius: 2px;">SIGUIENTE</span>
+      </div>
+
+      <!-- Mapa 3: DISPONIBLE -->
+      <div class="rotation-item">
+        <div>
+          <div style="font-size: 14px; font-weight: bold; color: #cbd5e1;">3. SIDEWINDER</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Capture The Flag // Límite: 3 Banderas // Vehículos Pesados</div>
+        </div>
+        <span style="font-size: 11px; color: var(--text-muted); padding: 3px 6px; border: 1px solid var(--panel-border); border-radius: 2px;">EN COLA</span>
+      </div>
+
+      <!-- ZONA DE PELIGRO CON CONFIRMACIÓN -->
+      <div class="danger-zone">
+        <span style="font-size: 11px; color: var(--text-muted);">Acciones administrativas críticas requieren confirmación:</span>
+        <button class="hud-btn hud-btn-red" onclick="confirmResetRotation()">REINICIAR ROTACIÓN</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const THEMES = {"unsc-titanium": {"name": "Mjolnir Titanium", "org": "UNSC LOGISTICS", "bg_col": "#1e242b", "glow": "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(226, 232, 240, 0.12) 0%, transparent 70%)", "texture_url": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2736%27%20height%3D%2736%27%20viewBox%3D%270%200%2036%2036%27%3E%0A%3Cdefs%3E%3Cstyle%3E.b%7Bstroke%3A%2523d5dde5%3Bstroke-width%3A2.5%3Bstroke-linecap%3Around%3Bopacity%3A0.10%3B%7D%3C/style%3E%3C/defs%3E%0A%3Cline%20x1%3D%273.5%27%20y1%3D%2714.5%27%20x2%3D%2714.5%27%20y2%3D%273.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%2721.5%27%20y1%3D%273.5%27%20x2%3D%2732.5%27%20y2%3D%2714.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%273.5%27%20y1%3D%2721.5%27%20x2%3D%2714.5%27%20y2%3D%2732.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%2721.5%27%20y1%3D%2732.5%27%20x2%3D%2732.5%27%20y2%3D%2721.5%27%20class%3D%27b%27/%3E%0A%3C/svg%3E", "texture_size": "100% 100%, 36px 36px", "panel_surface": "rgba(28, 35, 43, 0.94)", "panel_border": "rgba(226, 232, 240, 0.18)", "panel_bevel": "rgba(255, 255, 255, 0.18)", "accent": "#e2e8f0", "accent_bright": "#ffffff", "logo_color": "#e2e8f0", "logo_opacity": "0.14"}, "oni-blackops": {"name": "ONI Black Ops", "org": "OFFICE OF NAVAL INTEL", "bg_col": "#05070a", "glow": "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 70%)", "texture_url": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2736%27%20height%3D%2736%27%20viewBox%3D%270%200%2036%2036%27%3E%0A%3Cdefs%3E%3Cstyle%3E.b%7Bstroke%3A%2523ffffff%3Bstroke-width%3A2.5%3Bstroke-linecap%3Around%3Bopacity%3A0.08%3B%7D%3C/style%3E%3C/defs%3E%0A%3Cline%20x1%3D%273.5%27%20y1%3D%2714.5%27%20x2%3D%2714.5%27%20y2%3D%273.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%2721.5%27%20y1%3D%273.5%27%20x2%3D%2732.5%27%20y2%3D%2714.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%273.5%27%20y1%3D%2721.5%27%20x2%3D%2714.5%27%20y2%3D%2732.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%2721.5%27%20y1%3D%2732.5%27%20x2%3D%2732.5%27%20y2%3D%2721.5%27%20class%3D%27b%27/%3E%0A%3C/svg%3E", "texture_size": "100% 100%, 36px 36px", "panel_surface": "rgba(13, 17, 23, 0.94)", "panel_border": "rgba(255, 255, 255, 0.16)", "panel_bevel": "rgba(255, 255, 255, 0.18)", "accent": "#f8fafc", "accent_bright": "#ffffff", "logo_color": "#ffffff", "logo_opacity": "0.14"}, "unsc-amber": {"name": "UNSC Command Amber", "org": "UNSC HIGH COMMAND", "bg_col": "#0c0f14", "glow": "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(245, 158, 11, 0.14) 0%, transparent 70%)", "texture_url": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2736%27%20height%3D%2736%27%20viewBox%3D%270%200%2036%2036%27%3E%0A%3Cdefs%3E%3Cstyle%3E.b%7Bstroke%3A%2523f59e0b%3Bstroke-width%3A2.5%3Bstroke-linecap%3Around%3Bopacity%3A0.10%3B%7D%3C/style%3E%3C/defs%3E%0A%3Cline%20x1%3D%273.5%27%20y1%3D%2714.5%27%20x2%3D%2714.5%27%20y2%3D%273.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%2721.5%27%20y1%3D%273.5%27%20x2%3D%2732.5%27%20y2%3D%2714.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%273.5%27%20y1%3D%2721.5%27%20x2%3D%2714.5%27%20y2%3D%2732.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%2721.5%27%20y1%3D%2732.5%27%20x2%3D%2732.5%27%20y2%3D%2721.5%27%20class%3D%27b%27/%3E%0A%3C/svg%3E", "texture_size": "100% 100%, 36px 36px", "panel_surface": "rgba(20, 25, 33, 0.94)", "panel_border": "rgba(245, 158, 11, 0.22)", "panel_bevel": "rgba(251, 191, 36, 0.18)", "accent": "#f59e0b", "accent_bright": "#fbbf24", "logo_color": "#fbbf24", "logo_opacity": "0.14"}, "unsc-bluefleet": {"name": "UNSC Fleet Plasma", "org": "FLEET COMMAND", "bg_col": "#020914", "glow": "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(6, 182, 212, 0.16) 0%, transparent 70%)", "texture_url": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2736%27%20height%3D%2736%27%20viewBox%3D%270%200%2036%2036%27%3E%0A%3Cdefs%3E%3Cstyle%3E.b%7Bstroke%3A%252338bdf8%3Bstroke-width%3A2.5%3Bstroke-linecap%3Around%3Bopacity%3A0.10%3B%7D%3C/style%3E%3C/defs%3E%0A%3Cline%20x1%3D%273.5%27%20y1%3D%2714.5%27%20x2%3D%2714.5%27%20y2%3D%273.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%2721.5%27%20y1%3D%273.5%27%20x2%3D%2732.5%27%20y2%3D%2714.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%273.5%27%20y1%3D%2721.5%27%20x2%3D%2714.5%27%20y2%3D%2732.5%27%20class%3D%27b%27/%3E%0A%3Cline%20x1%3D%2721.5%27%20y1%3D%2732.5%27%20x2%3D%2732.5%27%20y2%3D%2721.5%27%20class%3D%27b%27/%3E%0A%3C/svg%3E", "texture_size": "100% 100%, 36px 36px", "panel_surface": "rgba(7, 20, 36, 0.94)", "panel_border": "rgba(56, 189, 248, 0.22)", "panel_bevel": "rgba(56, 189, 248, 0.18)", "accent": "#38bdf8", "accent_bright": "#7dd3fc", "logo_color": "#38bdf8", "logo_opacity": "0.14"}, "covenant-sacristan": {"name": "Sacristan Gold", "org": "SACRISTAN ORDER", "bg_col": "#0d0519", "glow": "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(245, 158, 11, 0.16) 0%, transparent 70%)", "texture_url": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22112%22%20height%3D%2296%22%20viewBox%3D%220%200%20112%2096%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20.h%20%7B%20fill%3A%20none%3B%20stroke%3A%20%23d97706%3B%20stroke-width%3A%201.0%3B%20opacity%3A%200.12%3B%20%7D%0A%20%20%20%20%20%20.g%20%7B%20stroke%3A%20%23d97706%3B%20stroke-width%3A%201.7%3B%20stroke-linecap%3A%20round%3B%20stroke-linejoin%3A%20round%3B%20fill%3A%20none%3B%20opacity%3A%200.18%3B%20%7D%0A%20%20%20%20%20%20.gf%20%7B%20fill%3A%20%23d97706%3B%20opacity%3A%200.18%3B%20%7D%0A%20%20%20%20%3C/style%3E%0A%20%20%3C/defs%3E%0A%20%20%3C%21--%20Panal%20de%20hex%C3%A1gonos%20100%25%20pegados%20y%20continuos%20--%3E%0A%20%20%3Cpolygon%20points%3D%2214%2C-24%2028%2C-16%2028%2C0%2014%2C8%200%2C0%200%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2242%2C-24%2056%2C-16%2056%2C0%2042%2C8%2028%2C0%2028%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2270%2C-24%2084%2C-16%2084%2C0%2070%2C8%2056%2C0%2056%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2298%2C-24%20112%2C-16%20112%2C0%2098%2C8%2084%2C0%2084%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22126%2C-24%20140%2C-16%20140%2C0%20126%2C8%20112%2C0%20112%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2214%2C0%2028%2C8%2028%2C24%2014%2C32%200%2C24%200%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2242%2C0%2056%2C8%2056%2C24%2042%2C32%2028%2C24%2028%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2270%2C0%2084%2C8%2084%2C24%2070%2C32%2056%2C24%2056%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2298%2C0%20112%2C8%20112%2C24%2098%2C32%2084%2C24%2084%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22126%2C0%20140%2C8%20140%2C24%20126%2C32%20112%2C24%20112%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%220%2C24%2014%2C32%2014%2C48%200%2C56%20-14%2C48%20-14%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2228%2C24%2042%2C32%2042%2C48%2028%2C56%2014%2C48%2014%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2256%2C24%2070%2C32%2070%2C48%2056%2C56%2042%2C48%2042%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2284%2C24%2098%2C32%2098%2C48%2084%2C56%2070%2C48%2070%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22112%2C24%20126%2C32%20126%2C48%20112%2C56%2098%2C48%2098%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2214%2C48%2028%2C56%2028%2C72%2014%2C80%200%2C72%200%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2242%2C48%2056%2C56%2056%2C72%2042%2C80%2028%2C72%2028%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2270%2C48%2084%2C56%2084%2C72%2070%2C80%2056%2C72%2056%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2298%2C48%20112%2C56%20112%2C72%2098%2C80%2084%2C72%2084%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22126%2C48%20140%2C56%20140%2C72%20126%2C80%20112%2C72%20112%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%220%2C72%2014%2C80%2014%2C96%200%2C104%20-14%2C96%20-14%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2228%2C72%2042%2C80%2042%2C96%2028%2C104%2014%2C96%2014%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2256%2C72%2070%2C80%2070%2C96%2056%2C104%2042%2C96%2042%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2284%2C72%2098%2C80%2098%2C96%2084%2C104%2070%2C96%2070%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22112%2C72%20126%2C80%20126%2C96%20112%2C104%2098%2C96%2098%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2214%2C96%2028%2C104%2028%2C120%2014%2C128%200%2C120%200%2C104%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2242%2C96%2056%2C104%2056%2C120%2042%2C128%2028%2C120%2028%2C104%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2270%2C96%2084%2C104%2084%2C120%2070%2C128%2056%2C120%2056%2C104%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2298%2C96%20112%2C104%20112%2C120%2098%2C128%2084%2C120%2084%2C104%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22126%2C96%20140%2C104%20140%2C120%20126%2C128%20112%2C120%20112%2C104%22%20class%3D%22h%22/%3E%0A%20%20%3C%21--%20S%C3%ADmbolos%20aut%C3%A9nticos%20Covenant%20variados%20--%3E%0A%20%20%3Cpath%20d%3D%22M%2014%2C9%20L%2014%2C21%20Q%2014%2C24%2011%2C24%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%229%22%20y1%3D%2213%22%20x2%3D%2219%22%20y2%3D%2213%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2210%22%20y1%3D%2217%22%20x2%3D%2218%22%20y2%3D%2217%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2037%2C11%20L%2046%2C11%20L%2040%2C16%20L%2046%2C21%20L%2037%2C21%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2216%22%20r%3D%221.3%22%20class%3D%22gf%22/%3E%3Cline%20x1%3D%2270%22%20y1%3D%2210%22%20x2%3D%2270%22%20y2%3D%2222%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2065%2C14%20L%2070%2C17%20L%2075%2C14%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2265%22%20y1%3D%2222%22%20x2%3D%2275%22%20y2%3D%2222%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2098%2C11%20C%2092%2C11%2092%2C21%2098%2C21%20C%20104%2C21%20104%2C15%2098%2C15%20L%20104%2C15%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2295%22%20cy%3D%2216%22%20r%3D%221.1%22%20class%3D%22gf%22/%3E%3Cline%20x1%3D%2222%22%20y1%3D%2237%22%20x2%3D%2232%22%20y2%3D%2237%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2222%22%20y1%3D%2240%22%20x2%3D%2234%22%20y2%3D%2240%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2222%22%20y1%3D%2243%22%20x2%3D%2232%22%20y2%3D%2243%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2030%2C36%20L%2034%2C40%20L%2030%2C44%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2252%22%20y1%3D%2235%22%20x2%3D%2252%22%20y2%3D%2245%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2256%22%20y1%3D%2234%22%20x2%3D%2256%22%20y2%3D%2246%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2260%22%20y1%3D%2235%22%20x2%3D%2260%22%20y2%3D%2245%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2079%2C36%20L%2084%2C33%20L%2089%2C36%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2079%2C42%20L%2084%2C39%20L%2089%2C42%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2284%22%20y1%3D%2239%22%20x2%3D%2284%22%20y2%3D%2246%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%204%2C35%20L%20-4%2C39%20L%204%2C42%20L%20-4%2C46%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22-4%22%20y1%3D%2235%22%20x2%3D%224%22%20y2%3D%2246%22%20class%3D%22g%22%20style%3D%22opacity%3A0.4%3B%22/%3E%3Cpath%20d%3D%22M%20116%2C35%20L%20108%2C39%20L%20116%2C42%20L%20108%2C46%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22108%22%20y1%3D%2235%22%20x2%3D%22116%22%20y2%3D%2246%22%20class%3D%22g%22%20style%3D%22opacity%3A0.4%3B%22/%3E%3Cpath%20d%3D%22M%2018%2C58%20L%2012%2C58%20L%2012%2C70%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%229%22%20y1%3D%2264%22%20x2%3D%2217%22%20y2%3D%2264%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%229%22%20y1%3D%2268%22%20x2%3D%2217%22%20y2%3D%2268%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2038%2C70%20L%2038%2C59%20L%2046%2C59%22%20class%3D%22g%22/%3E%3Cpolygon%20points%3D%2242%2C64%2045%2C67%2042%2C70%2039%2C67%22%20class%3D%22gf%22/%3E%3Cpath%20d%3D%22M%2074%2C59%20C%2065%2C59%2065%2C64%2070%2C64%20C%2075%2C64%2075%2C69%20C%2066%2C69%2066%2C69%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2267%22%20y1%3D%2263%22%20x2%3D%2273%22%20y2%3D%2265%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2094%2C59%20Q%2092%2C64%2094%2C69%20Q%20102%2C64%2094%2C59%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2297%22%20cy%3D%2264%22%20r%3D%221.3%22%20class%3D%22gf%22/%3E%3Cpath%20d%3D%22M%2023%2C83%20L%2032%2C83%20L%2026%2C88%20L%2032%2C93%20L%2023%2C93%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2227%22%20cy%3D%2288%22%20r%3D%221.3%22%20class%3D%22gf%22/%3E%3Cpath%20d%3D%22M%2056%2C83%20C%2050%2C83%2050%2C93%2056%2C93%20C%2062%2C93%2062%2C87%2056%2C87%20L%2062%2C87%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2253%22%20cy%3D%2288%22%20r%3D%221.1%22%20class%3D%22gf%22/%3E%3Cpath%20d%3D%22M%2084%2C81%20L%2084%2C93%20Q%2084%2C96%2081%2C96%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2279%22%20y1%3D%2285%22%20x2%3D%2289%22%20y2%3D%2285%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2280%22%20y1%3D%2289%22%20x2%3D%2288%22%20y2%3D%2289%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%220%22%20y1%3D%2282%22%20x2%3D%220%22%20y2%3D%2294%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%20-5%2C86%20L%200%2C89%20L%205%2C86%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22-5%22%20y1%3D%2294%22%20x2%3D%225%22%20y2%3D%2294%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22112%22%20y1%3D%2282%22%20x2%3D%22112%22%20y2%3D%2294%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%20107%2C86%20L%20112%2C89%20L%20117%2C86%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22107%22%20y1%3D%2294%22%20x2%3D%22117%22%20y2%3D%2294%22%20class%3D%22g%22/%3E%0A%3C/svg%3E", "texture_size": "100% 100%, 112px 96px", "panel_surface": "rgba(24, 12, 40, 0.94)", "panel_border": "rgba(245, 158, 11, 0.22)", "panel_bevel": "rgba(251, 191, 36, 0.18)", "accent": "#fbbf24", "accent_bright": "#fef08a", "logo_color": "#fbbf24", "logo_opacity": "0.14"}, "covenant-zealot": {"name": "Covenant Zealot", "org": "SANGHEILI ZEALOT", "bg_col": "#020712", "glow": "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(56, 189, 248, 0.16) 0%, transparent 70%)", "texture_url": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22112%22%20height%3D%2296%22%20viewBox%3D%220%200%20112%2096%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20.h%20%7B%20fill%3A%20none%3B%20stroke%3A%20%230284c7%3B%20stroke-width%3A%201.0%3B%20opacity%3A%200.12%3B%20%7D%0A%20%20%20%20%20%20.g%20%7B%20stroke%3A%20%230284c7%3B%20stroke-width%3A%201.7%3B%20stroke-linecap%3A%20round%3B%20stroke-linejoin%3A%20round%3B%20fill%3A%20none%3B%20opacity%3A%200.18%3B%20%7D%0A%20%20%20%20%20%20.gf%20%7B%20fill%3A%20%230284c7%3B%20opacity%3A%200.18%3B%20%7D%0A%20%20%20%20%3C/style%3E%0A%20%20%3C/defs%3E%0A%20%20%3C%21--%20Panal%20de%20hex%C3%A1gonos%20100%25%20pegados%20y%20continuos%20--%3E%0A%20%20%3Cpolygon%20points%3D%2214%2C-24%2028%2C-16%2028%2C0%2014%2C8%200%2C0%200%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2242%2C-24%2056%2C-16%2056%2C0%2042%2C8%2028%2C0%2028%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2270%2C-24%2084%2C-16%2084%2C0%2070%2C8%2056%2C0%2056%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2298%2C-24%20112%2C-16%20112%2C0%2098%2C8%2084%2C0%2084%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22126%2C-24%20140%2C-16%20140%2C0%20126%2C8%20112%2C0%20112%2C-16%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2214%2C0%2028%2C8%2028%2C24%2014%2C32%200%2C24%200%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2242%2C0%2056%2C8%2056%2C24%2042%2C32%2028%2C24%2028%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2270%2C0%2084%2C8%2084%2C24%2070%2C32%2056%2C24%2056%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2298%2C0%20112%2C8%20112%2C24%2098%2C32%2084%2C24%2084%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22126%2C0%20140%2C8%20140%2C24%20126%2C32%20112%2C24%20112%2C8%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%220%2C24%2014%2C32%2014%2C48%200%2C56%20-14%2C48%20-14%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2228%2C24%2042%2C32%2042%2C48%2028%2C56%2014%2C48%2014%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2256%2C24%2070%2C32%2070%2C48%2056%2C56%2042%2C48%2042%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2284%2C24%2098%2C32%2098%2C48%2084%2C56%2070%2C48%2070%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22112%2C24%20126%2C32%20126%2C48%20112%2C56%2098%2C48%2098%2C32%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2214%2C48%2028%2C56%2028%2C72%2014%2C80%200%2C72%200%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2242%2C48%2056%2C56%2056%2C72%2042%2C80%2028%2C72%2028%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2270%2C48%2084%2C56%2084%2C72%2070%2C80%2056%2C72%2056%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2298%2C48%20112%2C56%20112%2C72%2098%2C80%2084%2C72%2084%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22126%2C48%20140%2C56%20140%2C72%20126%2C80%20112%2C72%20112%2C56%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%220%2C72%2014%2C80%2014%2C96%200%2C104%20-14%2C96%20-14%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2228%2C72%2042%2C80%2042%2C96%2028%2C104%2014%2C96%2014%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2256%2C72%2070%2C80%2070%2C96%2056%2C104%2042%2C96%2042%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2284%2C72%2098%2C80%2098%2C96%2084%2C104%2070%2C96%2070%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22112%2C72%20126%2C80%20126%2C96%20112%2C104%2098%2C96%2098%2C80%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2214%2C96%2028%2C104%2028%2C120%2014%2C128%200%2C120%200%2C104%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2242%2C96%2056%2C104%2056%2C120%2042%2C128%2028%2C120%2028%2C104%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2270%2C96%2084%2C104%2084%2C120%2070%2C128%2056%2C120%2056%2C104%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%2298%2C96%20112%2C104%20112%2C120%2098%2C128%2084%2C120%2084%2C104%22%20class%3D%22h%22/%3E%3Cpolygon%20points%3D%22126%2C96%20140%2C104%20140%2C120%20126%2C128%20112%2C120%20112%2C104%22%20class%3D%22h%22/%3E%0A%20%20%3C%21--%20S%C3%ADmbolos%20aut%C3%A9nticos%20Covenant%20variados%20--%3E%0A%20%20%3Cpath%20d%3D%22M%2014%2C9%20L%2014%2C21%20Q%2014%2C24%2011%2C24%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%229%22%20y1%3D%2213%22%20x2%3D%2219%22%20y2%3D%2213%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2210%22%20y1%3D%2217%22%20x2%3D%2218%22%20y2%3D%2217%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2037%2C11%20L%2046%2C11%20L%2040%2C16%20L%2046%2C21%20L%2037%2C21%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2216%22%20r%3D%221.3%22%20class%3D%22gf%22/%3E%3Cline%20x1%3D%2270%22%20y1%3D%2210%22%20x2%3D%2270%22%20y2%3D%2222%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2065%2C14%20L%2070%2C17%20L%2075%2C14%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2265%22%20y1%3D%2222%22%20x2%3D%2275%22%20y2%3D%2222%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2098%2C11%20C%2092%2C11%2092%2C21%2098%2C21%20C%20104%2C21%20104%2C15%2098%2C15%20L%20104%2C15%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2295%22%20cy%3D%2216%22%20r%3D%221.1%22%20class%3D%22gf%22/%3E%3Cline%20x1%3D%2222%22%20y1%3D%2237%22%20x2%3D%2232%22%20y2%3D%2237%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2222%22%20y1%3D%2240%22%20x2%3D%2234%22%20y2%3D%2240%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2222%22%20y1%3D%2243%22%20x2%3D%2232%22%20y2%3D%2243%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2030%2C36%20L%2034%2C40%20L%2030%2C44%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2252%22%20y1%3D%2235%22%20x2%3D%2252%22%20y2%3D%2245%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2256%22%20y1%3D%2234%22%20x2%3D%2256%22%20y2%3D%2246%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2260%22%20y1%3D%2235%22%20x2%3D%2260%22%20y2%3D%2245%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2079%2C36%20L%2084%2C33%20L%2089%2C36%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2079%2C42%20L%2084%2C39%20L%2089%2C42%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2284%22%20y1%3D%2239%22%20x2%3D%2284%22%20y2%3D%2246%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%204%2C35%20L%20-4%2C39%20L%204%2C42%20L%20-4%2C46%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22-4%22%20y1%3D%2235%22%20x2%3D%224%22%20y2%3D%2246%22%20class%3D%22g%22%20style%3D%22opacity%3A0.4%3B%22/%3E%3Cpath%20d%3D%22M%20116%2C35%20L%20108%2C39%20L%20116%2C42%20L%20108%2C46%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22108%22%20y1%3D%2235%22%20x2%3D%22116%22%20y2%3D%2246%22%20class%3D%22g%22%20style%3D%22opacity%3A0.4%3B%22/%3E%3Cpath%20d%3D%22M%2018%2C58%20L%2012%2C58%20L%2012%2C70%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%229%22%20y1%3D%2264%22%20x2%3D%2217%22%20y2%3D%2264%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%229%22%20y1%3D%2268%22%20x2%3D%2217%22%20y2%3D%2268%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2038%2C70%20L%2038%2C59%20L%2046%2C59%22%20class%3D%22g%22/%3E%3Cpolygon%20points%3D%2242%2C64%2045%2C67%2042%2C70%2039%2C67%22%20class%3D%22gf%22/%3E%3Cpath%20d%3D%22M%2074%2C59%20C%2065%2C59%2065%2C64%2070%2C64%20C%2075%2C64%2075%2C69%20C%2066%2C69%2066%2C69%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2267%22%20y1%3D%2263%22%20x2%3D%2273%22%20y2%3D%2265%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%2094%2C59%20Q%2092%2C64%2094%2C69%20Q%20102%2C64%2094%2C59%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2297%22%20cy%3D%2264%22%20r%3D%221.3%22%20class%3D%22gf%22/%3E%3Cpath%20d%3D%22M%2023%2C83%20L%2032%2C83%20L%2026%2C88%20L%2032%2C93%20L%2023%2C93%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2227%22%20cy%3D%2288%22%20r%3D%221.3%22%20class%3D%22gf%22/%3E%3Cpath%20d%3D%22M%2056%2C83%20C%2050%2C83%2050%2C93%2056%2C93%20C%2062%2C93%2062%2C87%2056%2C87%20L%2062%2C87%22%20class%3D%22g%22/%3E%3Ccircle%20cx%3D%2253%22%20cy%3D%2288%22%20r%3D%221.1%22%20class%3D%22gf%22/%3E%3Cpath%20d%3D%22M%2084%2C81%20L%2084%2C93%20Q%2084%2C96%2081%2C96%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2279%22%20y1%3D%2285%22%20x2%3D%2289%22%20y2%3D%2285%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%2280%22%20y1%3D%2289%22%20x2%3D%2288%22%20y2%3D%2289%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%220%22%20y1%3D%2282%22%20x2%3D%220%22%20y2%3D%2294%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%20-5%2C86%20L%200%2C89%20L%205%2C86%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22-5%22%20y1%3D%2294%22%20x2%3D%225%22%20y2%3D%2294%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22112%22%20y1%3D%2282%22%20x2%3D%22112%22%20y2%3D%2294%22%20class%3D%22g%22/%3E%3Cpath%20d%3D%22M%20107%2C86%20L%20112%2C89%20L%20117%2C86%22%20class%3D%22g%22/%3E%3Cline%20x1%3D%22107%22%20y1%3D%2294%22%20x2%3D%22117%22%20y2%3D%2294%22%20class%3D%22g%22/%3E%0A%3C/svg%3E", "texture_size": "100% 100%, 112px 96px", "panel_surface": "rgba(7, 18, 33, 0.94)", "panel_border": "rgba(56, 189, 248, 0.22)", "panel_bevel": "rgba(186, 230, 253, 0.18)", "accent": "#38bdf8", "accent_bright": "#bae6fd", "logo_color": "#38bdf8", "logo_opacity": "0.14"}};
+    const LOGOS = {"unsc-titanium": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 100\" class=\"hud-insignia\">\n  <!-- Alas de aguila estilizadas -->\n  <path d=\"M 60,35 C 55,20 40,8 20,5 C 24,15 26,26 30,38 C 22,28 15,22 8,18 C 12,30 16,42 24,52 C 16,45 10,40 5,36 C 8,50 14,62 26,70 C 35,66 48,65 54,68 Z\" fill=\"currentColor\" opacity=\"0.85\"/>\n  <path d=\"M 60,35 C 65,20 80,8 100,5 C 96,15 94,26 90,38 C 98,28 105,22 112,18 C 108,30 104,42 96,52 C 104,45 110,40 115,36 C 112,50 106,62 94,70 C 85,66 72,65 66,68 Z\" fill=\"currentColor\" opacity=\"0.85\"/>\n  <!-- Cabeza de aguila -->\n  <path d=\"M 54,32 C 54,26 58,22 62,22 C 66,22 67,25 70,27 C 67,29 65,30 63,30 C 63,34 60,36 57,36 Z\" fill=\"currentColor\"/>\n  <!-- Escudo central -->\n  <path d=\"M 44,48 L 76,48 L 72,76 L 60,84 L 48,76 Z\" fill=\"var(--bg)\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n  <!-- Texto UNSC dentro del escudo -->\n  <text x=\"60\" y=\"65\" font-family=\"'Teko', sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"currentColor\" text-anchor=\"middle\" letter-spacing=\"1\">UNSC</text>\n  <!-- Liston inferior -->\n  <path d=\"M 32,84 Q 60,94 88,84 L 84,80 Q 60,89 36,80 Z\" fill=\"currentColor\" opacity=\"0.7\"/>\n</svg>", "oni-blackops": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" class=\"hud-insignia\">\n  <circle cx=\"50\" cy=\"50\" r=\"46\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" opacity=\"0.4\"/>\n  <circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"currentColor\" opacity=\"0.12\"/>\n  <!-- Triangulo invertido interior con ojo estilizado -->\n  <polygon points=\"50,18 78,72 22,72\" fill=\"currentColor\" opacity=\"0.85\"/>\n  <circle cx=\"50\" cy=\"52\" r=\"13\" fill=\"var(--bg)\"/>\n  <circle cx=\"50\" cy=\"52\" r=\"7\" fill=\"currentColor\"/>\n</svg>", "unsc-amber": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 100\" class=\"hud-insignia\">\n  <!-- Alas de aguila estilizadas -->\n  <path d=\"M 60,35 C 55,20 40,8 20,5 C 24,15 26,26 30,38 C 22,28 15,22 8,18 C 12,30 16,42 24,52 C 16,45 10,40 5,36 C 8,50 14,62 26,70 C 35,66 48,65 54,68 Z\" fill=\"currentColor\" opacity=\"0.85\"/>\n  <path d=\"M 60,35 C 65,20 80,8 100,5 C 96,15 94,26 90,38 C 98,28 105,22 112,18 C 108,30 104,42 96,52 C 104,45 110,40 115,36 C 112,50 106,62 94,70 C 85,66 72,65 66,68 Z\" fill=\"currentColor\" opacity=\"0.85\"/>\n  <!-- Cabeza de aguila -->\n  <path d=\"M 54,32 C 54,26 58,22 62,22 C 66,22 67,25 70,27 C 67,29 65,30 63,30 C 63,34 60,36 57,36 Z\" fill=\"currentColor\"/>\n  <!-- Escudo central -->\n  <path d=\"M 44,48 L 76,48 L 72,76 L 60,84 L 48,76 Z\" fill=\"var(--bg)\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n  <!-- Texto UNSC dentro del escudo -->\n  <text x=\"60\" y=\"65\" font-family=\"'Teko', sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"currentColor\" text-anchor=\"middle\" letter-spacing=\"1\">UNSC</text>\n  <!-- Liston inferior -->\n  <path d=\"M 32,84 Q 60,94 88,84 L 84,80 Q 60,89 36,80 Z\" fill=\"currentColor\" opacity=\"0.7\"/>\n</svg>", "unsc-bluefleet": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 100\" class=\"hud-insignia\">\n  <!-- Alas de aguila estilizadas -->\n  <path d=\"M 60,35 C 55,20 40,8 20,5 C 24,15 26,26 30,38 C 22,28 15,22 8,18 C 12,30 16,42 24,52 C 16,45 10,40 5,36 C 8,50 14,62 26,70 C 35,66 48,65 54,68 Z\" fill=\"currentColor\" opacity=\"0.85\"/>\n  <path d=\"M 60,35 C 65,20 80,8 100,5 C 96,15 94,26 90,38 C 98,28 105,22 112,18 C 108,30 104,42 96,52 C 104,45 110,40 115,36 C 112,50 106,62 94,70 C 85,66 72,65 66,68 Z\" fill=\"currentColor\" opacity=\"0.85\"/>\n  <!-- Cabeza de aguila -->\n  <path d=\"M 54,32 C 54,26 58,22 62,22 C 66,22 67,25 70,27 C 67,29 65,30 63,30 C 63,34 60,36 57,36 Z\" fill=\"currentColor\"/>\n  <!-- Escudo central -->\n  <path d=\"M 44,48 L 76,48 L 72,76 L 60,84 L 48,76 Z\" fill=\"var(--bg)\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n  <!-- Texto UNSC dentro del escudo -->\n  <text x=\"60\" y=\"65\" font-family=\"'Teko', sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"currentColor\" text-anchor=\"middle\" letter-spacing=\"1\">UNSC</text>\n  <!-- Liston inferior -->\n  <path d=\"M 32,84 Q 60,94 88,84 L 84,80 Q 60,89 36,80 Z\" fill=\"currentColor\" opacity=\"0.7\"/>\n</svg>", "covenant-sacristan": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 170\" class=\"hud-insignia\">\n  <!-- Domo superior masivo (hongo espacial de Gran Caridad) -->\n  <path d=\"M 80,18 C 30,18 10,48 10,68 C 10,74 25,78 40,79 C 55,80 70,82 80,82 C 90,82 105,80 120,79 C 135,78 150,74 150,68 C 150,48 130,18 80,18 Z\" fill=\"currentColor\" opacity=\"0.95\"/>\n  <!-- Detalles cr\u00e1teres y hendiduras bioluminiscentes en el domo -->\n  <path d=\"M 38,45 Q 52,38 68,44 Q 56,52 38,45 Z\" fill=\"#0b0314\" opacity=\"0.8\"/>\n  <circle cx=\"48\" cy=\"45\" r=\"3\" fill=\"currentColor\"/>\n  <path d=\"M 94,40 Q 112,36 126,42 Q 114,48 94,40 Z\" fill=\"#0b0314\" opacity=\"0.8\"/>\n  <circle cx=\"110\" cy=\"41\" r=\"2.5\" fill=\"currentColor\"/>\n  <!-- Resplandor del anillo inferior del domo (foso de la ciudad) -->\n  <ellipse cx=\"80\" cy=\"74\" rx=\"66\" ry=\"6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" opacity=\"0.6\"/>\n  <!-- Spire / Aguja central y ramas de la ciudad colgante inferior -->\n  <path d=\"M 45,80 L 76,145 L 80,154 L 84,145 L 115,80 Z\" fill=\"currentColor\" opacity=\"0.35\"/>\n  <line x1=\"80\" y1=\"80\" x2=\"80\" y2=\"158\" stroke=\"currentColor\" stroke-width=\"3\" opacity=\"0.9\"/>\n  <!-- Brazos orbitales / muelles de atraque colgantes -->\n  <line x1=\"62\" y1=\"96\" x2=\"98\" y2=\"96\" stroke=\"currentColor\" stroke-width=\"2\" opacity=\"0.8\"/>\n  <line x1=\"68\" y1=\"112\" x2=\"92\" y2=\"112\" stroke=\"currentColor\" stroke-width=\"1.8\" opacity=\"0.75\"/>\n  <line x1=\"73\" y1=\"126\" x2=\"87\" y2=\"126\" stroke=\"currentColor\" stroke-width=\"1.5\" opacity=\"0.7\"/>\n  <!-- Tipograf\u00eda sagrada -->\n  <text x=\"80\" y=\"166\" font-family=\"'Teko', sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"currentColor\" text-anchor=\"middle\" letter-spacing=\"3\">HIGH CHARITY</text>\n</svg>", "covenant-zealot": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 160\" class=\"hud-insignia\">\n  <!-- Arco orbital exterior punteado -->\n  <circle cx=\"80\" cy=\"80\" r=\"74\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-dasharray=\"4,4\" opacity=\"0.4\"/>\n  <circle cx=\"80\" cy=\"80\" r=\"66\" fill=\"rgba(15, 6, 28, 0.45)\" stroke=\"currentColor\" stroke-width=\"2\" opacity=\"0.6\"/>\n  <!-- Glifo sagrado Covenant (Forma bio-mec\u00e1nica curva / Sangheili) -->\n  <path d=\"M 80,24 C 65,45 42,60 26,76 C 45,74 65,82 72,96 C 76,82 84,82 88,96 C 95,82 115,74 134,76 C 118,60 95,45 80,24 Z\" fill=\"currentColor\" opacity=\"0.95\"/>\n  <!-- Ojo / N\u00facleo de Plasma Superior -->\n  <ellipse cx=\"80\" cy=\"54\" rx=\"7\" ry=\"12\" fill=\"#0b0314\" stroke=\"currentColor\" stroke-width=\"2\"/>\n  <circle cx=\"80\" cy=\"54\" r=\"3.5\" fill=\"currentColor\"/>\n  <!-- Garras inferiores / Cuernos del Gran Viaje -->\n  <path d=\"M 40,84 C 34,106 48,124 64,132 C 55,120 54,104 60,94 Z\" fill=\"currentColor\" opacity=\"0.9\"/>\n  <path d=\"M 120,84 C 126,106 112,124 96,132 C 105,120 106,104 100,94 Z\" fill=\"currentColor\" opacity=\"0.9\"/>\n  <!-- Anillo sagrado / Halo miniatura flotante -->\n  <ellipse cx=\"80\" cy=\"116\" rx=\"14\" ry=\"4.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" opacity=\"0.9\"/>\n  <!-- Tipograf\u00eda Forerunner / Sangheili -->\n  <text x=\"80\" y=\"148\" font-family=\"'Teko', sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"currentColor\" text-anchor=\"middle\" letter-spacing=\"4\">COVENANT</text>\n  <text x=\"80\" y=\"157\" font-family=\"'Share Tech Mono', monospace\" font-size=\"7\" fill=\"currentColor\" opacity=\"0.75\" text-anchor=\"middle\" letter-spacing=\"1.5\">HOLY ECUMENE FLEET</text>\n</svg>"};
+
+    function switchTheme(themeKey) {
+      const t = THEMES[themeKey];
+      if (!t) return;
+
+      const r = document.documentElement;
+      r.style.setProperty('--bg', t.bg_col);
+      r.style.setProperty('--theme-glow', t.glow);
+      r.style.setProperty('--theme-texture', 'url("' + t.texture_url + '")');
+      r.style.setProperty('--theme-size', t.texture_size);
+      r.style.setProperty('--panel-bg', t.panel_surface);
+      r.style.setProperty('--panel-border', t.panel_border);
+      r.style.setProperty('--panel-bevel', t.panel_bevel);
+      r.style.setProperty('--accent', t.accent);
+      r.style.setProperty('--accent-bright', t.accent_bright);
+      r.style.setProperty('--accent-dim', t.accent === '#f8fafc' ? 'rgba(255,255,255,0.08)' : t.accent + '1a');
+      r.style.setProperty('--logo-color', t.logo_color);
+      r.style.setProperty('--logo-opacity', t.logo_opacity);
+
+      // Actualizar SVGs
+      const svgCode = LOGOS[themeKey];
+      document.getElementById('brand-logo-icon').innerHTML = svgCode;
+      document.getElementById('bg-watermark-icon').innerHTML = svgCode;
+      document.getElementById('brand-org-tag').textContent = t.org + ' // NETCODE V39';
+
+      localStorage.setItem('halo_theme', themeKey);
+      document.getElementById('theme-selector').value = themeKey;
+    }
+
+    function selectTab(index, btn) {
+      document.querySelectorAll('.nav-tab').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+    }
+
+    function confirmResetRotation() {
+      if (confirm("ADVERTENCIA DE SEGURIDAD:\n¿Confirmas el reinicio inmediato de la rotación del servidor? La partida actual terminará.")) {
+        alert("Comando sv_mapcycle_restart enviado al servidor.");
+      }
+    }
+
+    // Cargar preferencia guardada o tema por defecto
+    const saved = localStorage.getItem('halo_theme') || 'unsc-titanium';
+    switchTheme(saved);
+  </script>
+</body>
+</html>

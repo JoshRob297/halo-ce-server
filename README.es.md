@@ -63,25 +63,31 @@ Construido sobre el puerto nativo de [OpenCE](https://github.com/OpenCommunityEd
 
 ## Dashboard Web
 
-El servidor incluye un Dashboard Web nativo embebido en C que escucha en el puerto `:8080`, replicando fielmente la interfaz de administración oficial de OpenCE y manteniendo 100% de compatibilidad con los clientes oficiales actuales (Netcode v39).
+El servidor incluye un Tactical Dashboard Web nativo embebido en C que escucha en el puerto `:8080`, diseñado con estética militar táctica de alto contraste y 6 identidades visuales fieles al lore (UNSC, ONI y Covenant) conmutables en caliente con persistencia local.
 
 El panel web es **completamente opcional**: si se configura `health_port = 0`, el servidor no abre ningún socket HTTP y corre en modo headless puro.
 
 <p align="center">
-  <img src="docs/screenshots/dashboard_status.png" alt="Dashboard Web de Halo CE - Pestaña Status" width="850">
+  <img src="docs/screenshots/dashboard_status.png" alt="Dashboard Web de Halo CE - Partida en Vivo y Salud" width="850">
 </p>
 
 ### Módulos del Dashboard
-- **Status y Telemetría en Vivo:** Mapa actual, variante activa, tiempo de partida, marcador en vivo, uptime y gráfica histórica de jugadores de los últimos 10 minutos.
-- **Gestor de Rotación:** Reordenamiento interactivo de mapas (`Up`, `Down`, `Remove`, `Play Now`) y formulario para agregar nuevas combinaciones de mapas y modos en caliente.
-- **Administración de Jugadores:** Monitoreo con ping, IP, equipo y botones de moderación instantánea (`Kick`, `Ban`, `Mute`).
-- **Ajustes y Consola Web:** Editor visual de parámetros de `config.toml` y terminal interactiva RCON en el navegador.
+- **Hero Card y Salud del Servidor:** Visibilidad inmediata de mapa en curso, modo y jugadores conectados (`0 / 16`), respaldado por telemetría agrupada (tickrate 30 Hz, RAM de proceso vía POSIX directo `/proc/self/statm`, RAM del nodo y tiempo en línea).
+- **Gestor de Rotación:** Control dinámico de rotación con acciones para saltar mapas, forzar combinaciones o detener partidas de forma segura.
+- **Administración de Jugadores:** Monitoreo con ping, puntuación, equipo y botones de moderación instantánea (`Kick`, `Ban`).
+- **Terminal HaloScript y Logs en Vivo:** Terminal administrativa interactiva en el navegador e inspector en tiempo real de `debug.txt`.
+- **Selector de Temas Tácticos:** Ubicado en el submenú de Configuración, con 6 variantes canónicas:
+  - Militares / Humanas: *Mjolnir Titanium*, *ONI Black Ops*, *UNSC Command Amber* y *UNSC Fleet Plasma* (con textura balística de cápsulas visible y blasones flotantes).
+  - Covenant: *Sacristan Gold Codex* y *Covenant Zealot Codex* (con panal hexagonal 100% continuo de aristas compartidas y glifos auténticos de Halo Waypoint).
 
 Para consultar la especificación completa de la API REST, payloads JSON y configuración de proxy inverso HTTPS, consulta [docs/web-dashboard.es.md](docs/web-dashboard.es.md).
 
 <p align="center">
   <img src="docs/screenshots/dashboard_rotation.png" alt="Gestor de Rotación de Mapas" width="420">&nbsp;
-  <img src="docs/screenshots/dashboard_settings.png" alt="Editor de Ajustes" width="420">
+  <img src="docs/screenshots/dashboard_settings.png" alt="Ajustes y Selector de Temas" width="420">
+</p>
+<p align="center">
+  <img src="docs/screenshots/dashboard_covenant.png" alt="Tema Covenant Sacristan Gold" width="850">
 </p>
 
 ---

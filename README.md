@@ -58,23 +58,29 @@ Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native por
 
 ## Web Dashboard
 
-The dedicated server includes a native, zero-dependency embedded Web Dashboard listening on port `:8080`, faithfully matching the official OpenCE administration interface while preserving 100% compatibility with current official client builds (Netcode v39).
+The dedicated server includes a native, zero-dependency embedded Tactical Web Dashboard listening on port `:8080`, engineered with high-contrast tactical HUD styling and 6 lore-authentic visual identities (UNSC, ONI, and Covenant) switchable on the fly with local persistence.
 
 <p align="center">
-  <img src="docs/screenshots/dashboard_status.png" alt="Halo CE Dedicated Server Web Dashboard - Status" width="850">
+  <img src="docs/screenshots/dashboard_status.png" alt="Halo CE Dedicated Server Web Dashboard - Live Match & Health" width="850">
 </p>
 
 ### Key Dashboard Modules
-- **Status & Telemetry:** Live map, active gametype, match time, score, uptime, and real-time 10-minute player history sparkline.
-- **Rotation Manager:** Interactive playlist reordering (`Up`, `Down`, `Remove`, `Play Now`) and adding new map/rule combinations on the fly.
-- **Player Administration:** Connected player monitoring with ping, IP, team affiliation, and instant moderation actions (`Kick`, `Ban`, `Mute`).
-- **Settings & Console:** Visual configuration editor and embedded browser RCON terminal.
+- **Hero Card & Server Health:** Instant visibility of the active map, gametype, and connected slots (`0 / 16`), backed by grouped telemetry (tickrate 30 Hz, POSIX native process RAM from `/proc/self/statm`, node RAM, and continuous uptime).
+- **Rotation Manager:** Dynamic mapcycle controls with direct triggers to skip maps, force specific rotations, or safely stop in-progress matches.
+- **Player Administration:** Connected player monitoring with real-time ping, score, team assignment, and moderation controls (`Kick`, `Ban`).
+- **HaloScript Terminal & Live Debug Logs:** In-browser administrative terminal and real-time inspector for `debug.txt`.
+- **Tactical Theme Selector:** Integrated in the Settings sub-menu, offering 6 authentic aesthetics:
+  - Human / Military: *Mjolnir Titanium*, *ONI Black Ops*, *UNSC Command Amber*, and *UNSC Fleet Plasma* (with visible ballistic capsule textures and front-floating emblems).
+  - Covenant: *Sacristan Gold Codex* and *Covenant Zealot Codex* (featuring 100% continuous, shared-edge hexagonal honeycomb meshes with authentic Halo Waypoint codex glyphs).
 
 For the complete REST API specification, JSON payloads, and HTTPS reverse proxy setup, see [docs/web-dashboard.md](docs/web-dashboard.md).
 
 <p align="center">
   <img src="docs/screenshots/dashboard_rotation.png" alt="Rotation Manager" width="420">&nbsp;
-  <img src="docs/screenshots/dashboard_settings.png" alt="Settings Editor" width="420">
+  <img src="docs/screenshots/dashboard_settings.png" alt="Settings & Theme Selector" width="420">
+</p>
+<p align="center">
+  <img src="docs/screenshots/dashboard_covenant.png" alt="Covenant Sacristan Gold Theme" width="850">
 </p>
 
 ---

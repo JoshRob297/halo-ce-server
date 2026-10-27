@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="52" viewBox="0 0 60 52">
+  <defs>
+    <style>
+      .h { fill: none; stroke: #d97706; stroke-width: 0.9; opacity: 0.28; }
+      .g { fill: none; stroke: #d97706; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.40; }
+      .gf { fill: #d97706; opacity: 0.40; }
+    </style>
+  </defs>
+
+  <!-- Hex 1 en (15, 13, r=14) -->
+  <polygon points="15,1 27,7 27,19 15,25 3,19 3,7" class="h"/>
+  <!-- Glifo 1: Cayado Sagrado Sangheili -->
+  <path d="M 15,6 L 15,17 Q 15,20 12,20" class="g"/>
+  <line x1="10" y1="10" x2="20" y2="10" class="g"/>
+  <line x1="11" y1="14" x2="19" y2="14" class="g"/>
+
+  <!-- Hex 2 en (45, 13, r=14) -->
+  <polygon points="45,1 57,7 57,19 45,25 33,19 33,7" class="h"/>
+  <!-- Glifo 2: Tridente angular Forerunner -->
+  <path d="M 45,6 L 45,20" class="g"/>
+  <path d="M 39,9 L 45,13 L 51,9" class="g"/>
+  <line x1="40" y1="20" x2="50" y2="20" class="g"/>
+
+  <!-- Hex 3 en (30, 39, r=14) -->
+  <polygon points="30,27 42,33 42,45 30,51 18,45 18,33" class="h"/>
+  <!-- Glifo 3: Bucle toroidal Sangheili -->
+  <path d="M 30,33 C 24,33 24,45 30,45 C 35,45 35,38 30,38 L 36,38" class="g"/>
+  <circle cx="28" cy="39" r="1.2" class="gf"/>
+
+  <!-- Hex 4 en (0, 39) y (60, 39) -->
+  <polygon points="0,27 12,33 12,45 0,51 -12,45 -12,33" class="h"/>
+  <path d="M -4,34 L 4,34 L -1,39 L 4,44 L -4,44" class="g"/>
+  <circle cx="0" cy="39" r="1.2" class="gf"/>
+
+  <polygon points="60,27 72,33 72,45 60,51 48,45 48,33" class="h"/>
+  <path d="M 56,34 L 64,34 L 59,39 L 64,44 L 56,44" class="g"/>
+  <circle cx="60" cy="39" r="1.2" class="gf"/>
+</svg>
