@@ -71,14 +71,13 @@ El panel web es **completamente opcional**: si se configura `health_port = 0`, e
   <img src="docs/screenshots/dashboard_status.png" alt="Dashboard Web de Halo CE - Partida en Vivo y Salud" width="850">
 </p>
 
-### Módulos del Dashboard
-- **Hero Card y Salud del Servidor:** Visibilidad inmediata de mapa en curso, modo y jugadores conectados (`0 / 16`), respaldado por telemetría agrupada (tickrate 30 Hz, RAM de proceso vía POSIX directo `/proc/self/statm`, RAM del nodo y tiempo en línea).
-- **Gestor de Rotación:** Control dinámico de rotación con acciones para saltar mapas, forzar combinaciones o detener partidas de forma segura.
-- **Administración de Jugadores:** Monitoreo con ping, puntuación, equipo y botones de moderación instantánea (`Kick`, `Ban`).
-- **Terminal HaloScript y Logs en Vivo:** Terminal administrativa interactiva en el navegador e inspector en tiempo real de `debug.txt`.
-- **Selector de Temas Tácticos:** Ubicado en el submenú de Configuración, con 6 variantes canónicas:
-  - Militares / Humanas: *Mjolnir Titanium*, *ONI Black Ops*, *UNSC Command Amber* y *UNSC Fleet Plasma* (con textura balística de cápsulas visible y blasones flotantes).
-  - Covenant: *Sacristan Gold Codex* y *Covenant Zealot Codex* (con panal hexagonal 100% continuo de aristas compartidas y glifos auténticos de Halo Waypoint).
+### Módulos del Dashboard (6 Pestañas Tácticas)
+- **Partida (Live Match & Salud):** Visibilidad inmediata de mapa activo, modo y jugadores conectados (`0 / 16`), respaldado por telemetría agrupada (tickrate 30 Hz, RAM de proceso vía POSIX directo `/proc/self/statm`, nodo anfitrión y tiempo en línea) con acciones rápidas (`Siguiente Mapa`, `Reiniciar`, `Detener Partida`).
+- **Jugadores (Administración y Moderación):** Tabla de jugadores en vivo con ping, puntuación, equipo y botones de moderación (`Kick`, `Ban`, `Mute`, `Team Swap`), además de control de bloqueos manuales por IP.
+- **Rotación (Mapcycle y Playlist):** Gestor del ciclo de mapas con modos secuencial/aleatorio, votación en lobby por chat (`network.map_voting`), presets de duración de partida y countdown de espera.
+- **Servidor (Operaciones):** Ajustes en caliente de nombre de servidor, puerto UDP, visibilidad pública en Master, región (`server.region`), filtro de chat/nombres (`server.chat_filter`), timeout AFK y compartición P2P de mapas.
+- **CO-OP (Campaña Cooperativa Masiva):** Parámetros exclusivos para campaña: escalado dinámico de enemigos por jugador (`network.coop_enemies_mode`), reabastecimiento de suministros/botiquines (`network.coop_pickups`) y reglas de fuego amigo (`network.coop_friendly_fire`).
+- **Consola (Terminal, Logs y Temas):** Terminal HaloScript interactiva en el navegador, visor en tiempo real de `debug.txt` con scroll automático, y selector de 6 identidades visuales tácticas (Mjolnir Titanium, ONI Black Ops, Command Amber, Fleet Plasma, Sacristan Gold Codex, Zealot Cyan Codex).
 
 Para consultar la especificación completa de la API REST, payloads JSON y configuración de proxy inverso HTTPS, consulta [docs/web-dashboard.es.md](docs/web-dashboard.es.md).
 
