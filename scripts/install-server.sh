@@ -139,9 +139,36 @@ case "$ARCH" in
             PKG_NAME="halo-server-linux-arm64.tar.gz"
         else
             echo "    -> Hardware ARMv7 puro: configurando emulador ligero Box86..."
+            # Intentar instalar Box86 desde repos
             if command -v apt-get >/dev/null 2>&1; then
                 apt-get install -y -qq box86 2>/dev/null || true
             fi
+            # Si no se instalo, compilar desde fuente
+            if ! command -v box86 >/dev/null 2>&1; then
+                echo "    [*] Box86 no disponible en repos. Compilando desde fuente..."
+                if command -v git >/dev/null 2>&1 && command -v cmake >/dev/null 2>&1 && command -v make >/dev/null 2>&1; then
+                    TMP_BOX86=$(mktemp -d /tmp/box86_build_XXXXXX)
+                    git clone --depth 1 https://github.com/ptitSeb/box86.git "$TMP_BOX86" 2>/dev/null || true
+                    if [ -d "$TMP_BOX86" ]; then
+                        mkdir -p "$TMP_BOX86/build"
+                        (cd "$TMP_BOX86/build" && cmake .. -DRPI4=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo 2>/dev/null && make -j$(nproc) 2>/dev/null && make install 2>/dev/null) || true
+                        rm -rf "$TMP_BOX86"
+                    fi
+                else
+                    echo "    [!] Faltan herramientas de compilacion (git, cmake, make)."
+                    echo "    Instala con: sudo apt install -y git cmake build-essential"
+                fi
+            fi
+            # Verificar que Box86 se instalo
+            if ! command -v box86 >/dev/null 2>&1; then
+                echo "    [-] ERROR: Box86 no se pudo instalar."
+                echo "    Alternativa: habilita kernel 64-bit si tu CPU lo soporta:"
+                echo "      echo 'arm_64bit=1' | sudo tee -a $CONFIG_FILE"
+                echo "      sudo reboot"
+                echo "    Luego ejecuta el instalador de nuevo."
+                exit 1
+            fi
+            echo "    [+] Box86 instalado en: $(which box86)"
             PKG_NAME="halo-server-linux-x86.tar.gz"
         fi
         ;;
@@ -259,7 +286,8 @@ EXEC_CMD="$INSTALL_DIR/halo --server --config $INSTALL_DIR/config.toml"
 # Si es ARMv7 puro con Box86
 if [ "$ARCH" = "armv7l" ] || [ "$ARCH" = "armhf" ]; then
     if ! grep -qE "ARMv8|CPU architecture: 8|cortex-a53|cortex-a72|cortex-a76" /proc/cpuinfo 2>/dev/null && [ ! -d /sys/module/bcm2835 ]; then
-        EXEC_CMD="/usr/bin/box86 $INSTALL_DIR/halo --server --config $INSTALL_DIR/config.toml"
+        BOX86_BIN="$(command -v box86 2>/dev/null || echo '/usr/local/bin/box86')"
+        EXEC_CMD="$BOX86_BIN $INSTALL_DIR/halo --server --config $INSTALL_DIR/config.toml"
     fi
 fi
 
