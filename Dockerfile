@@ -1,12 +1,12 @@
 # Halo CE dedicated server, built from the OpenCE port with the dedicated
-# host (dhost-v38) on top.
+# host suite (feat/server-full-suite) on top.
 #
 # Two stages: an Arch builder with the 32-bit toolchain compiles the release
 # build (the committed PGO profile, tools/ci_build.py linux release); a slim
 # Debian runtime holds only the binary, the bundled SDL3 and the config.
 
 ARG OPENCE_REPO=https://github.com/JoshRob297/halo-ce-touch.git
-ARG OPENCE_REF=dhost-v38
+ARG OPENCE_REF=feat/server-full-suite
 
 FROM --platform=$BUILDPLATFORM archlinux:base AS build
 
