@@ -64,19 +64,22 @@ The dedicated server includes a native, zero-dependency embedded Tactical Web Da
   <img src="docs/screenshots/dashboard_status.png" alt="Halo CE Dedicated Server Web Dashboard - Live Match & Health" width="850">
 </p>
 
-### Key Dashboard Modules (6 Tactical Tabs)
-- **Partida (Live Match & Health):** Instant visibility of active map, gametype, and connected slots (`0 / 16`), backed by grouped telemetry (tickrate 30 Hz, POSIX native process RAM from `/proc/self/statm`, node RAM, and continuous uptime) with quick actions (`Next Map`, `Restart`, `Stop Game`).
-- **Jugadores (Player Administration):** Connected player table with real-time ping, score, team assignment, and moderation controls (`Kick`, `Ban`, `Mute`, `Team Swap`), plus IP blacklist controls.
-- **Rotación (Rotation & Mapcycle):** Playlist cycle manager with sequence/shuffle modes, in-lobby chat map voting toggle (`network.map_voting`), match duration and lobby countdown presets.
-- **Servidor (Server Operations):** Live configuration of server name, UDP port, public browser listing, region (`server.region`), chat/name filtering (`server.chat_filter`), AFK timeout, and P2P map sharing.
-- **CO-OP (Massive Campaign):** Dedicated campaign co-op parameters: enemy difficulty scaling (`network.coop_enemies_mode`), pickup replenishing (`network.coop_pickups`), and friendly fire rules (`network.coop_friendly_fire`).
-- **Consola (Terminal, Logs & Themes):** In-browser interactive HaloScript command terminal, live `debug.txt` real-time viewer, and tactical theme switcher with 6 authentic identities (Mjolnir Titanium, ONI Black Ops, Command Amber, Fleet Plasma, Sacristan Gold Codex, Zealot Cyan Codex).
+### Key Dashboard Modules (5 Unified Tactical Tabs)
+- **Partida (Live Match & Health Telemetry):** Instant visibility of active map, gametype, connected slots (up to 128), and cycle telemetry backed by grouped metrics (30 Hz tickrate, native process RSS RAM from `/proc/self/statm`, node environment, and continuous uptime) with round controls (`Next Map`, `Restart`).
+- **Jugadores (Player Moderation & Timed Bans):** Live player roster with ping, team, score, HWID, and one-click moderation (`Kick`, `Ban`, `IP Veto`), alongside the blacklist inspector displaying strike levels and real-time expiration countdowns.
+- **Rotación & Modos (Unified Rotation, Match Rules & Co-Op):** Interactive mapcycle with optimistic drag/order controls (`▲` / `▼`), immediate match launch (`INICIAR PARTIDA AHORA`), dynamic weapon sets, vehicle loadouts, friendly fire rules, 20-kill limits, and complete Campaign Co-Op scaling.
+- **Servidor (Server Operations & Master Registration):** Hot-reloaded server name, UDP ports, region (`server.region`), AFK timeouts, P2P map distribution, theme switcher, and the official OpenCE Master Server handshake suite (`Public Key` & `Proof of Key` generator).
+- **Consola (Terminal, P2P Chat & Dynamic Logs):** In-browser HaloScript terminal with live command feedback (`help`, `sv_map`), real-time in-game text chat broadcaster (`network_chat_broadcast`), and dynamic `debug.txt` stream with freeze/resume controls.
 
 For the complete REST API specification, JSON payloads, and HTTPS reverse proxy setup, see [docs/web-dashboard.md](docs/web-dashboard.md).
 
 <p align="center">
-  <img src="docs/screenshots/dashboard_rotation.png" alt="Rotation Manager" width="420">&nbsp;
-  <img src="docs/screenshots/dashboard_settings.png" alt="Settings & Theme Selector" width="420">
+  <img src="docs/screenshots/dashboard_rotation.png" alt="Rotation & Gamemodes Suite" width="420">&nbsp;
+  <img src="docs/screenshots/dashboard_settings.png" alt="Server Operations & Master Registration" width="420">
+</p>
+<p align="center">
+  <img src="docs/screenshots/dashboard_players.png" alt="Live Players & Timed Bans" width="420">&nbsp;
+  <img src="docs/screenshots/dashboard_console.png" alt="HaloScript Console & Log Stream" width="420">
 </p>
 <p align="center">
   <img src="docs/screenshots/dashboard_covenant.png" alt="Covenant Sacristan Gold Theme" width="850">
