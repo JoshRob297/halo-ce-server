@@ -245,23 +245,22 @@ sudo firewall-cmd --reload
 
 En routers residenciales: Reenvía el puerto UDP `2302` hacia la IP local de tu servidor.
 
-### Paso 5: Despliegue en Bare Metal (systemd)
+### Paso 5: Despliegue en Bare Metal (Instalador Universal en 1 Comando)
 
-Si prefieres ejecutar directamente en el sistema operativo sin contenedores:
+Si prefieres ejecutar directamente en el sistema operativo sin contenedores (funciona en **PC/VPS x86_64**, **Raspberry Pi 3/4/5**, **Oracle Ampere A1 ARM64** y cualquier Linux Debian/Ubuntu):
 
 ```sh
-# 1. Ejecutar el instalador automatizado
-sudo curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scripts/install-baremetal.sh | sudo bash -s -- /srv/halo
+# 1. Ejecutar el instalador universal en 1 solo comando
+curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scripts/install-server.sh | sudo bash
 
-# 2. Copiar mapas
-sudo cp /ruta/a/tus/mapas/* /srv/halo/maps/
+# 2. Copiar mapas del juego
+sudo cp /ruta/a/tus/mapas/* /opt/halo-server/maps/
+# O extraerlos directamente desde tu ISO legal de Halo original:
+# sudo /opt/halo-server/scripts/import-maps.sh /ruta/a/tu/halo.iso
 
-# 3. Editar configuración
-sudo nano /srv/halo/config.toml
-
-# 4. Iniciar y habilitar el servicio
-sudo systemctl enable --now halo-server
-sudo journalctl -u halo-server -f
+# 3. Acceso y control
+# Tactical Web Dashboard: http://IP_DE_TU_SERVIDOR:8080
+# Ver registros en vivo: sudo journalctl -u halo-server -f
 ```
 
 ---

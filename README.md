@@ -246,23 +246,22 @@ docker compose logs -f
 
 ---
 
-## Bare-Metal Installation (systemd)
+## Bare-Metal Installation (1-Command Universal Installer)
 
-If you prefer to run directly on the host without containerization:
+If you prefer to run directly on the host without containerization (works on **x86_64 PC/VPS**, **Raspberry Pi 3/4/5**, **Oracle Ampere A1**, and Debian/Ubuntu):
 
 ```sh
-# 1. Run the automated installer
-sudo curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scripts/install-baremetal.sh | sudo bash -s -- /srv/halo
+# 1. Run the universal 1-command installer
+curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scripts/install-server.sh | sudo bash
 
 # 2. Place map files
-sudo cp /path/to/extracted/maps/* /srv/halo/maps/
+sudo cp /path/to/extracted/maps/* /opt/halo-server/maps/
+# Or extract directly from your legal Halo Xbox ISO:
+# sudo /opt/halo-server/scripts/import-maps.sh /path/to/halo.iso
 
-# 3. Adjust settings
-sudo nano /srv/halo/config.toml
-
-# 4. Start the service
-sudo systemctl enable --now halo-server
-sudo journalctl -u halo-server -f
+# 3. Access your server
+# Tactical Web Dashboard: http://YOUR_SERVER_IP:8080
+# View live logs: sudo journalctl -u halo-server -f
 ```
 
 ---
