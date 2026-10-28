@@ -26,7 +26,8 @@ Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native por
 
 ### Highlights
 
-- **Native OpenCE Netcode (v39):** Official OpenCE clients (Windows, Linux, Android, Web) connect directly without modifications.
+- **Native OpenCE & Chupathingy Netcode (v39):** Official OpenCE and modern Chupathingy Delta clients (Windows, Linux, macOS, Android, Web) connect directly without modifications.
+- **Universal Multi-Platform Cross-Play:** A truly independent dedicated server compatible with both OpenCE and Chupathingy ecosystems, giving operators full hosting sovereignty without reliance on external maintainers.
 - **Automated Map Rotation:** Define map and gametype sequences directly in `config.toml`; the server rotates and resets the lobby automatically.
 - **Server Browser Discovery:** Fully discoverable in the in-game public browser or shareable via direct invite links (`halo://join/...`).
 - **Low Footprint:** Runs with a null renderer and SDL dummy drivers. Lightweight enough for a basic VPS, NUC, or mini-PC.
@@ -476,9 +477,15 @@ The engine supports tag-based mods placed in the `mods/` directory:
 | **OpenCE Official (Desktop)** | v38 / v39 | Supported directly |
 | **OpenCE Android APK** | v38 / v39 | Supported directly |
 | **OpenCE WebAssembly Browser** | v38 / v39 | Supported directly |
-| **Legacy OpenCE Clients** | ≤ v37 | Upgrade client required |
+| **Chupathingy CE (Desktop & Mobile)** | v0.8.0e+ (`opence-39-hosts`) | Supported directly (Cross-play ready) |
+| **Legacy Clients** | ≤ v37 | Upgrade client required |
 
-The netcode strictly requires version alignment on the client side. Current official master releases operate on network version 39.
+### Universal Cross-Play & Community Acknowledgments
+This server runs as a **universal standalone host**, bridging both the **OpenCE** and **Chupathingy** communities:
+- Built with upstream Netcode v39 and Ed25519 cryptographic master authentication.
+- Incorporates resilient headless countdown and lobby diagnostic logic pioneered during cross-platform testing with Chupathingy.
+- Gives server operators full autonomy: run your own maps, custom rules, and hot-reloaded tactical dashboard with zero lock-in.
+Special thanks to the developers and maintainers across both **OpenCommunityEdition** and **ChupathingyCE** for their collaborative protocol updates, feedback on dedicated host lifecycle, and multimedia improvements.
 
 ---
 

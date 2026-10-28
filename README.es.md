@@ -26,7 +26,8 @@ Construido sobre el puerto nativo de [OpenCE](https://github.com/OpenCommunityEd
 
 ### Características Principales
 
-- **Netcode Nativo OpenCE (v39 con fallback a v38):** Compatible directamente con todos los clientes oficiales de OpenCE (Windows, Linux, Android y Web) sin requerir modificaciones.
+- **Netcode Nativo OpenCE y Chupathingy (v39 con fallback a v38):** Compatible directamente con clientes oficiales de OpenCE y clientes modernos de Chupathingy Delta (Windows, Linux, macOS, Android y Web) sin requerir modificaciones.
+- **Cross-Play Universal e Independiente:** Servidor dedicado universal compatible con ambos ecosistemas comunitarios, otorgando soberanía total al operador sin atarse a decisiones cerradas de mantenedores externos.
 - **Dashboard Web Embebido (Opcional en `:8080`):** Interfaz gráfica de administración web integrada en el binario sin dependencias externas (HTML, CSS y JS puro).
 - **Rotación y Votación en Lobby:** Soporta rotación secuencial o aleatoria (`shuffle`), y permite a los jugadores del lobby votar por la siguiente partida escribiendo `1` a `N` en el chat.
 - **Anti-Inactividad (AFK Auto-Kick):** Detecta inactividad de sticks, botones y mira, enviando advertencia privada a $T-30$s y desconectando automáticamente al jugador inactivo.
@@ -456,7 +457,15 @@ El motor soporta mods basados en tags en la carpeta `mods/`:
 | **OpenCE Oficial (Desktop / PC)** | v38 / v39 | Compatible directamente |
 | **OpenCE Android APK** | v38 / v39 | Compatible directamente |
 | **OpenCE WebAssembly (Navegador)** | v38 / v39 | Compatible directamente |
+| **Chupathingy CE (Desktop y Móvil)** | v0.8.0e+ (`opence-39-hosts`) | Compatible directamente (Cross-play activo) |
 | **Clientes Anteriores (v37 o menor)** | ≤ v37 | Requiere actualizar cliente |
+
+### Cross-Play Universal y Agradecimientos a la Comunidad
+Este servidor opera como un **nodo de hosting universal e independiente**, conectando a las comunidades de **OpenCE** y **Chupathingy**:
+- Construido sobre Netcode v39 oficial con autenticación criptográfica Ed25519 ante el Master Server.
+- Integra lógica refinada de diagnóstico y resiliencia de lobby originada durante las pruebas de compatibilidad con Chupathingy.
+- Brinda a los administradores soberanía total: maneja tus propios mapas, variantes personalizadas y dashboard táctico desacoplado sin depender de directrices de terceros.
+Un agradecimiento especial a los desarrolladores y mantenedores de **OpenCommunityEdition** y **ChupathingyCE** por su colaboración técnica, feedback en el ciclo de vida del servidor y mejoras multimedia compartidas.
 
 ---
 
