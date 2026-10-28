@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-# HALO COMBAT EVOLVED - AUTO MAP EXTRACTOR & IMPORTER (v2.1)
-# Soporta nombres con espacios, parentesis y caracteres especiales.
+# ==============================================================================
+# HALO COMBAT EVOLVED - AUTO MAP EXTRACTOR & IMPORTER (v2.2)
+# Compatible con: x86_64, ARM64 (Raspberry Pi 3/4/5), ARMv7 (32-bit).
+# Extrae mapas (.map) desde ISO (Xbox/XISO) o copia desde directorio existente.
+# Auto-instala dependencias (7z, extract-xiso) segun arquitectura.
+# ==============================================================================
+
 set -euo pipefail
 
 TARGET_DIR="${2:-/opt/halo-server/maps}"
@@ -23,34 +28,77 @@ fi
 
 mkdir -p "$TARGET_DIR"
 
+# ==============================================================================
+# Funcion: Auto-instalar dependencias de extraccion segun arquitectura
+# ==============================================================================
+install_extraction_deps() {
+    echo "[*] Verificando dependencias de extraccion..."
+
+    if ! command -v 7z >/dev/null 2>&1; then
+        echo "[*] 7z no encontrado. Instalando p7zip-full..."
+        if command -v apt-get >/dev/null 2>&1; then
+            apt-get update -qq && apt-get install -y -qq p7zip-full >/dev/null 2>&1 || true
+        elif command -v dnf >/dev/null 2>&1; then
+            dnf install -y -q p7zip p7zip-plugins >/dev/null 2>&1 || true
+        elif command -v pacman >/dev/null 2>&1; then
+            pacman -Sy --noconfirm --needed p7zip >/dev/null 2>&1 || true
+        fi
+    fi
+
+    if ! command -v extract-xiso >/dev/null 2>&1; then
+        if command -v gcc >/dev/null 2>&1 || command -v cc >/dev/null 2>&1; then
+            echo "[*] extract-xiso no encontrado. Intentando compilar desde fuente..."
+            TMP_BUILD=$(mktemp -d /tmp/extract_xiso_build_XXXXXX)
+            if curl -fsSL "https://raw.githubusercontent.com/XboxDev/extract-xiso/master/extract-xiso.c" \
+                -o "$TMP_BUILD/extract-xiso.c" 2>/dev/null; then
+                (cd "$TMP_BUILD" && (gcc -O2 -o extract-xiso extract-xiso.c 2>/dev/null || cc -O2 -o extract-xiso extract-xiso.c 2>/dev/null)) && \
+                cp "$TMP_BUILD/extract-xiso" /usr/local/bin/extract-xiso && \
+                chmod +x /usr/local/bin/extract-xiso && \
+                echo "[+] extract-xiso compilado e instalado en /usr/local/bin/"
+            fi
+            rm -rf "$TMP_BUILD"
+        fi
+    fi
+
+    if ! command -v 7z >/dev/null 2>&1 && ! command -v extract-xiso >/dev/null 2>&1; then
+        echo "[-] ERROR: No se pudo instalar 7z ni extract-xiso."
+        echo "    Instala manualmente con: sudo apt install -y p7zip-full"
+        exit 1
+    fi
+
+    echo "    [+] Herramientas de extraccion verificadas:"
+    command -v 7z >/dev/null 2>&1 && echo "        - 7z: disponible"
+    command -v extract-xiso >/dev/null 2>&1 && echo "        - extract-xiso: disponible"
+}
+
+# ==============================================================================
 # Caso 1: Es un archivo ISO
+# ==============================================================================
 if [ -f "$SOURCE" ]; then
     echo "[*] Detectada imagen ISO: $SOURCE"
     TMP_DIR=$(mktemp -d /tmp/halo_iso_ext_XXXXXX)
     trap 'rm -rf "$TMP_DIR"' EXIT
 
+    install_extraction_deps
+
     # Copiar el ISO a un nombre temporal sin caracteres especiales
-    # para evitar que extract-xiso o 7z fallen con parentesis
     SAFE_ISO="$TMP_DIR/halo_input.iso"
     cp "$SOURCE" "$SAFE_ISO"
     SOURCE="$SAFE_ISO"
 
     EXTRACTED=0
-    # Intentar con extract-xiso
     if command -v extract-xiso >/dev/null 2>&1; then
         echo "[*] Extrayendo con extract-xiso..."
         extract-xiso -x "$SOURCE" -d "$TMP_DIR" >/dev/null 2>&1 || true
         EXTRACTED=1
     fi
 
-    # Fallback con 7z
     if [ "$EXTRACTED" -eq 0 ] && command -v 7z >/dev/null 2>&1; then
         echo "[*] Extrayendo con 7z..."
         7z x "$SOURCE" -o"$TMP_DIR" maps/ -y >/dev/null 2>&1 || 7z x "$SOURCE" -o"$TMP_DIR" -y >/dev/null 2>&1 || true
         EXTRACTED=1
     fi
 
-    # Buscar todos los .map extraidos y moverlos
     MAP_COUNT=$(find "$TMP_DIR" -type f -iname "*.map" | wc -l)
     if [ "$MAP_COUNT" -gt 0 ]; then
         echo "[+] Se encontraron $MAP_COUNT mapas en la imagen ISO."
@@ -59,7 +107,7 @@ if [ -f "$SOURCE" ]; then
         echo "[+] Mapas importados exitosamente en: $TARGET_DIR"
     else
         echo "[-] ERROR: No se pudieron extraer archivos .map de la ISO."
-        echo "    Asegurate de instalar '7z' (p7zip-full) o 'extract-xiso'."
+        echo "    Asegurate de que la ISO sea un disco original de Halo CE."
         exit 1
     fi
 
