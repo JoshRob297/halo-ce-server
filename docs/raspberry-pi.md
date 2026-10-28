@@ -1,6 +1,60 @@
-# Guía Definitiva de Instalación: Raspberry Pi 3B / 4 / 5 & ARM64 (Bare-Metal sin Docker)
+# Guía Rápida de Instalación: Raspberry Pi 3B / 4 / 5 & ARM64 (Bare-Metal)
 
-Esta guía explica paso a paso cómo instalar, configurar y ejecutar de forma nativa el servidor dedicado 24/7 de **Halo: Combat Evolved (OpenCE Netcode v39)** en placas **Raspberry Pi** de 64 bits (**Raspberry Pi 3 Model B, 3B+, 4, 400 y 5**) y servidores basados en arquitectura **ARM64 (AArch64)** como **Oracle Cloud Ampere A1** (Free Tier), AWS Graviton o VPS Debian/Ubuntu ARM64, **directamente en el sistema operativo sin sobrecarga de Docker**.
+Instala y ejecuta el servidor dedicado 24/7 de **Halo: Combat Evolved (OpenCE Netcode v39)** en cualquier placa **Raspberry Pi (3B, 3B+, 4, 400 y 5)** o servidor **ARM64 (Oracle Cloud Ampere, AWS Graviton)** en **1 solo comando**, directamente sobre el sistema operativo y sin sobrecarga de Docker.
+
+---
+
+## ⚡ Instalación Automática en 1 Solo Comando (Recomendada)
+
+Conéctate por SSH a tu Raspberry Pi y ejecuta:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scripts/install-pi.sh | sudo bash
+```
+
+### ¿Qué hace este comando automáticamente por ti?
+1. Detecta si tu procesador corre en 64-bit (`aarch64`) o 32-bit (`armhf`).
+2. Si tienes un SO de 32 bits en una Pi 3/4/5, habilita `arm_64bit=1` en `config.txt` para permitir la ejecución de 64 bits de forma transparente.
+3. Instala dependencias (`curl`, `7zip`, herramientas de red).
+4. Crea el usuario aislado `halo` y la estructura en `/opt/halo-server`.
+5. Descarga la última release de producción (`v1.5.1+`) con el motor Netcode v39, librerías SDL3 y el Tactical Web Dashboard v2.
+6. Ajusta la memoria GPU a 16 MB (`gpu_mem=16`) para liberar el 100% de la RAM al servidor.
+7. Crea e inicia el servicio de **systemd** para que corra 24/7 y se reinicie solo ante cortes de energía.
+
+---
+
+## 🗺️ Paso Siguiente: Agregar los Mapas del Juego
+
+Para que el servidor empiece a hostear partidas, copia tus mapas (`.map`):
+
+- **Opción A (Desde tu ISO legal de Halo original):**
+  ```bash
+  sudo /opt/halo-server/scripts/import-maps.sh /ruta/a/tu/halo.iso
+  ```
+- **Opción B (Copiar archivos `.map` directamente):**
+  Copia `ui.map`, `beavercreek.map`, `wizard.map`, etc., dentro de:
+  ```bash
+  /opt/halo-server/maps/
+  ```
+
+Una vez agregados los mapas, reinicia el servicio:
+```bash
+sudo systemctl restart halo-server
+```
+
+---
+
+## 🎮 Panel Web Táctico y Registros
+
+- **Tactical Web Dashboard:** Abre en tu navegador `http://IP_DE_TU_RASPBERRY:8080` para controlar rotaciones (`▲`/`▼`), expulsar jugadores, cambiar temas tácticos o ver telemetría en vivo.
+- **Ver registros en vivo (Consola):**
+  ```bash
+  sudo journalctl -u halo-server -f
+  ```
+
+---
+
+## 🛠️ Instalación Manual Detallada (Paso a Paso)
 
 ---
 
