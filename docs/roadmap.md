@@ -200,20 +200,39 @@ Verification details:
 
 ---
 
-## Milestone 7: Log directory redirection (QoL for Unraid / Docker)
+## Milestone 7: Tactical Web Dashboard v2 & Full Live Management
 
-**Status: Planned.** Allow custom redirection of `debug.txt` and `debug.old.txt` via environment variable or config setting (e.g. `HALO_LOG_DIR` or `paths.logs`), as requested by users in Issue #1.
+**Status: Done (v1.5.0).** Zero-dependency tactical web management suite listening on `:8080`, completely decoupled with live hot-reload from `/opt/halo-server/web/index.html`.
 
-Goals:
-1. Provide a dedicated setting in `port_config.c` (`paths.logs` / `HALO_LOG_DIR`) to point the engine's log file output to a custom directory instead of strictly `d:\` (the game data root).
-2. Allow Unraid and Docker users to map a dedicated `/logs` volume share without having to mount the entire `/halo` binary root directory.
-3. Automatically roll `debug.txt` to `debug.old.txt` in the specified folder when reaching 64 MB.
+Implemented:
+1. **5 Unified Tactical Modules:**
+   - **Partida:** Native POSIX telemetry (`/proc/self/statm`), 30 Hz nominal tickrate, connected slots up to 128, round controls (`Next Map`, `Restart`).
+   - **Jugadores:** Real-time roster with ping, team, score, HWID, and one-click moderation (`Kick`, `Ban`, `IP Veto`), along with live strike and expiration timer inspector.
+   - **Rotación & Modos:** Interactive mapcycle with optimistic drag/order controls (`▲` / `▼`), immediate match launch (`INICIAR PARTIDA AHORA`), dynamic weapon sets, vehicle loadouts, friendly fire rules, 20-kill limits, and full Campaign Co-Op scaling.
+   - **Servidor:** Live two-way persistence in `config.toml`, server name, UDP ports, region (`server.region`), AFK timeouts, P2P map distribution, and tactical theme switcher.
+   - **Consola:** In-browser HaloScript terminal with live command feedback (`help`, `sv_map`), real-time in-game text chat broadcaster (`network_chat_broadcast`), and dynamic `debug.txt` stream with freeze/resume controls.
+2. **Hot-Reload Architecture:** Frontend files served directly from the filesystem (`web/index.html`) with embedded C fallback, allowing UI customization without restarting the server daemon.
+3. **Optimistic UI & Tab State Persistence:** Zero-latency DOM updates on rotation reordering and session tab retention via `localStorage`.
 
 ---
 
-## Milestone 8: Role-based access control (RBAC), user authentication & Web Login
+## Milestone 8: Official OpenCE Master Server Cryptographic Handshake
 
-**Status: Planned.** Native authentication system and tiered role permissions for server operations, in-game moderation, and Web Dashboard access.
+**Status: Done (v1.5.0).** Native cryptographic verification allowing dedicated servers to appear under the official in-game **DEDICATED** tab.
+
+Implemented:
+1. **Ed25519 Publisher Key Integration:** Asymmetric keypair generation and verification against `master.opencommunityedition.com` with `publisher.key` permission isolation (`0600`).
+2. **Discord Onboarding Suite (1:1 Form Alignment):**
+   - Click-to-copy Public Key hex export.
+   - Nonce challenge signer (`POST /api/master/sign`) generating pure hexadecimal Proof of Key strings.
+   - Double-confirmation validation gate and automatic backups (`publisher.key.bak`) preventing accidental key invalidation.
+3. **Verified In-Game Listing:** Full compatibility with PR #492 (Build 289+), advertising certified dedicated presence with low-latency regional indicators (`SA`, `NA-EAST`).
+
+---
+
+## Milestone 9: Role-based access control (RBAC), user authentication & Web Login
+
+**Status: In Progress / Planned (v1.6.0).** Tiered authentication system for Web Dashboard access.
 
 Goals:
 1. **Multi-Tiered Roles:**
