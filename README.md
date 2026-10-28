@@ -118,14 +118,15 @@ For the complete REST API specification, JSON payloads, and HTTPS reverse proxy 
 
 A multiplayer server requires `ui.map` and any level intended for the map cycle (`bloodgulch.map`, `chillout.map`, etc.). Co-op servers additionally require the campaign maps (`a10.map`, `c10.map`, etc.). Custom Edition maps should be placed inside a `custom_maps/` directory.
 
-Extracting maps from your retail disc image (performed once on your desktop):
+Extracting and importing maps from your retail disc image (100% legal automated tool):
 
 ```sh
-# Using extract-xiso (Linux / macOS / WSL)
-extract-xiso -x "Halo - Combat Evolved (USA).xiso.iso"
+# Using the automated importer tool:
+./scripts/import-maps.sh "Halo - Combat Evolved (USA).iso"
 
-# Or using 7-Zip
-7z x "Halo - Combat Evolved (USA).xiso.iso" maps/
+# Or manual extraction using extract-xiso / 7-Zip:
+extract-xiso -x "Halo - Combat Evolved (USA).xiso.iso"
+# Or: 7z x "Halo - Combat Evolved (USA).xiso.iso" maps/
 ```
 
 ---
