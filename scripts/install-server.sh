@@ -66,12 +66,19 @@ echo "[*] Verificando e instalando dependencias del sistema..."
 install_deps_apt() {
     apt-get update -qq
     apt-get install -y -qq curl wget tar gzip p7zip-full coreutils procps \
-        net-tools ca-certificates netcat-openbsd socat 2>/dev/null || true
+        net-tools ca-certificates netcat-openbsd socat file 2>/dev/null || true
     # El motor Linux es i386: en un host x86_64 hace falta el loader de 32 bits.
     if [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "amd64" ]; then
         dpkg --add-architecture i386 2>/dev/null || true
         apt-get update -qq 2>/dev/null || true
-        apt-get install -y -qq libc6:i386 libstdc++6:i386 2>/dev/null || true
+        apt-get install -y -qq libc6:i386 libstdc++6:i386 libgcc-s1:i386 2>/dev/null || true
+    fi
+    # En aarch64 con binario i386 se usa qemu-user-static (box86 no vale)
+    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        dpkg --add-architecture i386 2>/dev/null || true
+        apt-get update -qq 2>/dev/null || true
+        apt-get install -y -qq qemu-user-static binfmt-support libc6:i386 libstdc++6:i386 libgcc-s1:i386 2>/dev/null || true
+        systemctl restart systemd-binfmt 2>/dev/null || true
     fi
 }
 
@@ -241,16 +248,19 @@ if [ ! -f "$INSTALL_DIR/halo" ]; then
     exit 1
 fi
 
-# Un binario x86 en un host ARM64 no arranca ni con multilib.
+# Un binario x86 en un host ARM64 no arranca ni con multilib/box86 directo.
 if command -v file >/dev/null 2>&1; then
     HALO_DESC="$(file -b "$INSTALL_DIR/halo" 2>/dev/null || true)"
     case "$ARCH" in
         aarch64|arm64)
             case "$HALO_DESC" in
-                *"Intel i386"*|*"x86-64"*)
-                    echo "[-] ERROR: $PKG_NAME trae un binario x86 para $ARCH." >&2
-                    echo "    Descripcion: $HALO_DESC" >&2
-                    echo "    El asset arm64 del release no es nativo. No se registra el servicio." >&2
+                *"Intel 80386"*|*"Intel i386"*|*"x86-64"*)
+                    echo "[-] ERROR: $PKG_NAME trae un binario i386/x86 para $ARCH ($HALO_DESC)." >&2
+                    echo "    El asset arm64 del release actual NO es nativo para aarch64." >&2
+                    echo "    Opciones:" >&2
+                    echo "      1) Usa el instalador para x86_64 con multilib/box86 solo si es ARMv7 real." >&2
+                    echo "      2) Descarga/compila un binario nativo para aarch64, o usa la imagen Docker." >&2
+                    echo "    No se registra el servicio para evitar bucle 203/EXEC." >&2
                     exit 1
                     ;;
             esac
@@ -325,19 +335,51 @@ if [ ! -x "$INSTALL_DIR/halo" ]; then
     exit 1
 fi
 
-# ARMv7 puro: el binario x86 necesita box86 en una ruta absoluta verificada
+# Comprobar tipo de binario
+HALO_DESC="$(file -b "$INSTALL_DIR/halo" 2>/dev/null || true)"
+
+# ARMv7 puro: el binario x86 necesita box86
 if [ "$ARCH" = "armv7l" ] || [ "$ARCH" = "armhf" ]; then
     if ! grep -qE "ARMv8|CPU architecture: 8|cortex-a53|cortex-a72|cortex-a76" /proc/cpuinfo 2>/dev/null && [ ! -d /sys/module/bcm2835 ]; then
-        BOX86_BIN="$(command -v box86 2>/dev/null || true)"
-        if [ -z "$BOX86_BIN" ] || [ ! -x "$BOX86_BIN" ]; then
-            echo "[-] ERROR: ARMv7 sin box86: el binario es x86 y no puede ejecutarse." >&2
-            echo "    Instala box86 (apt install box86 o compilalo) y repite la instalacion." >&2
-            echo "    Si la CPU soporta ARMv8, activa 'arm_64bit=1' en config.txt y reinicia." >&2
-            exit 1
-        fi
-        EXEC_CMD="$BOX86_BIN $INSTALL_DIR/halo --server --config $INSTALL_DIR/config.toml"
-        echo "    [+] Box86 verificado en: $BOX86_BIN"
+        case "$HALO_DESC" in
+            *"Intel 80386"*|*"Intel i386"*)
+                BOX86_BIN="$(command -v box86 2>/dev/null || true)"
+                if [ -z "$BOX86_BIN" ] || [ ! -x "$BOX86_BIN" ]; then
+                    echo "[-] ERROR: ARMv7 sin box86: el binario es x86 y no puede ejecutarse." >&2
+                    echo "    Instala box86 (apt install box86 o compilalo) y repite la instalacion." >&2
+                    echo "    Si la CPU soporta ARMv8, activa 'arm_64bit=1' en config.txt y reinicia." >&2
+                    exit 1
+                fi
+                EXEC_CMD="$BOX86_BIN $INSTALL_DIR/halo --server --config $INSTALL_DIR/config.toml"
+                echo "    [+] Box86 verificado en: $BOX86_BIN"
+                ;;
+        esac
     fi
+fi
+
+# aarch64 puro: binario i386 requiere qemu-user-static
+if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    case "$HALO_DESC" in
+        *"Intel 80386"*|*"Intel i386"*)
+            QEMU_BIN="$(command -v qemu-i386-static 2>/dev/null || true)"
+            if [ -z "$QEMU_BIN" ] || [ ! -x "$QEMU_BIN" ]; then
+                echo "[-] ERROR: aarch64 con binario i386 sin qemu-i386-static." >&2
+                echo "    El instalador intentara instalarlo, pero si falla ejecuta manualmente:" >&2
+                echo "    apt install -y qemu-user-static binfmt-support libc6:i386 libstdc++6:i386" >&2
+                exit 1
+            fi
+            QEMU_LIB="/lib/i386-linux-gnu"
+            [ -d /usr/lib/i386-linux-gnu ] && QEMU_LIB="/usr/lib/i386-linux-gnu"
+            EXEC_CMD="$QEMU_BIN -L $QEMU_LIB $INSTALL_DIR/halo --server --config $INSTALL_DIR/config.toml"
+            echo "    [+] Usando qemu-i386-static en aarch64 (binario i386)"
+            ;;
+        *"ARM aarch64"*|*"AArch64"*)
+            echo "    [+] Binario nativo aarch64 detectado"
+            ;;
+        *)
+            echo "    [!] Tipo de binario no identificado: $HALO_DESC" >&2
+            ;;
+    esac
 fi
 
 cat << SYSTEMD_EOF > /etc/systemd/system/$SERVICE_NAME.service
