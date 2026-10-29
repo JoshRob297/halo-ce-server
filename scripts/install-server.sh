@@ -248,20 +248,17 @@ if [ ! -f "$INSTALL_DIR/halo" ]; then
     exit 1
 fi
 
-# Un binario x86 en un host ARM64 no arranca ni con multilib/box86 directo.
+# aarch64 con binario i386: se soporta con qemu-user-static (no se aborta)
 if command -v file >/dev/null 2>&1; then
     HALO_DESC="$(file -b "$INSTALL_DIR/halo" 2>/dev/null || true)"
     case "$ARCH" in
         aarch64|arm64)
             case "$HALO_DESC" in
                 *"Intel 80386"*|*"Intel i386"*|*"x86-64"*)
-                    echo "[-] ERROR: $PKG_NAME trae un binario i386/x86 para $ARCH ($HALO_DESC)." >&2
-                    echo "    El asset arm64 del release actual NO es nativo para aarch64." >&2
-                    echo "    Opciones:" >&2
-                    echo "      1) Usa el instalador para x86_64 con multilib/box86 solo si es ARMv7 real." >&2
-                    echo "      2) Descarga/compila un binario nativo para aarch64, o usa la imagen Docker." >&2
-                    echo "    No se registra el servicio para evitar bucle 203/EXEC." >&2
-                    exit 1
+                    echo "    [*] Binario i386 en aarch64 detectado. Se usara qemu-i386-static." >&2
+                    ;;
+                *"ARM aarch64"*|*"AArch64"*)
+                    echo "    [+] Binario nativo aarch64 detectado"
                     ;;
             esac
             ;;
