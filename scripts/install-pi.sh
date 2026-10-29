@@ -66,17 +66,23 @@ echo "[*] Verificando e instalando dependencias del sistema..."
 install_deps_apt() {
     apt-get update -qq
     apt-get install -y -qq curl wget tar gzip p7zip-full coreutils procps \
-        net-tools ca-certificates 2>/dev/null || true
+        net-tools ca-certificates netcat-openbsd socat 2>/dev/null || true
+    # El motor Linux es i386: en un host x86_64 hace falta el loader de 32 bits.
+    if [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "amd64" ]; then
+        dpkg --add-architecture i386 2>/dev/null || true
+        apt-get update -qq 2>/dev/null || true
+        apt-get install -y -qq libc6:i386 libstdc++6:i386 2>/dev/null || true
+    fi
 }
 
 install_deps_dnf() {
     dnf install -y -q curl wget tar gzip p7zip p7zip-plugins coreutils \
-        procps-ng net-tools ca-certificates 2>/dev/null || true
+        procps-ng net-tools ca-certificates nmap-ncat socat 2>/dev/null || true
 }
 
 install_deps_pacman() {
     pacman -Sy --noconfirm --needed curl wget tar gzip p7zip coreutils \
-        procps-ng net-tools ca-certificates >/dev/null 2>&1 || true
+        procps-ng net-tools ca-certificates openbsd-netcat socat >/dev/null 2>&1 || true
 }
 
 if command -v apt-get >/dev/null 2>&1; then
@@ -227,6 +233,31 @@ rm -f /tmp/halo-pkg.tar.gz
 chmod +x "$INSTALL_DIR/halo" 2>/dev/null || true
 chmod +x "$INSTALL_DIR/scripts/"*.sh 2>/dev/null || true
 
+# El tar debe traer el motor. Un asset incompleto no puede terminar en un
+# ExecStart valido: el servicio entraria en bucle con status=203/EXEC.
+if [ ! -f "$INSTALL_DIR/halo" ]; then
+    echo "[-] ERROR: el paquete $PKG_NAME no contiene el binario 'halo'." >&2
+    echo "    Release incompleta: verifica los assets antes de reintentar." >&2
+    exit 1
+fi
+
+# Un binario x86 en un host ARM64 no arranca ni con multilib.
+if command -v file >/dev/null 2>&1; then
+    HALO_DESC="$(file -b "$INSTALL_DIR/halo" 2>/dev/null || true)"
+    case "$ARCH" in
+        aarch64|arm64)
+            case "$HALO_DESC" in
+                *"Intel i386"*|*"x86-64"*)
+                    echo "[-] ERROR: $PKG_NAME trae un binario x86 para $ARCH." >&2
+                    echo "    Descripcion: $HALO_DESC" >&2
+                    echo "    El asset arm64 del release no es nativo. No se registra el servicio." >&2
+                    exit 1
+                    ;;
+            esac
+            ;;
+    esac
+fi
+
 # ==============================================================================
 # 9. Crear config.toml si no existe (instalacion nueva)
 # ==============================================================================
@@ -240,6 +271,8 @@ if [ ! -f "$INSTALL_DIR/config.toml" ]; then
         cat << 'TOML_EOF' > "$INSTALL_DIR/config.toml"
 [debug]
 null_renderer = true
+telnet_console = true
+telnet_console_port = 2323
 network_test = "host:beavercreek:swat;wizard:infection;chillout:gun_game;prisoner:swat;putput:infection;damnation:gun_game;longest:swat;carousel:infection"
 network_test_time = 15
 network_test_player = false
@@ -283,11 +316,27 @@ fi
 echo "[*] Registrando servicio systemd '$SERVICE_NAME'..."
 
 EXEC_CMD="$INSTALL_DIR/halo --server --config $INSTALL_DIR/config.toml"
-# Si es ARMv7 puro con Box86
+
+# El ejecutable debe existir antes de escribir el unit: un ExecStart roto deja
+# el servicio en bucle de reinicio con status=203/EXEC.
+if [ ! -x "$INSTALL_DIR/halo" ]; then
+    echo "[-] ERROR: $INSTALL_DIR/halo no existe o no es ejecutable." >&2
+    echo "    Paquete descargado: $PKG_NAME (arquitectura detectada: $ARCH)." >&2
+    exit 1
+fi
+
+# ARMv7 puro: el binario x86 necesita box86 en una ruta absoluta verificada
 if [ "$ARCH" = "armv7l" ] || [ "$ARCH" = "armhf" ]; then
     if ! grep -qE "ARMv8|CPU architecture: 8|cortex-a53|cortex-a72|cortex-a76" /proc/cpuinfo 2>/dev/null && [ ! -d /sys/module/bcm2835 ]; then
-        BOX86_BIN="$(command -v box86 2>/dev/null || echo '/usr/local/bin/box86')"
+        BOX86_BIN="$(command -v box86 2>/dev/null || true)"
+        if [ -z "$BOX86_BIN" ] || [ ! -x "$BOX86_BIN" ]; then
+            echo "[-] ERROR: ARMv7 sin box86: el binario es x86 y no puede ejecutarse." >&2
+            echo "    Instala box86 (apt install box86 o compilalo) y repite la instalacion." >&2
+            echo "    Si la CPU soporta ARMv8, activa 'arm_64bit=1' en config.txt y reinicia." >&2
+            exit 1
+        fi
         EXEC_CMD="$BOX86_BIN $INSTALL_DIR/halo --server --config $INSTALL_DIR/config.toml"
+        echo "    [+] Box86 verificado en: $BOX86_BIN"
     fi
 fi
 
@@ -296,6 +345,9 @@ cat << SYSTEMD_EOF > /etc/systemd/system/$SERVICE_NAME.service
 Description=Halo Combat Evolved Dedicated Server 24/7 (OpenCE Netcode v39)
 After=network-online.target
 Wants=network-online.target
+# Un ExecStart roto no debe reintentar sin fin: 5 fallos en 5 min y queda failed.
+StartLimitIntervalSec=300
+StartLimitBurst=5
 
 [Service]
 Type=simple
@@ -305,8 +357,9 @@ WorkingDirectory=$INSTALL_DIR
 Environment="SDL_VIDEODRIVER=dummy"
 Environment="SDL_AUDIODRIVER=dummy"
 Environment="LD_LIBRARY_PATH=$INSTALL_DIR"
+Environment="HALO_TELNET_CONSOLE=true"
 ExecStart=$EXEC_CMD
-Restart=always
+Restart=on-failure
 RestartSec=5
 LimitNOFILE=65535
 StandardOutput=journal
@@ -341,6 +394,15 @@ if [ "$NEED_REBOOT_FOR_64BIT" = "1" ]; then
     echo ""
 else
     systemctl restart "$SERVICE_NAME" 2>/dev/null || true
+    sleep 3
+    if ! systemctl is-active --quiet "$SERVICE_NAME"; then
+        echo ""
+        echo "[-] ERROR: $SERVICE_NAME no quedo activo. Ultimas lineas del journal:" >&2
+        journalctl -u "$SERVICE_NAME" -n 15 --no-pager >&2 || true
+        echo ""
+        echo "    Corrige el error anterior y vuelve a ejecutar el instalador." >&2
+        exit 1
+    fi
     echo ""
     echo "=========================================================="
     if [ "$IS_UPDATE" = "1" ]; then

@@ -35,7 +35,7 @@ network_test_player = true
 
 # Operator console: listen on 127.0.0.1 for kick/ban/say commands.
 # Access with: scripts/operator.sh kick "PlayerName"
-telnet_console = false
+telnet_console = true
 telnet_console_port = 2323
 
 [audio]

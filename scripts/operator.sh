@@ -3,7 +3,19 @@ set -eu
 
 HOST="${HALO_CONSOLE_HOST:-127.0.0.1}"
 PORT="${HALO_CONSOLE_PORT:-2323}"
-LOG_FILE="${HALO_LOG_FILE:-/root/.local/share/halo-linux/debug.txt}"
+if [ -z "${HALO_LOG_FILE:-}" ]; then
+    for candidate in \
+        "${HOME:-/root}/.local/share/halo-linux/debug.txt" \
+        "/opt/halo-server/.local/share/halo-linux/debug.txt" \
+        "/opt/halo-server/debug.txt" \
+        "/halo/debug.txt"; do
+        if [ -f "$candidate" ]; then
+            LOG_FILE="$candidate"
+            break
+        fi
+    done
+fi
+LOG_FILE="${LOG_FILE:-${HOME:-/root}/.local/share/halo-linux/debug.txt}"
 
 usage() {
     cat << 'EOF'

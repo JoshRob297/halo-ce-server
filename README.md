@@ -286,25 +286,25 @@ export HALO_TELNET_CONSOLE=true
 Run commands from the host machine using `docker exec`:
 ```bash
 # Check live match status (map, mode, players, state)
-docker exec halo-server /halo/operator.sh status
+docker exec halo-server /halo/scripts/operator.sh status
 
 # Disconnect a disruptive player
-docker exec halo-server /halo/operator.sh kick "PlayerName"
+docker exec halo-server /halo/scripts/operator.sh kick "PlayerName"
 
 # Ban a player (writes IP + HWID with progressive tier)
-docker exec halo-server /halo/operator.sh ban "Griefer"
+docker exec halo-server /halo/scripts/operator.sh ban "Griefer"
 
 # Trigger a host vote-kick
-docker exec halo-server /halo/operator.sh votekick "AfkPlayer"
+docker exec halo-server /halo/scripts/operator.sh votekick "AfkPlayer"
 
 # Execute arbitrary Halo Script or debug commands
-docker exec halo-server /halo/operator.sh raw "help kick"
+docker exec halo-server /halo/scripts/operator.sh raw "help kick"
 ```
 
 ### Usage on Bare Metal / Systemd
 ```bash
-/opt/halo-server/operator.sh status
-/opt/halo-server/operator.sh kick "PlayerName"
+/opt/halo-server/scripts/operator.sh status
+/opt/halo-server/scripts/operator.sh kick "PlayerName"
 ```
 
 ### Safe Automated Updates (`halo-update.sh`)

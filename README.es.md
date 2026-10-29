@@ -272,25 +272,25 @@ El servidor incluye la utilidad `scripts/operator.sh` que se comunica con la con
 ### Uso con Docker
 ```bash
 # Consultar estado en vivo de la partida
-docker exec halo-server /halo/operator.sh status
+docker exec halo-server /halo/scripts/operator.sh status
 
 # Expulsar a un jugador
-docker exec halo-server /halo/operator.sh kick "NombreJugador"
+docker exec halo-server /halo/scripts/operator.sh kick "NombreJugador"
 
 # Banear con sistema progresivo automático
-docker exec halo-server /halo/operator.sh ban "Griefer"
+docker exec halo-server /halo/scripts/operator.sh ban "Griefer"
 
 # Iniciar votación de expulsión desde el servidor
-docker exec halo-server /halo/operator.sh votekick "AfkPlayer"
+docker exec halo-server /halo/scripts/operator.sh votekick "AfkPlayer"
 
 # Ejecutar comandos de depuración o Halo Script directamente
-docker exec halo-server /halo/operator.sh raw "help kick"
+docker exec halo-server /halo/scripts/operator.sh raw "help kick"
 ```
 
 ### Uso en Bare Metal / Systemd
 ```bash
-/opt/halo-server/operator.sh status
-/opt/halo-server/operator.sh kick "NombreJugador"
+/opt/halo-server/scripts/operator.sh status
+/opt/halo-server/scripts/operator.sh kick "NombreJugador"
 ```
 
 ### Actualizaciones Seguras y Automáticas (`halo-update.sh`)

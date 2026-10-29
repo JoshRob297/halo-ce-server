@@ -38,10 +38,19 @@ jobs:
           mkdir -p release-dist/x86/halo-server-linux-x86/maps
           mkdir -p release-dist/x86/halo-server-linux-x86/custom_maps
           
-          # Descargar binario compilado v1.2.0 de produccion
+          # Descargar binario compilado v1.2.0 de produccion.
+          # El portable trae los archivos en la raiz (sin directorio contenedor):
+          # --strip-components=1 descartaba TODO y publicaba un tar de 7 KB sin
+          # el ejecutable. Extraer sin strip y verificar antes de empaquetar.
           curl -fsSL https://github.com/JoshRob297/halo-ce-server/releases/download/v1.2.0/halo-linux-portable.tar.gz -o /tmp/x86-engine.tar.gz
-          tar -xzf /tmp/x86-engine.tar.gz -C release-dist/x86/halo-server-linux-x86/ --strip-components=1 2>/dev/null || tar -xzf /tmp/x86-engine.tar.gz -C release-dist/x86/halo-server-linux-x86/
-          
+          tar -xzf /tmp/x86-engine.tar.gz -C release-dist/x86/halo-server-linux-x86/
+
+          if [ ! -x release-dist/x86/halo-server-linux-x86/halo ]; then
+            echo "ERROR: el portable no contiene el binario halo; se aborta el release." >&2
+            exit 1
+          fi
+          file release-dist/x86/halo-server-linux-x86/halo
+
           cp server/config.toml release-dist/x86/halo-server-linux-x86/
           cp scripts/* release-dist/x86/halo-server-linux-x86/scripts/
           chmod +x release-dist/x86/halo-server-linux-x86/scripts/*
@@ -57,8 +66,12 @@ jobs:
           mkdir -p release-dist/x64/halo-server-linux-x64/maps
           mkdir -p release-dist/x64/halo-server-linux-x64/custom_maps
           
-          # Compilar lanzador y wrapper nativo x86_64
+          # Bundle x86_64: motor i386 con multilib. No es un binario nativo.
           cp -r release-dist/x86/halo-server-linux-x86/* release-dist/x64/halo-server-linux-x64/
+          if [ ! -x release-dist/x64/halo-server-linux-x64/halo ]; then
+            echo "ERROR: bundle x64 sin binario halo." >&2
+            exit 1
+          fi
           
           cd release-dist/x64
           tar -czf ../../halo-server-linux-x64.tar.gz halo-server-linux-x64
@@ -71,7 +84,15 @@ jobs:
           mkdir -p release-dist/arm64/halo-server-linux-arm64/maps
           mkdir -p release-dist/arm64/halo-server-linux-arm64/custom_maps
           
+          # ARM64 requiere motor compilado para aarch64. Copiar el i386 produce
+          # Exec format error (203/EXEC). El asset se genera con aviso explicito
+          # y el instalador aborta al detectar el binario x86.
           cp -r release-dist/x86/halo-server-linux-x86/* release-dist/arm64/halo-server-linux-arm64/
+          printf '%s\n' \
+            'This ARM64 asset contains an i386 engine and does NOT run on aarch64.' \
+            'The installer aborts when the architecture mismatch is detected.' \
+            'A native ARM64 build is pending.' \
+            > release-dist/arm64/halo-server-linux-arm64/UNSUPPORTED_ARCH.txt
           
           cd release-dist/arm64
           tar -czf ../../halo-server-linux-arm64.tar.gz halo-server-linux-arm64
