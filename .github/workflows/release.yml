@@ -24,7 +24,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            clang lld qemu-user-static \
+            clang lld qemu-user-static libwayland-bin \
             zip unzip tar gzip coreutils
 
       - name: Clone OpenCE Dedicated Server Engine (netcode v41)
@@ -92,15 +92,16 @@ jobs:
           mkdir -p release-dist/arm64/halo-server-linux-arm64/maps
           mkdir -p release-dist/arm64/halo-server-linux-arm64/custom_maps
           
-          # ARM64 requiere motor compilado para aarch64. Copiar el i386 produce
-          # Exec format error (203/EXEC). El asset se genera con aviso explicito
-          # y el instalador aborta al detectar el binario x86.
+          # El motor es i386 de 32 bits: en aarch64 corre bajo qemu-i386-static,
+          # que install-server.sh instala y usa en el ExecStart del servicio.
+          # Una build nativa aarch64 sigue pendiente; las notas lo dicen.
           cp -r release-dist/x86/halo-server-linux-x86/* release-dist/arm64/halo-server-linux-arm64/
           printf '%s\n' \
-            'This ARM64 asset contains an i386 engine and does NOT run on aarch64.' \
-            'The installer aborts when the architecture mismatch is detected.' \
-            'A native ARM64 build is pending.' \
-            > release-dist/arm64/halo-server-linux-arm64/UNSUPPORTED_ARCH.txt
+            'This ARM64 package carries the i386 engine.' \
+            'install-server.sh installs qemu-i386-static with the i386 libraries and' \
+            'runs the engine through it, so the server starts on aarch64 as it does' \
+            'on x86_64. Expect the emulation overhead; a native aarch64 build is pending.' \
+            > release-dist/arm64/halo-server-linux-arm64/ARCH_NOTES.txt
           
           cd release-dist/arm64
           tar -czf ../../halo-server-linux-arm64.tar.gz halo-server-linux-arm64
