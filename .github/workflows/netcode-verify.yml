@@ -82,4 +82,7 @@ jobs:
           EOF
           
           clang --target=aarch64-linux-gnu -static /tmp/arm64_smoke.c -o /tmp/arm64_smoke
-          qemu-aarch64-static /tmp/arm64_smoke
+          # qemu-user-binfmt registers the handler and ships qemu-aarch64;
+          # qemu-user-static ships qemu-aarch64-static. Use whichever is there.
+          QEMU="$(command -v qemu-aarch64-static || command -v qemu-aarch64 || true)"
+          if [ -n "$QEMU" ]; then "$QEMU" /tmp/arm64_smoke; else /tmp/arm64_smoke; fi
