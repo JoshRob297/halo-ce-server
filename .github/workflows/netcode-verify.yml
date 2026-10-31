@@ -52,7 +52,10 @@ jobs:
 
       - name: Verify multi-arch cross-compilation & smoke test
         run: |
-          sudo apt-get update && sudo apt-get install -y qemu-user-static clang gcc-aarch64-linux-gnu libc6-dev-arm64-cross
+          sudo apt-get update && sudo apt-get install -y clang gcc-aarch64-linux-gnu libc6-dev-arm64-cross
+          # qemu-user-static is a virtual package on recent Ubuntu: the real one is
+          # qemu-user-binfmt, which also provides qemu-aarch64-static.
+          sudo apt-get install -y qemu-user-binfmt || sudo apt-get install -y qemu-user-static
           
           # Compilar prueba de socket headless ARM64
           cat << 'EOF' > /tmp/arm64_smoke.c
