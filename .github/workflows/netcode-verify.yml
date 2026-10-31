@@ -42,7 +42,7 @@ jobs:
           UPSTREAM_VERSION=$(curl -fsSL https://raw.githubusercontent.com/OpenCommunityEdition/OpenCE/main/port/linux/include/halo_port_limits.h | grep -E '^#define[[:space:]]+HALO_PORT_NETWORK_VERSION[[:space:]]+' | awk '{print $3}')
           echo "Upstream OpenCE HALO_PORT_NETWORK_VERSION: $UPSTREAM_VERSION"
           
-          EXPECTED_VERSION="39"
+          EXPECTED_VERSION="41"
           if [ "$UPSTREAM_VERSION" != "$EXPECTED_VERSION" ]; then
             echo "ALERTA: Upstream OpenCE ha cambiado la version de red a $UPSTREAM_VERSION (esperada: $EXPECTED_VERSION)."
             echo "Se requiere evaluar migracion o compatibilidad."
