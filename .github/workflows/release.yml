@@ -43,9 +43,12 @@ jobs:
           # --portable enlaza contra el sysroot Debian 11 i386 y trae su propio
           # libSDL3.so.0 al lado del ejecutable.
           cd /tmp/halo-engine
+          # The engine reports its build number; the release names it.
+          export HALO_BUILD_NUMBER="${{ github.run_number }}"
           python3 configure.py --portable --release
           ninja linux
           file build/linux/halo
+          build/linux/halo --version
           cd "$GITHUB_WORKSPACE"
 
           cp /tmp/halo-engine/build/linux/halo release-dist/x86/halo-server-linux-x86/
