@@ -27,9 +27,9 @@ jobs:
             clang lld qemu-user-static \
             zip unzip tar gzip coreutils
 
-      - name: Clone OpenCE Dedicated Server Engine
+      - name: Clone OpenCE Dedicated Server Engine (netcode v41)
         run: |
-          git clone --depth 1 --branch feat/server-full-suite https://github.com/JoshRob297/halo-ce-touch.git /tmp/halo-engine
+          git clone --depth 1 --branch feat/rebase-upstream-build309 https://github.com/JoshRob297/halo-ce-touch.git /tmp/halo-engine
 
       - name: Package Linux x86 (i686) Portable
         run: |
@@ -38,18 +38,26 @@ jobs:
           mkdir -p release-dist/x86/halo-server-linux-x86/maps
           mkdir -p release-dist/x86/halo-server-linux-x86/custom_maps
           
-          # Descargar binario compilado v1.2.0 de produccion.
-          # El portable trae los archivos en la raiz (sin directorio contenedor):
-          # --strip-components=1 descartaba TODO y publicaba un tar de 7 KB sin
-          # el ejecutable. Extraer sin strip y verificar antes de empaquetar.
-          curl -fsSL https://github.com/JoshRob297/halo-ce-server/releases/download/v1.2.0/halo-linux-portable.tar.gz -o /tmp/x86-engine.tar.gz
-          tar -xzf /tmp/x86-engine.tar.gz -C release-dist/x86/halo-server-linux-x86/
+          # Compilar el motor desde el fork (netcode v41) en lugar de reutilizar
+          # un portable antiguo: el release publica exactamente lo que compila.
+          # --portable enlaza contra el sysroot Debian 11 i386 y trae su propio
+          # libSDL3.so.0 al lado del ejecutable.
+          cd /tmp/halo-engine
+          python3 configure.py --portable --release
+          ninja linux
+          file build/linux/halo
+          cd "$GITHUB_WORKSPACE"
+
+          cp /tmp/halo-engine/build/linux/halo release-dist/x86/halo-server-linux-x86/
+          cp /tmp/halo-engine/build/linux/libSDL3.so.0 release-dist/x86/halo-server-linux-x86/
+          cp /tmp/halo-engine/build/linux/SDL3-LICENSE.txt release-dist/x86/halo-server-linux-x86/
+          cp /tmp/halo-engine/build/linux/brokers.txt release-dist/x86/halo-server-linux-x86/ 2>/dev/null || true
+          cp /tmp/halo-engine/build/linux/masters.txt release-dist/x86/halo-server-linux-x86/ 2>/dev/null || true
 
           if [ ! -x release-dist/x86/halo-server-linux-x86/halo ]; then
-            echo "ERROR: el portable no contiene el binario halo; se aborta el release." >&2
+            echo "ERROR: el build no produjo el binario halo; se aborta el release." >&2
             exit 1
           fi
-          file release-dist/x86/halo-server-linux-x86/halo
 
           cp server/config.toml release-dist/x86/halo-server-linux-x86/
           cp scripts/* release-dist/x86/halo-server-linux-x86/scripts/

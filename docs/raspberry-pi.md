@@ -1,6 +1,6 @@
 # Guía Rápida de Instalación: Raspberry Pi 3B / 4 / 5 & ARM64 (Bare-Metal)
 
-Instala y ejecuta el servidor dedicado 24/7 de **Halo: Combat Evolved (OpenCE Netcode v39)** en cualquier placa **Raspberry Pi (3B, 3B+, 4, 400 y 5)** o servidor **ARM64 (Oracle Cloud Ampere, AWS Graviton)** en **1 solo comando**, directamente sobre el sistema operativo y sin sobrecarga de Docker.
+Instala y ejecuta el servidor dedicado 24/7 de **Halo: Combat Evolved (OpenCE Netcode v41)** en cualquier placa **Raspberry Pi (3B, 3B+, 4, 400 y 5)** o servidor **ARM64 (Oracle Cloud Ampere, AWS Graviton)** en **1 solo comando**, directamente sobre el sistema operativo y sin sobrecarga de Docker.
 
 ---
 
@@ -17,7 +17,7 @@ curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scri
 2. Si tienes un SO de 32 bits en una Pi 3/4/5, habilita `arm_64bit=1` en `config.txt` para permitir la ejecución de 64 bits de forma transparente.
 3. Instala dependencias (`curl`, `7zip`, herramientas de red).
 4. Crea el usuario aislado `halo` y la estructura en `/opt/halo-server`.
-5. Descarga la última release de producción (`v1.5.1+`) con el motor Netcode v39, librerías SDL3 y el Tactical Web Dashboard v2.
+5. Descarga la última release de producción (`v1.5.1+`) con el motor Netcode v41, librerías SDL3 y el Tactical Web Dashboard v2.
 6. Ajusta la memoria GPU a 16 MB (`gpu_mem=16`) para liberar el 100% de la RAM al servidor.
 7. Crea e inicia el servicio de **systemd** para que corra 24/7 y se reinicie solo ante cortes de energía.
 
@@ -134,7 +134,7 @@ sudo mkdir -p /opt/halo-server/maps \
 ```
 
 ### Paso 2: Descargar el paquete oficial compilado (Release v1.5.1+)
-Descargamos el paquete oficial de producción que incluye el motor compilado Netcode v39, librerías SDL3, plantillas TOML y el Tactical Web Dashboard v2:
+Descargamos el paquete oficial de producción que incluye el motor compilado Netcode v41, librerías SDL3, plantillas TOML y el Tactical Web Dashboard v2:
 
 ```bash
 cd /tmp
@@ -230,7 +230,7 @@ Para que el servidor arranque solo cuando enciendes la Raspberry Pi, se reinicie
 2. Pega la siguiente configuración optimizada:
    ```ini
    [Unit]
-   Description=Halo Combat Evolved Dedicated Server 24/7 (OpenCE Netcode v39)
+   Description=Halo Combat Evolved Dedicated Server 24/7 (OpenCE Netcode v41)
    After=network-online.target
    Wants=network-online.target
 

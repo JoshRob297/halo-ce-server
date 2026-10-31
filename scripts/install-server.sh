@@ -35,7 +35,7 @@ fi
 
 echo "=========================================================="
 echo " Instalador Universal: Halo CE Dedicated Server 24/7     "
-echo " (OpenCE Netcode v39 + Tactical Web Dashboard v2)        "
+echo " (OpenCE Netcode v41 + Tactical Web Dashboard v2)        "
 echo "=========================================================="
 echo ""
 
@@ -381,7 +381,7 @@ fi
 
 cat << SYSTEMD_EOF > /etc/systemd/system/$SERVICE_NAME.service
 [Unit]
-Description=Halo Combat Evolved Dedicated Server 24/7 (OpenCE Netcode v39)
+Description=Halo Combat Evolved Dedicated Server 24/7 (OpenCE Netcode v41)
 After=network-online.target
 Wants=network-online.target
 # Un ExecStart roto no debe reintentar sin fin: 5 fallos en 5 min y queda failed.

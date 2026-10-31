@@ -10,13 +10,13 @@
 
 [![Release](https://img.shields.io/github/v/release/JoshRob297/halo-ce-server?style=for-the-badge&color=blue)](https://github.com/JoshRob297/halo-ce-server/releases/latest)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#quick-start-docker)
-[![Netcode](https://img.shields.io/badge/netcode-v39-green?style=for-the-badge)](#who-can-join)
+[![Netcode](https://img.shields.io/badge/netcode-v41-green?style=for-the-badge)](#who-can-join)
 [![Web Dashboard](https://img.shields.io/badge/web-dashboard-002244?style=for-the-badge&logo=html5&logoColor=2299ff)](#web-dashboard)
 [![Anti-Cheat](https://img.shields.io/badge/anticheat-enforced-success?style=for-the-badge)](docs/anticheat.md)
 [![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)](LICENSE)
 
 Run a continuous multiplayer or co-op host with **no screen, no GPU, and no sound card**.<br/>
-Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native port (`dhost-v39`).
+Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native port (`dhost-v41`).
 
 [Quick Start](#quick-start-docker) • [Full Guide](#the-complete-guide-step-by-step) • [Web Dashboard](#web-dashboard) • [Master Server Registration](docs/master-registration.md) • [Operator CLI](#operator-cli-operatorsh) • [Raspberry Pi ARM64](docs/raspberry-pi.md) • [Settings](#the-settings) • [Guía en Español](README.es.md)
 
@@ -26,7 +26,7 @@ Built on the [OpenCE](https://github.com/OpenCommunityEdition/OpenCE) native por
 
 ### Highlights
 
-- **Native OpenCE & Chupathingy Netcode (v39):** Official OpenCE and modern Chupathingy Delta clients (Windows, Linux, macOS, Android, Web) connect directly without modifications.
+- **Native OpenCE & Chupathingy Netcode (v41, joins back to v38):** Official OpenCE and modern Chupathingy Delta clients (Windows, Linux, macOS, Android, Web) connect directly without modifications.
 - **Universal Multi-Platform Cross-Play:** A truly independent dedicated server compatible with both OpenCE and Chupathingy ecosystems, giving operators full hosting sovereignty without reliance on external maintainers.
 - **Automated Map Rotation:** Define map and gametype sequences directly in `config.toml`; the server rotates and resets the lobby automatically.
 - **Server Browser Discovery:** Fully discoverable in the in-game public browser or shareable via direct invite links (`halo://join/...`).
@@ -473,15 +473,15 @@ The engine supports tag-based mods placed in the `mods/` directory:
 
 | Client Type | Version | Status |
 | :--- | :--- | :--- |
-| **OpenCE Official (Desktop)** | v38 / v39 | Supported directly |
-| **OpenCE Android APK** | v38 / v39 | Supported directly |
-| **OpenCE WebAssembly Browser** | v38 / v39 | Supported directly |
+| **OpenCE Official (Desktop)** | v38 – v41 | Supported directly |
+| **OpenCE Android APK** | v38 – v41 | Supported directly |
+| **OpenCE WebAssembly Browser** | v38 – v41 | Supported directly |
 | **Chupathingy CE (Desktop & Mobile)** | v0.8.0e+ (`opence-39-hosts`) | Supported directly (Cross-play ready) |
 | **Legacy Clients** | ≤ v37 | Upgrade client required |
 
 ### Universal Cross-Play & Community Acknowledgments
 This server runs as a **universal standalone host**, bridging both the **OpenCE** and **Chupathingy** communities:
-- Built with upstream Netcode v39 and Ed25519 cryptographic master authentication.
+- Built with upstream Netcode v41 and Ed25519 cryptographic master authentication.
 - Incorporates resilient headless countdown and lobby diagnostic logic pioneered during cross-platform testing with Chupathingy.
 - Gives server operators full autonomy: run your own maps, custom rules, and hot-reloaded tactical dashboard with zero lock-in.
 Special thanks to the developers and maintainers across both **OpenCommunityEdition** and **ChupathingyCE** for their collaborative protocol updates, feedback on dedicated host lifecycle, and multimedia improvements.
@@ -560,7 +560,7 @@ See [docs/roadmap.md](docs/roadmap.md) for planned milestones.
 ## Credits & Attribution
 
 - **[OpenCE Project](https://github.com/OpenCommunityEdition/OpenCE):** The underlying decompilation, engine architecture, and multiplayer netcode are created and maintained by the OpenCE community contributors.
-- **Web Interface Architecture:** The visual dashboard layout, styles (`app.css`), and frontend client logic (`app.js`) were designed by **MrBruh / cybersecurity** in the OpenCE project. We ported and adapted the dashboard to interface directly with the Netcode v39 engine core, providing immediate availability to the community without waiting for the v39 transition.
+- **Web Interface Architecture:** The visual dashboard layout, styles (`app.css`), and frontend client logic (`app.js`) were designed by **MrBruh / cybersecurity** in the OpenCE project. We ported and adapted the dashboard to interface directly with the engine core, providing immediate availability to the community.
 
 ---
 
