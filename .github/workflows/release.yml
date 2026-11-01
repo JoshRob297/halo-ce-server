@@ -139,8 +139,11 @@ jobs:
               curl -fsSL --retry 3 -o /tmp/xwin.tar.gz \
                 https://github.com/Jake-Shadle/xwin/releases/download/0.10.0/xwin-0.10.0-x86_64-unknown-linux-musl.tar.gz
               tar -xzf /tmp/xwin.tar.gz -C /tmp
+              # cache y salida dentro del contenedor: mover entre el volumen
+              # montado y el disco del contenedor falla con EXDEV
               /tmp/xwin-0.10.0-x86_64-unknown-linux-musl/xwin --arch x86 --accept-license \
-                splat --use-winsysroot-style --output /tmp/winsdk
+                --cache-dir /tmp/xwin-cache \
+                splat --use-winsysroot-style --copy --output /tmp/winsdk
 
               VCTOOLS="$(ls -d /tmp/winsdk/VC/Tools/MSVC/* | tail -1)"
               rm -rf build/windows build.ninja
