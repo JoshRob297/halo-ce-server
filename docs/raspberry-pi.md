@@ -9,7 +9,7 @@ Instala y ejecuta el servidor dedicado 24/7 de **Halo: Combat Evolved (OpenCE Ne
 Conéctate por SSH a tu Raspberry Pi y ejecuta:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scripts/install-pi.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scripts/install-server.sh | sudo bash
 ```
 
 ### ¿Qué hace este comando automáticamente por ti?
@@ -17,7 +17,7 @@ curl -fsSL https://raw.githubusercontent.com/JoshRob297/halo-ce-server/main/scri
 2. Si tienes un SO de 32 bits en una Pi 3/4/5, habilita `arm_64bit=1` en `config.txt` para permitir la ejecución de 64 bits de forma transparente.
 3. Instala dependencias (`curl`, `7zip`, herramientas de red).
 4. Crea el usuario aislado `halo` y la estructura en `/opt/halo-server`.
-5. Descarga la última release de producción (`v1.5.1+`) con el motor Netcode v41, librerías SDL3 y el Tactical Web Dashboard v2.
+5. Descarga la última release de producción (`v1.6.0+`) con el motor Netcode v41, librerías SDL3 y el Tactical Web Dashboard v2.
 6. Ajusta la memoria GPU a 16 MB (`gpu_mem=16`) para liberar el 100% de la RAM al servidor.
 7. Crea e inicia el servicio de **systemd** para que corra 24/7 y se reinicie solo ante cortes de energía.
 

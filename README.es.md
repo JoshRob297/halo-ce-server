@@ -325,7 +325,7 @@ El servidor está optimizado para ejecutarse en diversas arquitecturas y factore
 El servidor corre de forma nativa en Windows usando los drivers dummy de SDL sin entorno gráfico ni sonido.
 
 - **Guía Completa de Windows:** Consulta [docs/windows.md](docs/windows.md) para la configuración paso a paso, arranque manual en PowerShell/CMD, reglas de Windows Defender Firewall y ejecución persistente como servicio de Windows mediante NSSM (`nssm install HaloServer`).
-- **Verificación en CI:** El trabajo `windows` en GitHub Actions (`windows-2025`) compila y verifica continuamente el arranque headless con `SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy`.
+- **Estado de compilacion (pendiente conocido):** el paquete de Windows en las releases es el `halo.exe` de la v1.2.0 (netcode v39); todavia no se recompila desde el motor v41. `configure.py --windows-cross` necesita el toolchain de MSVC y el Windows SDK (`i686-pc-windows-msvc`), que el workflow de release no aprovisiona. Bloquea la proxima release de Windows.
 
 ---
 
