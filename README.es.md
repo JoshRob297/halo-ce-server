@@ -230,7 +230,9 @@ En `docker-compose.yml`, descomenta la línea del volumen de configuración:
 
 ### Paso 4: Firewall y Reenvío de Puertos (Port Forwarding)
 
-Abre el puerto UDP `2302` (juego) y opcionalmente TCP `8080` (dashboard web):
+Abre el puerto UDP `2302` (juego). El dashboard escucha en `127.0.0.1:8080` y no
+necesita regla de firewall; si lo expones en la LAN (`web_bind = "0.0.0.0"`),
+abre entonces el TCP `8080` y usa la contrasena que el servidor genero:
 
 ```sh
 # UFW (Ubuntu / Debian)
@@ -259,9 +261,25 @@ sudo cp /ruta/a/tus/mapas/* /opt/halo-server/maps/
 # sudo /opt/halo-server/scripts/import-maps.sh /ruta/a/tu/halo.iso
 
 # 3. Acceso y control
-# Tactical Web Dashboard: http://IP_DE_TU_SERVIDOR:8080
+# Dashboard, por defecto solo en loopback:
+#   ssh -L 8080:127.0.0.1:8080 root@IP_DE_TU_SERVIDOR  ->  http://127.0.0.1:8080
 # Ver registros en vivo: sudo journalctl -u halo-server -f
 ```
+
+
+El instalador no declara exito si el servidor no puede arrancar:
+
+| Salida | Significado | Que hacer |
+| :--- | :--- | :--- |
+| 0 | instalado y en marcha | nada |
+| 2 | instalado, pero `maps/` no tiene `ui.map` | importa los mapas de la ISO y `sudo systemctl restart halo-server` |
+| 3 | instalado, pero el puerto de juego esta ocupado | libera UDP 2302 o cambia `network.tunnel_port` |
+
+Verifica el paquete con el `SHA256SUMS` del release, guarda el binario anterior
+en `/opt/halo-server/.backup-<stamp>` y lo restaura si el nuevo no arranca, y
+nunca sobrescribe `config.toml`, `maps/` ni `custom_maps/`.
+Registro completo: `/var/log/halo-install.log`. Otras opciones: `--check`,
+`--dir <ruta>`, `--help`.
 
 ---
 

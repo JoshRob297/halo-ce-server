@@ -260,9 +260,23 @@ sudo cp /path/to/extracted/maps/* /opt/halo-server/maps/
 # sudo /opt/halo-server/scripts/import-maps.sh /path/to/halo.iso
 
 # 3. Access your server
-# Tactical Web Dashboard: http://YOUR_SERVER_IP:8080
+# Dashboard, bound to loopback by default:
+#   ssh -L 8080:127.0.0.1:8080 root@YOUR_SERVER_IP  ->  http://127.0.0.1:8080
 # View live logs: sudo journalctl -u halo-server -f
 ```
+
+The installer refuses to report success when the server cannot run:
+
+| Exit | Meaning | What to do |
+| :--- | :--- | :--- |
+| 0 | installed and running | nothing |
+| 2 | installed, but `maps/` has no `ui.map` | import the Xbox maps, then `sudo systemctl restart halo-server` |
+| 3 | installed, but the game port is taken | free UDP 2302 or change `network.tunnel_port` |
+
+It verifies the package against the release's `SHA256SUMS`, keeps the previous
+binary in `/opt/halo-server/.backup-<stamp>` and restores it if the new one
+does not start, and never overwrites `config.toml`, `maps/` or `custom_maps/`.
+Full log: `/var/log/halo-install.log`. Other flags: `--check`, `--dir <path>`, `--help`.
 
 ---
 
