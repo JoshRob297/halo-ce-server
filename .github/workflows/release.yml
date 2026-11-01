@@ -24,8 +24,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            clang lld qemu-user-static libwayland-bin \
+            clang lld llvm qemu-user-static libwayland-bin \
             zip unzip tar gzip coreutils
+          # llvm-rc escribe los recursos del .exe; Ubuntu lo instala con sufijo
+          if ! command -v llvm-rc >/dev/null 2>&1; then
+            sudo ln -sf "$(ls /usr/bin/llvm-rc-* 2>/dev/null | tail -1)" /usr/local/bin/llvm-rc
+          fi
 
       - name: Clone OpenCE Dedicated Server Engine (netcode v41)
         run: |
