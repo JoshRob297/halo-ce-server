@@ -353,7 +353,7 @@ The server is engineered for maximum portability across architectures, operating
 The dedicated server runs natively on Windows using headless SDL dummy drivers without a display or sound card.
 
 - **Guide & Service Setup:** See [docs/windows.md](docs/windows.md) for full instructions, manual startup commands (Command Prompt and PowerShell), Windows Firewall rules, and running as an auto-restarting background service via NSSM.
-- **Build status (known gap):** the Windows package on the releases page is `halo.exe` from v1.2.0 (netcode v39); it is not rebuilt from the v41 engine yet. `configure.py --windows-cross` needs an MSVC toolchain and the Windows SDK (`i686-pc-windows-msvc`), which the release workflow does not provision. Gates the next Windows release.
+- **Build status:** the Windows package is built from the same branch as Linux: the release job fetches an MSVC toolchain and the Windows SDK with `xwin` and cross-compiles `i686-pc-windows-msvc` inside Debian trixie (its clang builds the AES-NI intrinsics the runner's cannot). Since v1.7.0 the `halo.exe` shipped is netcode v41.
 
 ---
 
