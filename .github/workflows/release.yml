@@ -116,38 +116,50 @@ jobs:
 
       - name: Package Windows x86/x64 Standalone
         run: |
-          # El motor Windows se compila aqui: el zip de la v1.2.0 solo aporta los
-          # .bat y los textos de servicio, que se reemplazan por el binario nuevo.
+          # El zip de la v1.2.0 aporta el layout y los .bat; los binarios se
+          # reemplazan por los que compila el motor v41.
           mkdir -p release-dist/windows/halo-server-windows/scripts
           curl -fsSL https://github.com/JoshRob297/halo-ce-server/releases/download/v1.2.0/halo-server-windows.zip -o /tmp/win-base.zip
           unzip -q -o /tmp/win-base.zip -d release-dist/windows/
 
-          # Toolchain MSVC + Windows SDK (32 bits) sin Visual Studio
-          curl -fsSL -o /tmp/xwin.tar.gz \
-            https://github.com/Jake-Shadle/xwin/releases/download/0.10.0/xwin-0.10.0-x86_64-unknown-linux-musl.tar.gz
-          tar -xzf /tmp/xwin.tar.gz -C /tmp
-          /tmp/xwin-0.10.0-x86_64-unknown-linux-musl/xwin --arch x86 --accept-license \
-            splat --use-winsysroot-style --output /tmp/winsdk
+          # El toolchain MSVC y el SDK vienen de xwin; la compilacion corre en
+          # Debian trixie porque su clang 19 compila los intrinsics de mbedtls
+          # para i686-pc-windows-msvc (el clang del runner no).
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE":/repo -v /tmp/halo-engine:/engine \
+            -e HALO_BUILD_NUMBER="${{ github.run_number }}" \
+            -w /engine debian:trixie bash -c '
+              set -e
+              apt-get update -qq
+              DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+                clang lld llvm python3 ninja-build cmake git curl ca-certificates \
+                xz-utils file pkg-config unzip >/dev/null 2>&1
+              ln -sf "$(ls /usr/bin/llvm-rc-* | tail -1)" /usr/local/bin/llvm-rc
 
-          VCTOOLS="$(ls -d /tmp/winsdk/VC/Tools/MSVC/* | tail -1)"
-          cd /tmp/halo-engine
-          rm -rf build/windows/case_bridge build.ninja
-          python3 configure.py --windows-cross --portable \
-            --windows-vctools-dir "$VCTOOLS" \
-            --windows-sdk-dir "/tmp/winsdk/Windows Kits/10"
-          export HALO_BUILD_NUMBER="${{ github.run_number }}"
-          ninja windows
-          file build/windows/halo.exe
-          cd "$GITHUB_WORKSPACE"
+              curl -fsSL --retry 3 -o /tmp/xwin.tar.gz \
+                https://github.com/Jake-Shadle/xwin/releases/download/0.10.0/xwin-0.10.0-x86_64-unknown-linux-musl.tar.gz
+              tar -xzf /tmp/xwin.tar.gz -C /tmp
+              /tmp/xwin-0.10.0-x86_64-unknown-linux-musl/xwin --arch x86 --accept-license \
+                splat --use-winsysroot-style --output /tmp/winsdk
 
-          if [ ! -f /tmp/halo-engine/build/windows/halo.exe ]; then
-            echo "ERROR: el build de Windows no produjo halo.exe; se aborta el release." >&2
-            exit 1
-          fi
-          cp /tmp/halo-engine/build/windows/halo.exe release-dist/windows/halo-server-windows/
-          cp /tmp/halo-engine/build/windows/SDL3.dll release-dist/windows/halo-server-windows/
+              VCTOOLS="$(ls -d /tmp/winsdk/VC/Tools/MSVC/* | tail -1)"
+              rm -rf build/windows build.ninja
+              python3 configure.py --windows-cross --portable \
+                --windows-vctools-dir "$VCTOOLS" \
+                --windows-sdk-dir "/tmp/winsdk/Windows Kits/10"
+              ninja windows
+              file build/windows/halo.exe
+              install -m 0755 build/windows/halo.exe /repo/release-dist/windows/halo-server-windows/
+              install -m 0644 build/windows/SDL3.dll /repo/release-dist/windows/halo-server-windows/
+            '
+
           cp server/config.toml release-dist/windows/halo-server-windows/
           cp scripts/* release-dist/windows/halo-server-windows/scripts/
+
+          if [ ! -f release-dist/windows/halo-server-windows/halo.exe ]; then
+            echo "ERROR: falta halo.exe tras compilar; se aborta el release." >&2
+            exit 1
+          fi
 
           cd release-dist/windows
           zip -r ../../halo-server-windows.zip halo-server-windows
